@@ -402,6 +402,8 @@ th{
 </div>
 
 <script>
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby6zggstrBKI0mDAiATN4saWkqRO4Y4P31F84IS8TvXVHj_Se_RRv2LSpRbeeawDVPm/exec";
+
 let trips = [];
 
 const PRICE_PER_KM = 3;
@@ -414,18 +416,43 @@ function setStatus(text){
   document.getElementById("status").innerText = text || "";
 }
 
+function apiGetTrips(){
+  return fetch(WEB_APP_URL + "?action=getTrips")
+    .then(response => response.json());
+}
+
+function apiAddTrip(trip){
+  return fetch(WEB_APP_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "addTrip",
+      trip: trip
+    })
+  }).then(response => response.json());
+}
+
+function apiDeleteTrip(id){
+  return fetch(WEB_APP_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "deleteTrip",
+      id: id
+    })
+  }).then(response => response.json());
+}
+
 function loadTrips(){
   setStatus("Загрузка данных из Google Sheets...");
-  google.script.run
-    .withSuccessHandler(function(data){
-      trips = data || [];
+
+  apiGetTrips()
+    .then(function(result){
+      trips = result.trips || [];
       showTrips();
       setStatus("Данные загружены");
     })
-    .withFailureHandler(function(error){
+    .catch(function(error){
       setStatus("Ошибка загрузки: " + error.message);
-    })
-    .getTrips();
+    });
 }
 
 function getTransportType(){
@@ -594,18 +621,21 @@ function addTrip(){
   addBtn.disabled = true;
   setStatus("Сохраняю запись в Google Sheets...");
 
-  google.script.run
-    .withSuccessHandler(function(){
+  apiAddTrip(trip)
+    .then(function(result){
+      if(!result.success){
+        throw new Error(result.message || "Не удалось сохранить");
+      }
+
       resetForm();
       loadTrips();
       addBtn.disabled = false;
     })
-    .withFailureHandler(function(error){
+    .catch(function(error){
       alert("Ошибка сохранения: " + error.message);
       setStatus("Ошибка сохранения");
       addBtn.disabled = false;
-    })
-    .addTripToSheet(trip);
+    });
 }
 
 function resetForm(){
@@ -630,15 +660,17 @@ function deleteTrip(index){
 
   setStatus("Удаляю запись...");
 
-  google.script.run
-    .withSuccessHandler(function(){
+  apiDeleteTrip(trip.id)
+    .then(function(result){
+      if(!result.success){
+        throw new Error(result.message || "Не удалось удалить");
+      }
       loadTrips();
     })
-    .withFailureHandler(function(error){
+    .catch(function(error){
       alert("Ошибка удаления: " + error.message);
       setStatus("Ошибка удаления");
-    })
-    .deleteTripFromSheet(trip.id);
+    });
 }
 
 function getFilteredTrips(){
