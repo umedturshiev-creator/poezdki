@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Учет поездок</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(0,255,255,.35), transparent 30%),
+    radial-gradient(circle at 90% 10%, rgba(99,102,241,.45), transparent 35%),
+    radial-gradient(circle at 50% 90%, rgba(14,165,233,.35), transparent 35%),
+    linear-gradient(135deg,#020617,#0f172a,#111827);
+  color:#fff;
+  padding:20px;
+}
+
+.container{
+  max-width:1150px;
+  margin:auto;
+  padding:24px;
+  border-radius:28px;
+  background:rgba(255,255,255,.12);
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+  border:1px solid rgba(255,255,255,.25);
+  box-shadow:0 25px 60px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.25);
+}
+
+h2{text-align:center;font-size:28px;margin-top:0}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+}
+
+.input-box label{
+  display:block;
+  margin-bottom:6px;
+  font-size:13px;
+  color:#93c5fd;
+  font-weight:600;
+}
+
+input{
+  width:100%;
+  padding:14px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.25);
+  background:rgba(255,255,255,.13);
+  color:white;
+  outline:none;
+  font-size:14px;
+}
+
+input::placeholder{color:rgba(255,255,255,.65)}
+
+input:focus{
+  border-color:#38bdf8;
+  box-shadow:0 0 15px rgba(56,189,248,.45);
+}
+
+.route-points-box{grid-column:span 2}
+
+.office-route{
+  padding:14px;
+  border-radius:18px;
+  background:rgba(34,197,94,.18);
+  border:1px solid rgba(34,197,94,.35);
+  color:#bbf7d0;
+  font-weight:800;
+  margin-bottom:10px;
+}
+
+.route-point{margin-bottom:10px}
+
+.price-box input{
+  background:rgba(37,99,235,.25);
+  border-color:rgba(56,189,248,.45);
+  font-weight:800;
+}
+
+.transport-box{
+  display:flex;
+  gap:10px;
+  margin-top:0;
+  flex-wrap:wrap;
+}
+
+.transport-option{
+  flex:1;
+  min-width:150px;
+}
+
+.transport-option input{
+  display:none;
+}
+
+.transport-option span{
+  display:block;
+  text-align:center;
+  padding:12px;
+  border-radius:16px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.18);
+  color:#e2e8f0;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.transport-option input:checked + span{
+  background:linear-gradient(135deg,#2563eb,#06b6d4);
+  box-shadow:0 0 14px rgba(37,99,235,.55);
+  color:white;
+}
+
+.toggles{
+  display:flex;
+  gap:12px;
+  margin-top:12px;
+  flex-wrap:wrap;
+}
+
+.toggle{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 12px;
+  border-radius:16px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.18);
+}
+
+.toggle input{display:none}
+
+.slider{
+  width:38px;
+  height:22px;
+  background:rgba(255,255,255,.25);
+  border-radius:999px;
+  position:relative;
+  transition:.25s;
+}
+
+.slider::before{
+  content:"";
+  position:absolute;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:white;
+  top:2px;
+  left:2px;
+  transition:.25s;
+}
+
+.toggle input:checked + .slider{
+  background:linear-gradient(135deg,#2563eb,#06b6d4);
+  box-shadow:0 0 10px rgba(37,99,235,.6);
+}
+
+.toggle input:checked + .slider::before{
+  transform:translateX(16px);
+}
+
+.label-text{
+  font-size:13px;
+  font-weight:600;
+  color:#e2e8f0;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:18px;
+  color:white;
+  font-weight:700;
+  cursor:pointer;
+  transition:.25s;
+}
+
+button:hover{transform:translateY(-2px)}
+button:disabled{opacity:.55;cursor:not-allowed;transform:none}
+
+.btn-point{background:linear-gradient(135deg,#7c3aed,#2563eb)}
+
+.actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:12px;
+}
+
+.btn-add{background:linear-gradient(135deg,#2563eb,#06b6d4)}
+.btn-report{background:linear-gradient(135deg,#16a34a,#22c55e)}
+.btn-clear{background:linear-gradient(135deg,#475569,#0f172a)}
+
+.filter-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:18px;
+}
+
+.card{
+  margin-top:20px;
+  border-radius:22px;
+  overflow:auto;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.18);
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:1050px;
+}
+
+th,td{
+  padding:12px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  text-align:left;
+}
+
+th{
+  color:#93c5fd;
+  font-size:13px;
+}
+
+.total{
+  margin-top:15px;
+  padding:15px;
+  border-radius:18px;
+  text-align:center;
+  font-size:20px;
+  font-weight:700;
+  background:rgba(37,99,235,.25);
+}
+
+.delete{
+  background:#dc2626;
+  border-radius:10px;
+  padding:6px 10px;
+}
+
+.empty{
+  text-align:center;
+  color:rgba(255,255,255,.65);
+  padding:20px;
+}
+
+.badge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:999px;
+  background:rgba(34,197,94,.25);
+  color:#bbf7d0;
+  font-size:12px;
+  font-weight:700;
+}
+
+.hidden{display:none !important}
+
+.status{
+  margin-top:12px;
+  font-size:13px;
+  color:#cbd5e1;
+  text-align:center;
+}
+
+@media(max-width:700px){
+  .form-grid,
+  .filter-grid,
+  .actions{
+    grid-template-columns:1fr;
+  }
+
+  .route-points-box{
+    grid-column:span 1;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>🚘 Учет поездок</h2>
+
+  <div class="form-grid">
+
+    <div class="input-box">
+      <label>Дата поездки</label>
+      <input type="date" id="date">
+    </div>
+
+    <div class="input-box route-points-box">
+      <label>Маршрут</label>
+
+      <div class="office-route">Точка А: Офис</div>
+
+      <div id="routePoints">
+        <input type="text" class="route-point" placeholder="Точка Б / куда едем">
+      </div>
+
+      <button type="button" class="btn-point" onclick="addRoutePoint()">+ Добавить точку</button>
+    </div>
+
+    <div class="input-box">
+      <label>Тип транспорта</label>
+      <div class="transport-box">
+        <label class="transport-option">
+          <input type="radio" name="transportType" value="car" checked onchange="toggleTransportType()">
+          <span>🚗 Своя машина</span>
+        </label>
+
+        <label class="transport-option">
+          <input type="radio" name="transportType" value="taxi" onchange="toggleTransportType()">
+          <span>🚕 Такси</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="input-box car-field">
+      <label>Километраж</label>
+      <input type="number" id="km" placeholder="Км" oninput="calculatePrice()">
+    </div>
+
+    <div class="input-box car-field">
+      <label>Время поездки</label>
+      <input type="number" id="minutes" placeholder="Минуты" oninput="calculatePrice()">
+    </div>
+
+    <div class="input-box price-box taxi-field hidden">
+      <label>Сумма такси</label>
+      <input type="number" id="manualAmount" placeholder="Сомони" oninput="calculatePrice()">
+    </div>
+
+    <div class="input-box price-box">
+      <label>Итоговая сумма</label>
+      <input type="text" id="finalPrice" value="0.00 сомони" readonly>
+    </div>
+
+  </div>
+
+  <div class="toggles">
+    <label class="toggle">
+      <input type="checkbox" id="returnTrip" onchange="calculatePrice()">
+      <span class="slider"></span>
+      <span class="label-text">Обратно</span>
+    </label>
+  </div>
+
+  <div class="actions">
+    <button class="btn-add" id="addBtn" onclick="addTrip()">Добавить запись</button>
+    <button class="btn-report" onclick="generateReport()">Сформировать отчет</button>
+  </div>
+
+  <div class="filter-grid">
+    <div class="input-box">
+      <label>Фильтр по месяцу</label>
+      <input type="month" id="monthFilter" onchange="showTrips()">
+    </div>
+
+    <div class="input-box">
+      <label>&nbsp;</label>
+      <button class="btn-clear" onclick="clearFilter()">Показать все</button>
+    </div>
+  </div>
+
+  <div class="status" id="status">Загрузка данных...</div>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>Дата</th>
+          <th>Маршрут</th>
+          <th>Транспорт</th>
+          <th>Км</th>
+          <th>Мин</th>
+          <th>Обратно</th>
+          <th>Сумма</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tripList"></tbody>
+    </table>
+  </div>
+
+  <div class="total" id="total">Итого: 0 сомони</div>
+</div>
+
+<script>
+let trips = [];
+
+const PRICE_PER_KM = 3;
+const BASE_KM_LIMIT = 3;
+const BASE_KM_PRICE = 10;
+const FREE_MINUTES = 20;
+const PRICE_PER_EXTRA_MINUTE = 0.10;
+
+function setStatus(text){
+  document.getElementById("status").innerText = text || "";
+}
+
+function loadTrips(){
+  setStatus("Загрузка данных из Google Sheets...");
+  google.script.run
+    .withSuccessHandler(function(data){
+      trips = data || [];
+      showTrips();
+      setStatus("Данные загружены");
+    })
+    .withFailureHandler(function(error){
+      setStatus("Ошибка загрузки: " + error.message);
+    })
+    .getTrips();
+}
+
+function getTransportType(){
+  return document.querySelector('input[name="transportType"]:checked').value;
+}
+
+function toggleTransportType(){
+  const type = getTransportType();
+
+  document.querySelectorAll(".car-field").forEach(el=>{
+    el.classList.toggle("hidden", type !== "car");
+  });
+
+  document.querySelectorAll(".taxi-field").forEach(el=>{
+    el.classList.toggle("hidden", type !== "taxi");
+  });
+
+  if(type === "car"){
+    document.getElementById("manualAmount").value = "";
+  }else{
+    document.getElementById("km").value = "";
+    document.getElementById("minutes").value = "";
+  }
+
+  calculatePrice();
+}
+
+function addRoutePoint(){
+  const container = document.getElementById("routePoints");
+  const count = container.querySelectorAll(".route-point").length + 1;
+
+  const wrapper = document.createElement("div");
+  wrapper.style.display = "flex";
+  wrapper.style.gap = "8px";
+  wrapper.style.marginBottom = "10px";
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.className = "route-point";
+  input.placeholder = `Точка ${count + 1} / куда едем`;
+  input.style.marginBottom = "0";
+
+  const removeBtn = document.createElement("button");
+  removeBtn.type = "button";
+  removeBtn.textContent = "−";
+  removeBtn.className = "delete";
+  removeBtn.style.width = "55px";
+  removeBtn.onclick = function(){
+    wrapper.remove();
+  };
+
+  wrapper.appendChild(input);
+  wrapper.appendChild(removeBtn);
+  container.appendChild(wrapper);
+}
+
+function getRoutePoints(){
+  return Array.from(document.querySelectorAll(".route-point"))
+    .map(input => input.value.trim())
+    .filter(value => value);
+}
+
+function resetRoutePoints(){
+  document.getElementById("routePoints").innerHTML = `
+    <input type="text" class="route-point" placeholder="Точка Б / куда едем">
+  `;
+}
+
+function calculateKmPrice(km){
+  if(!km || km <= 0) return 0;
+
+  if(km <= BASE_KM_LIMIT){
+    return BASE_KM_PRICE;
+  }
+
+  return BASE_KM_PRICE + (km - BASE_KM_LIMIT) * PRICE_PER_KM;
+}
+
+function calculatePrice(){
+  const type = getTransportType();
+  const isReturn = document.getElementById("returnTrip").checked;
+
+  let total = 0;
+
+  if(type === "taxi"){
+    total = Number(document.getElementById("manualAmount").value) || 0;
+  }else{
+    const km = Number(document.getElementById("km").value) || 0;
+    const minutes = Number(document.getElementById("minutes").value) || 0;
+
+    const kmPrice = calculateKmPrice(km);
+    const extraMinutes = minutes > FREE_MINUTES ? minutes - FREE_MINUTES : 0;
+    const timePrice = extraMinutes * PRICE_PER_EXTRA_MINUTE;
+
+    total = kmPrice + timePrice;
+  }
+
+  if(isReturn){
+    total *= 2;
+  }
+
+  document.getElementById("finalPrice").value = total.toFixed(2) + " сомони";
+  return total;
+}
+
+function addTrip(){
+  const date = document.getElementById("date").value;
+  const points = getRoutePoints();
+  const type = getTransportType();
+  const km = Number(document.getElementById("km").value) || 0;
+  const minutes = Number(document.getElementById("minutes").value) || 0;
+  const manualAmount = Number(document.getElementById("manualAmount").value) || 0;
+  const isReturn = document.getElementById("returnTrip").checked;
+
+  if(!date || points.length === 0){
+    alert("Заполните дату и хотя бы одну точку маршрута");
+    return;
+  }
+
+  if(type === "taxi" && !manualAmount){
+    alert("Укажите сумму такси");
+    return;
+  }
+
+  if(type === "car" && !km){
+    alert("Укажите километраж");
+    return;
+  }
+
+  const route = ["Офис", ...points].join(" → ");
+
+  let kmPrice = 0;
+  let extraMinutes = 0;
+  let timePrice = 0;
+  let finalAmount = 0;
+
+  if(type === "taxi"){
+    finalAmount = manualAmount;
+  }else{
+    kmPrice = calculateKmPrice(km);
+    extraMinutes = minutes > FREE_MINUTES ? minutes - FREE_MINUTES : 0;
+    timePrice = extraMinutes * PRICE_PER_EXTRA_MINUTE;
+    finalAmount = kmPrice + timePrice;
+  }
+
+  if(isReturn){
+    finalAmount *= 2;
+  }
+
+  const trip = {
+    date,
+    route,
+    points,
+    transportType:type,
+    manualAmount,
+    km,
+    minutes,
+    kmPrice,
+    extraMinutes,
+    timePrice,
+    isReturn,
+    finalAmount
+  };
+
+  const addBtn = document.getElementById("addBtn");
+  addBtn.disabled = true;
+  setStatus("Сохраняю запись в Google Sheets...");
+
+  google.script.run
+    .withSuccessHandler(function(){
+      resetForm();
+      loadTrips();
+      addBtn.disabled = false;
+    })
+    .withFailureHandler(function(error){
+      alert("Ошибка сохранения: " + error.message);
+      setStatus("Ошибка сохранения");
+      addBtn.disabled = false;
+    })
+    .addTripToSheet(trip);
+}
+
+function resetForm(){
+  resetRoutePoints();
+  document.getElementById("km").value = "";
+  document.getElementById("minutes").value = "";
+  document.getElementById("manualAmount").value = "";
+  document.querySelector('input[name="transportType"][value="car"]').checked = true;
+  document.getElementById("returnTrip").checked = false;
+  toggleTransportType();
+}
+
+function deleteTrip(index){
+  const trip = getFilteredTrips()[index];
+
+  if(!trip || !trip.id){
+    alert("Не удалось найти запись для удаления");
+    return;
+  }
+
+  if(!confirm("Удалить запись?")) return;
+
+  setStatus("Удаляю запись...");
+
+  google.script.run
+    .withSuccessHandler(function(){
+      loadTrips();
+    })
+    .withFailureHandler(function(error){
+      alert("Ошибка удаления: " + error.message);
+      setStatus("Ошибка удаления");
+    })
+    .deleteTripFromSheet(trip.id);
+}
+
+function getFilteredTrips(){
+  const month = document.getElementById("monthFilter").value;
+
+  if(!month){
+    return trips;
+  }
+
+  return trips.filter(trip => String(trip.date).startsWith(month));
+}
+
+function showTrips(){
+  const list = document.getElementById("tripList");
+  const filteredTrips = getFilteredTrips();
+
+  list.innerHTML = "";
+  let total = 0;
+
+  if(filteredTrips.length === 0){
+    list.innerHTML = `
+      <tr>
+        <td colspan="8" class="empty">Нет записей за выбранный период</td>
+      </tr>
+    `;
+  }
+
+  filteredTrips.forEach((trip, index)=>{
+    const amount = Number(trip.finalAmount || 0);
+    total += amount;
+    const typeText = trip.transportType === "taxi" ? "🚕 Такси" : "🚗 Своя машина";
+
+    list.innerHTML += `
+      <tr>
+        <td>${formatDate(trip.date)}</td>
+        <td>${trip.route || "-"}</td>
+        <td>${typeText}</td>
+        <td>${trip.transportType === "taxi" ? "-" : (trip.km || 0) + " км"}</td>
+        <td>${trip.transportType === "taxi" ? "-" : (trip.minutes || 0) + " мин"}</td>
+        <td>${trip.isReturn ? '<span class="badge">Да</span>' : 'Нет'}</td>
+        <td>${amount.toFixed(2)} сомони</td>
+        <td><button class="delete" onclick="deleteTrip(${index})">X</button></td>
+      </tr>
+    `;
+  });
+
+  const month = document.getElementById("monthFilter").value;
+  const text = month ? "Итого за месяц: " : "Итого: ";
+
+  document.getElementById("total").innerText = text + total.toFixed(2) + " сомони";
+}
+
+function clearFilter(){
+  document.getElementById("monthFilter").value = "";
+  showTrips();
+}
+
+function generateReport(){
+  const filteredTrips = getFilteredTrips();
+  const month = document.getElementById("monthFilter").value;
+  let total = filteredTrips.reduce((sum,t)=>sum + Number(t.finalAmount || 0),0);
+
+  let report = "ОТЧЕТ ПО ПОЕЗДКАМ\n";
+
+  if(month){
+    report += "Месяц: " + formatMonth(month) + "\n";
+  }else{
+    report += "Период: все записи\n";
+  }
+
+  report += "\n";
+
+  filteredTrips.forEach((t,i)=>{
+    const amount = Number(t.finalAmount || 0);
+
+    report += `${i+1}. Дата: ${formatDate(t.date)}\n`;
+    report += `Маршрут: ${t.route || "-"}\n`;
+    report += `Транспорт: ${t.transportType === "taxi" ? "Такси" : "Своя машина"}\n`;
+
+    if(t.transportType === "taxi"){
+      report += `Сумма такси: ${amount.toFixed(2)} сомони\n`;
+    }else{
+      report += `Километраж: ${t.km || 0} км\n`;
+      report += `Время поездки: ${t.minutes || 0} минут\n`;
+      report += `Стоимость маршрута: ${(calculateKmPrice(Number(t.km) || 0)).toFixed(2)} сомони\n`;
+      const extraMinutes = (Number(t.minutes) || 0) > FREE_MINUTES ? (Number(t.minutes) || 0) - FREE_MINUTES : 0;
+      report += `Доп. минуты после 20 мин: ${extraMinutes} минут\n`;
+      report += `Стоимость доп. времени: ${(extraMinutes * PRICE_PER_EXTRA_MINUTE).toFixed(2)} сомони\n`;
+    }
+
+    report += `Обратно: ${t.isReturn ? "Да" : "Нет"}\n`;
+    report += `Итоговая сумма: ${amount.toFixed(2)} сомони\n\n`;
+  });
+
+  report += "ИТОГО: " + total.toFixed(2) + " сомони";
+
+  const blob = new Blob([report], {type:"text/plain"});
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = month ? `otchet-${month}.txt` : "otchet-vse-poezdki.txt";
+  link.click();
+}
+
+function formatDate(date){
+  if(!date) return "-";
+  const parts = String(date).split("-");
+  if(parts.length !== 3) return date;
+  const [year, month, day] = parts;
+  return `${day}.${month}.${year}`;
+}
+
+function formatMonth(monthValue){
+  const [year, month] = monthValue.split("-");
+  const months = [
+    "январь","февраль","март","апрель","май","июнь",
+    "июль","август","сентябрь","октябрь","ноябрь","декабрь"
+  ];
+
+  return months[Number(month)-1] + " " + year;
+}
+
+document.getElementById("date").valueAsDate = new Date();
+
+toggleTransportType();
+loadTrips();
+calculatePrice();
+</script>
+
+</body>
+</html>
