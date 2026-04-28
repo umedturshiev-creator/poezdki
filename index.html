@@ -160,7 +160,17 @@
     textarea { resize:vertical; min-height:76px; }
 
     .row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-    .mobileTwo { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .mobileTwo {
+  display: grid;
+  grid-template-columns: 45% 55%;
+  gap: 10px;
+  align-items: end;
+}
+
+    input[type="date"] {
+  padding: 10px 8px;
+  font-size: 14px;
+}
 
     .transport {
       display:grid;
@@ -168,6 +178,12 @@
       gap:12px;
       margin-bottom:14px;
     }
+
+    .mobileTwo input,
+.mobileTwo select {
+  width: 100%;
+  min-width: 0;
+}
 
     button {
       border:none;
