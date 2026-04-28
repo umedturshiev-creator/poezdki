@@ -8,120 +8,549 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Smartpay Trips" />
   <link rel="manifest" href="manifest.json" />
+
   <title>Smartpay — Учет поездок</title>
+
   <style>
-    :root{--bg1:#052f3f;--bg2:#111827;--glass:rgba(255,255,255,.13);--border:rgba(255,255,255,.22);--text:#fff;--muted:#b8ddf3;--green:#22c55e;--red:#ef4444;--shadow:0 24px 80px rgba(0,0,0,.28)}
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    html{scroll-behavior:smooth}
-    body{margin:0;min-height:100vh;font-family:Inter,Arial,sans-serif;color:var(--text);background:radial-gradient(circle at top left,rgba(14,165,233,.42),transparent 34%),radial-gradient(circle at bottom right,rgba(109,40,217,.42),transparent 36%),linear-gradient(135deg,var(--bg1),var(--bg2));overflow-x:hidden}
-    body:before{content:"";position:fixed;inset:0;background:linear-gradient(120deg,transparent,rgba(255,255,255,.05),transparent);animation:shine 7s ease-in-out infinite;pointer-events:none}
-    @keyframes shine{0%,100%{transform:translateX(-40%);opacity:.3}50%{transform:translateX(40%);opacity:.8}}
-    @keyframes rise{from{transform:translateY(12px);opacity:0}to{transform:translateY(0);opacity:1}}
-    .app{width:min(1180px,100%);margin:0 auto;padding:22px;padding-bottom:90px}
-    .header{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:18px;animation:rise .45s ease both}
-    .brand{display:flex;align-items:center;gap:14px}
-    .logoBox{width:58px;height:58px;border-radius:22px;background:linear-gradient(135deg,rgba(255,255,255,.24),rgba(255,255,255,.08));display:grid;place-items:center;border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden}
-    .logoText{font-weight:900;font-size:18px;letter-spacing:-1px}
-    h1{margin:0;font-size:30px;letter-spacing:-.6px}.subtitle{color:var(--muted);font-size:14px;margin-top:4px}
-    .grid{display:grid;grid-template-columns:1.08fr .92fr;gap:18px;align-items:start}
-    .card{background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:28px;padding:20px;box-shadow:var(--shadow);animation:rise .5s ease both}
-    .card h2{margin:0 0 16px;font-size:20px;letter-spacing:-.25px}
-    label{display:block;margin-bottom:7px;color:var(--muted);font-size:13px;font-weight:800}
-    input,select,textarea{width:100%;border:1px solid rgba(255,255,255,.22);border-radius:18px;padding:14px;outline:none;color:#fff;background:rgba(255,255,255,.13);font-size:15px;margin-bottom:14px;transition:.2s ease}
-    input:focus,select:focus,textarea:focus{border-color:rgba(14,165,233,.8);box-shadow:0 0 0 4px rgba(14,165,233,.14);background:rgba(255,255,255,.18)}
-    option{color:#111827}textarea{resize:vertical;min-height:76px}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    .transport{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
-    button{border:none;color:#fff;padding:14px 18px;border-radius:18px;font-weight:900;cursor:pointer;background:linear-gradient(135deg,#6d28d9,#2563eb);transition:.18s ease;box-shadow:0 12px 30px rgba(0,0,0,.16)}
-    button:active{transform:scale(.98)}button:hover{filter:brightness(1.08);transform:translateY(-1px)}
-    .btnFull{width:100%;margin-top:6px}.btnGreen{background:linear-gradient(135deg,#22c55e,#16a34a)}.btnRed{background:linear-gradient(135deg,#ef4444,#b91c1c)}.btnGhost{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.25);box-shadow:none}
-    .transport button{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.25);box-shadow:none}
-    .transport button.active{background:linear-gradient(135deg,#0ea5e9,#2563eb);box-shadow:0 14px 32px rgba(14,165,233,.22)}
-    .totalBox{padding:18px;background:linear-gradient(135deg,rgba(14,165,233,.26),rgba(34,197,94,.18));border:1px solid rgba(14,165,233,.45);border-radius:22px;margin-bottom:14px}
-    .totalBox span{display:block;color:var(--muted);font-size:13px;margin-bottom:6px}.totalBox strong{font-size:28px;letter-spacing:-.5px}
-    .switchLine{display:flex;align-items:center;gap:10px;margin-bottom:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:12px}.switchLine input{width:22px;height:22px;margin:0}
-    .hidden{display:none!important}.filters{display:grid;grid-template-columns:1fr auto;gap:10px;margin-bottom:14px}.reportGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-    .mini{padding:14px;border-radius:20px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.16)}.mini span{color:var(--muted);font-size:12px}.mini strong{display:block;font-size:20px;margin-top:5px}
-    .employeeReport{padding:12px;border-radius:18px;background:rgba(255,255,255,.09);margin-bottom:8px;font-size:14px}
-    .exportActions{display:none;gap:10px;margin-top:10px}.exportActions.show{display:grid;grid-template-columns:1fr 1fr}
-    .list{display:grid;gap:12px;max-height:520px;overflow:auto;padding-right:4px}
-    .trip{padding:15px;border-radius:22px;background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.16);transition:.2s ease;animation:rise .35s ease both}
-    .trip:hover{background:rgba(255,255,255,.15);transform:translateY(-1px)}.tripTop{display:flex;justify-content:space-between;gap:10px;margin-bottom:8px}.tripTitle{font-weight:900}.tripMeta{color:var(--muted);font-size:13px;line-height:1.5}.tripTotal{font-size:19px;font-weight:950;color:#a7f3d0;white-space:nowrap}
-    .extraPointRow{position:relative;align-items:end}.smallRemove{min-height:42px;padding:10px 12px;border-radius:14px;font-size:13px;width:auto;margin-bottom:14px}
-    .hint{color:var(--muted);font-size:12px;margin-top:-6px;margin-bottom:12px}
-    .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);padding:14px 18px;background:rgba(0,0,0,.78);border:1px solid rgba(255,255,255,.2);border-radius:18px;display:none;z-index:1000;box-shadow:var(--shadow)}
-    .bottomBar{display:none}
-    @media(max-width:768px){.app{padding:12px;padding-bottom:92px}h1{font-size:22px}.subtitle{font-size:12px}.logoBox{width:48px;height:48px;border-radius:17px}.logoText{font-size:15px}.header{flex-direction:column;align-items:stretch;gap:12px}.brand{align-items:center}.grid{grid-template-columns:1fr;gap:14px}.card{padding:16px;border-radius:24px}.row,.transport,.filters,.reportGrid,.exportActions.show{grid-template-columns:1fr;gap:0}input,select,textarea,button{font-size:16px;min-height:50px}.tripTop{flex-direction:column}.tripTotal{font-size:22px}.list{max-height:none}.smallRemove{width:100%;min-height:40px;padding:9px 12px;font-size:12px;margin-top:-6px}.bottomBar{display:grid;grid-template-columns:1fr 1fr;position:fixed;left:12px;right:12px;bottom:12px;gap:10px;z-index:900}.bottomBar button{border-radius:20px;min-height:54px;box-shadow:0 20px 50px rgba(0,0,0,.35)}}
-    @media print{body{background:#fff;color:#111}.header,.grid,.bottomBar,#tripListTitle{display:none!important}.card{box-shadow:none;border:none;background:#fff;color:#111}.trip{color:#111;border:1px solid #ddd;background:#fff}.tripMeta{color:#333}}
+    :root {
+      --bg1: #052f3f;
+      --bg2: #111827;
+      --glass: rgba(255,255,255,.13);
+      --glass2: rgba(255,255,255,.18);
+      --border: rgba(255,255,255,.22);
+      --text: #ffffff;
+      --muted: #b8ddf3;
+      --green: #22c55e;
+      --red: #ef4444;
+      --blue: #0ea5e9;
+      --shadow: 0 24px 80px rgba(0,0,0,.28);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(14,165,233,.42), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(109,40,217,.42), transparent 36%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,.05), transparent);
+      animation: shine 7s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes shine {
+      0%,100% { transform: translateX(-40%); opacity: .3; }
+      50% { transform: translateX(40%); opacity: .8; }
+    }
+
+    @keyframes rise {
+      from { transform: translateY(12px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes pulseSave {
+      0% { transform: scale(1); box-shadow: 0 0 0 rgba(34,197,94,0); }
+      50% { transform: scale(.985); box-shadow: 0 0 32px rgba(34,197,94,.45); }
+      100% { transform: scale(1); box-shadow: 0 0 0 rgba(34,197,94,0); }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .app {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      padding: 22px;
+      padding-bottom: 28px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 18px;
+      animation: rise .45s ease both;
+    }
+
+    .brand { display:flex; align-items:center; gap:14px; }
+
+    .logoBox {
+      width:60px; height:60px; border-radius:22px;
+      background: linear-gradient(135deg, rgba(255,255,255,.24), rgba(255,255,255,.08));
+      display:grid; place-items:center;
+      border:1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      padding: 8px;
+    }
+
+    .logoBox img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.25));
+    }
+
+    h1 { margin:0; font-size:30px; letter-spacing:-.6px; }
+    .subtitle { color:var(--muted); font-size:14px; margin-top:4px; }
+
+    .grid {
+      display:grid;
+      grid-template-columns: 1.08fr .92fr;
+      gap:18px;
+      align-items:start;
+    }
+
+    .card {
+      background: var(--glass);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      animation: rise .5s ease both;
+    }
+
+    .card h2 { margin:0 0 16px; font-size:20px; letter-spacing:-.25px; }
+
+    label {
+      display:block;
+      margin-bottom:7px;
+      color:var(--muted);
+      font-size:13px;
+      font-weight:800;
+    }
+
+    input, select, textarea {
+      width:100%;
+      border:1px solid rgba(255,255,255,.22);
+      border-radius:18px;
+      padding:14px;
+      outline:none;
+      color:#fff;
+      background: rgba(255,255,255,.13);
+      font-size:15px;
+      margin-bottom:14px;
+      transition:.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(14,165,233,.8);
+      box-shadow: 0 0 0 4px rgba(14,165,233,.14);
+      background: rgba(255,255,255,.18);
+    }
+
+    option { color:#111827; }
+    textarea { resize:vertical; min-height:76px; }
+
+    .row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .mobileTwo { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+
+    .transport {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    button {
+      border:none;
+      color:#fff;
+      padding:14px 18px;
+      border-radius:18px;
+      font-weight:900;
+      cursor:pointer;
+      background: linear-gradient(135deg,#6d28d9,#2563eb);
+      transition:.18s ease;
+      box-shadow: 0 12px 30px rgba(0,0,0,.16);
+    }
+
+    button:active { transform: scale(.98); }
+    button:hover { filter:brightness(1.08); transform: translateY(-1px); }
+
+    .btnFull { width:100%; margin-top:6px; }
+    .btnGreen { background:linear-gradient(135deg,#22c55e,#16a34a); }
+    .btnRed { background:linear-gradient(135deg,#ef4444,#b91c1c); }
+    .btnGhost { background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.25); box-shadow:none; }
+
+    .transport button {
+      background: rgba(255,255,255,.13);
+      border: 1px solid rgba(255,255,255,.25);
+      box-shadow: none;
+    }
+
+    .transport button.active {
+      background: linear-gradient(135deg,#0ea5e9,#2563eb);
+      box-shadow: 0 14px 32px rgba(14,165,233,.22);
+    }
+
+    .saveBtn.saving {
+      pointer-events: none;
+      animation: pulseSave .9s ease-in-out infinite;
+      opacity: .92;
+    }
+
+    .saveBtn.saving::before {
+      content: "";
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 3px solid rgba(255,255,255,.45);
+      border-top-color: #fff;
+      border-radius: 50%;
+      margin-right: 8px;
+      vertical-align: -3px;
+      animation: spin .8s linear infinite;
+    }
+
+    .totalBox {
+      padding:18px;
+      background: linear-gradient(135deg, rgba(14,165,233,.26), rgba(34,197,94,.18));
+      border:1px solid rgba(14,165,233,.45);
+      border-radius:22px;
+      margin-bottom:14px;
+    }
+
+    .totalBox span { display:block; color:var(--muted); font-size:13px; margin-bottom:6px; }
+    .totalBox strong { font-size:28px; letter-spacing:-.5px; }
+
+    .switchLine {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:14px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius:18px;
+      padding:12px;
+    }
+
+    .switchLine input { width:22px; height:22px; margin:0; }
+
+    .hidden { display:none !important; }
+
+    .filters { display:grid; grid-template-columns:1fr auto; gap:10px; margin-bottom:14px; }
+
+    .reportGrid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px; }
+
+    .mini {
+      padding:14px;
+      border-radius:20px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.16);
+    }
+
+    .mini span { color:var(--muted); font-size:12px; }
+    .mini strong { display:block; font-size:20px; margin-top:5px; }
+
+    .employeeReport {
+      padding:12px;
+      border-radius:18px;
+      background:rgba(255,255,255,.09);
+      margin-bottom:8px;
+      font-size:14px;
+    }
+
+    .exportActions {
+      display:none;
+      gap:10px;
+      margin-top:10px;
+    }
+
+    .exportActions.show {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+    }
+
+    .list {
+      display:grid;
+      gap:12px;
+      max-height:520px;
+      overflow:auto;
+      padding-right:4px;
+    }
+
+    .trip {
+      padding:15px;
+      border-radius:22px;
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(255,255,255,.16);
+      transition:.2s ease;
+      animation: rise .35s ease both;
+    }
+
+    .trip:hover { background:rgba(255,255,255,.15); transform: translateY(-1px); }
+
+    .tripTop { display:flex; justify-content:space-between; gap:10px; margin-bottom:8px; }
+    .tripTitle { font-weight:900; }
+    .tripMeta { color:var(--muted); font-size:13px; line-height:1.5; }
+    .tripTotal { font-size:19px; font-weight:950; color:#a7f3d0; white-space:nowrap; }
+
+    .extraPointRow { position: relative; align-items:end; }
+
+    .smallRemove {
+      min-height:42px;
+      padding:10px 12px;
+      border-radius:14px;
+      font-size:13px;
+      width:auto;
+      margin-bottom:14px;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: -6px;
+      margin-bottom: 12px;
+    }
+
+    .toast {
+      position:fixed;
+      left:50%;
+      bottom:24px;
+      transform:translateX(-50%);
+      padding:14px 18px;
+      background:rgba(0,0,0,.78);
+      border:1px solid rgba(255,255,255,.2);
+      border-radius:18px;
+      display:none;
+      z-index:1000;
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 768px) {
+      .app { padding:12px 12px 28px; }
+      h1 { font-size:22px; }
+      .subtitle { font-size:12px; }
+      .logoBox { width:48px; height:48px; border-radius:17px; padding:6px; }
+
+      .header { flex-direction:column; align-items:stretch; gap:12px; }
+      .brand { align-items:center; }
+
+      .grid { grid-template-columns:1fr; gap:14px; }
+      .card { padding:16px; border-radius:24px; }
+
+      .row,
+      .filters,
+      .reportGrid,
+      .exportActions.show {
+        grid-template-columns:1fr;
+        gap:0;
+      }
+
+      .mobileTwo,
+      .transport {
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+      }
+
+      .mobileTwo input,
+      .mobileTwo select,
+      .transport button {
+        min-height:44px;
+        font-size:14px;
+        padding:10px 12px;
+        border-radius:15px;
+      }
+
+      input, select, textarea, button {
+        font-size:16px;
+        min-height:50px;
+      }
+
+      .tripTop { flex-direction:column; }
+      .tripTotal { font-size:22px; }
+      .list { max-height:none; }
+
+      .smallRemove {
+        width: auto;
+        min-height: 34px;
+        padding: 7px 10px;
+        font-size: 11px;
+        margin-top: -8px;
+        margin-bottom: 12px;
+        border-radius: 12px;
+      }
+
+      .extraPointRow {
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+      }
+    }
+
+    @media print {
+      body { background:#fff; color:#111; }
+      .header, .grid, #tripListTitle { display:none !important; }
+      .card { box-shadow:none; border:none; background:#fff; color:#111; }
+      .trip { color:#111; border:1px solid #ddd; background:#fff; }
+      .tripMeta { color:#333; }
+    }
   </style>
 </head>
+
 <body>
   <div class="app">
     <div class="header">
-      <div class="brand"><div class="logoBox"><div class="logoText">S PAY</div></div><div><h1>🚗 Учет поездок</h1><div class="subtitle">Smartpay — контроль поездок сотрудников</div></div></div>
+      <div class="brand">
+        <div class="logoBox"><img src="smartpay-logo.png" alt="Smartpay"></div>
+        <div>
+          <h1>🚗 Учет поездок</h1>
+          <div class="subtitle">Smartpay — контроль поездок сотрудников</div>
+        </div>
+      </div>
       <button class="btnGhost" onclick="reloadData()">🔄 Обновить</button>
     </div>
 
     <div class="grid">
-      <div class="card" id="formCard">
-        <h2>Новая поездка</h2>
-        <div class="row">
-          <div><label>Дата поездки</label><input type="date" id="date"></div>
-          <div><label>Сотрудник</label><select id="employee"></select></div>
+      <div class="card hidden" id="formCard">
+        <button class="btnFull btnGhost" onclick="toggleForm()" id="formToggleInside">
+          ✖️ Скрыть новую поездку
+        </button>
+
+        <h2 style="margin-top:16px;">Новая поездка</h2>
+
+        <div class="mobileTwo">
+          <div>
+            <label>Дата поездки</label>
+            <input type="date" id="date">
+          </div>
+          <div>
+            <label>Сотрудник</label>
+            <select id="employee"></select>
+          </div>
         </div>
 
         <div id="routeFields">
           <div class="row">
-            <div><label>Точка А</label><select id="from"></select></div>
-            <div><label>Точка Б</label><select id="to"></select></div>
+            <div>
+              <label>Точка А</label>
+              <input list="pointsList" id="from" placeholder="Откуда">
+            </div>
+            <div>
+              <label>Точка Б</label>
+              <input list="pointsList" id="to" placeholder="Куда">
+            </div>
           </div>
         </div>
 
-        <div class="hint">Маршруты из истории будут подставляться автоматически по выбранным точкам.</div>
+        <datalist id="pointsList"></datalist>
+
+        <div class="hint">Можно выбрать точку из списка и дописать текст, например: “Банк Эсхата”.</div>
+
         <button class="btnFull btnGhost" onclick="addRoutePoint()">+ Добавить промежуточную точку</button>
 
         <label style="margin-top:14px;">Тип транспорта</label>
         <div class="transport">
-          <button id="carBtn" class="active" onclick="setTransport('car')">🚗 Своя машина</button>
+          <button id="carBtn" class="active" onclick="setTransport('car')">🚗 Своя</button>
           <button id="taxiBtn" onclick="setTransport('taxi')">🚕 Такси</button>
         </div>
 
         <div id="carFields" class="row">
-          <div><label>Километраж</label><input type="number" id="km" min="0" step="0.1" placeholder="Например: 12"></div>
-          <div><label>Время поездки, минут</label><input type="number" id="minutes" min="0" step="1" placeholder="Например: 21"></div>
+          <div>
+            <label>Километраж</label>
+            <input type="number" id="km" min="0" step="0.1" placeholder="Например: 12">
+          </div>
+          <div>
+            <label>Время поездки, минут</label>
+            <input type="number" id="minutes" min="0" step="1" placeholder="Например: 21">
+          </div>
         </div>
 
         <div id="taxiFields" class="hidden">
-          <label>Сумма такси</label><input type="number" id="taxiAmount" min="0" step="0.01" placeholder="Например: 35">
+          <label>Сумма такси</label>
+          <input type="number" id="taxiAmount" min="0" step="0.01" placeholder="Например: 35">
         </div>
 
-        <div class="switchLine"><input type="checkbox" id="roundTrip"><strong>Туда и обратно</strong></div>
-        <label>Комментарий</label><textarea id="comment" placeholder="Например: встреча с клиентом"></textarea>
-        <div class="totalBox"><span>Итоговая сумма</span><strong id="totalPreview">0.00 сомони</strong></div>
-        <button class="btnFull btnGreen" onclick="saveTrip()">✅ Сохранить поездку</button>
+        <div class="switchLine">
+          <input type="checkbox" id="roundTrip">
+          <strong>Туда и обратно</strong>
+        </div>
+
+        <label>Комментарий</label>
+        <textarea id="comment" placeholder="Например: встреча с клиентом"></textarea>
+
+        <div class="totalBox">
+          <span>Итоговая сумма</span>
+          <strong id="totalPreview">0.00 сомони</strong>
+        </div>
+
+        <button class="btnFull btnGreen saveBtn" id="saveBtn" onclick="saveTrip()">✅ Сохранить поездку</button>
       </div>
 
       <div class="card">
-        <button class="btnFull btnGhost" onclick="toggleReport()" id="reportToggleBtn">📊 Открыть отчет за месяц</button>
+        <button class="btnFull btnGhost" onclick="toggleForm()" id="formToggleBtn">
+          ➕ Добавить новую поездку
+        </button>
+
+        <button class="btnFull btnGhost" onclick="toggleReport()" id="reportToggleBtn" style="margin-top:12px;">
+          📊 Открыть отчет за месяц
+        </button>
+
         <div id="reportPanel" class="hidden" style="margin-top:16px;">
           <h2>Отчет за месяц</h2>
-          <div class="filters"><select id="monthFilter" onchange="applyMonthFilter()"><option value="">Все месяцы</option></select><button onclick="applyMonthFilter()">Показать</button></div>
-          <div class="reportGrid"><div class="mini"><span>Поездок</span><strong id="reportCount">0</strong></div><div class="mini"><span>Сумма</span><strong id="reportTotal">0</strong></div><div class="mini"><span>Месяц</span><strong id="reportMonth">Все</strong></div></div>
+
+          <div class="filters">
+            <select id="monthFilter" onchange="applyMonthFilter()">
+              <option value="">Все месяцы</option>
+            </select>
+            <button onclick="applyMonthFilter()">Показать</button>
+          </div>
+
+          <div class="reportGrid">
+            <div class="mini">
+              <span>Поездок</span>
+              <strong id="reportCount">0</strong>
+            </div>
+            <div class="mini">
+              <span>Сумма</span>
+              <strong id="reportTotal">0</strong>
+            </div>
+            <div class="mini">
+              <span>Месяц</span>
+              <strong id="reportMonth">Все</strong>
+            </div>
+          </div>
+
           <div id="employeeReport"></div>
-          <button class="btnFull btnGhost" onclick="toggleExportActions()" id="exportToggleBtn">📤 Экспорт отчета</button>
-          <div class="exportActions" id="exportActions"><button onclick="exportPDF()">📄 PDF</button><button onclick="exportExcel()">📊 Excel</button></div>
+
+          <button class="btnFull btnGhost" onclick="toggleExportActions()" id="exportToggleBtn">
+            📤 Экспорт отчета
+          </button>
+
+          <div class="exportActions" id="exportActions">
+            <button onclick="exportPDF()">📄 PDF</button>
+            <button onclick="exportExcel()">📊 Excel</button>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="card" style="margin-top:18px;"><h2 id="tripListTitle">Список поездок</h2><div id="tripList" class="list"></div></div>
+    <div class="card" style="margin-top:18px;">
+      <h2 id="tripListTitle">Список поездок</h2>
+      <div id="tripList" class="list"></div>
+    </div>
   </div>
 
-  <div class="bottomBar"><button class="btnGhost" onclick="scrollToForm()">➕ Новая</button><button class="btnGhost" onclick="toggleReportAndScroll()">📊 Отчет</button></div>
   <div id="toast" class="toast"></div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzRYeRid9bSeWTvbBRYlIhSEuHC93qfNQrTnGkjscAhFTPPtRaOWNzul5Odnr332pOT/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzhfAM3eSKrViMWK6Nf9cCrD3x8fvCjsk0iAO00iA7ivUUu5lYiRSPwd9jB3nXlgTUC/exec';
 
     let transportType = 'car';
     let allTrips = [];
@@ -189,9 +618,8 @@
         employeesCache = data.employees || [];
         pointsCache = data.points || [];
 
-        fillSelect('employee', employeesCache, 'Выберите сотрудника');
-        fillSelect('from', pointsCache, 'Выберите точку А');
-        fillSelect('to', pointsCache, 'Выберите точку Б');
+        fillEmployeeSelect();
+        fillPointsDatalist();
         fillMonths(data.months || []);
 
         setDefaultEmployee();
@@ -203,33 +631,29 @@
       }
     }
 
-    function fillSelect(id, items, placeholder) {
-      const el = document.getElementById(id);
+    function fillEmployeeSelect() {
+      const el = document.getElementById('employee');
       const current = el.value;
-      el.innerHTML = `<option value="">${placeholder}</option>`;
+      el.innerHTML = '<option value="">Выберите сотрудника</option>';
 
-      items.forEach(item => {
+      employeesCache.forEach(item => {
         const option = document.createElement('option');
         option.value = item;
         option.textContent = item;
         el.appendChild(option);
       });
 
-      if (current && items.includes(current)) el.value = current;
+      if (current && employeesCache.includes(current)) el.value = current;
     }
 
-    function makePointSelect(className = 'extraPoint') {
-      const select = document.createElement('select');
-      select.className = className;
-      select.innerHTML = '<option value="">Выберите точку</option>';
+    function fillPointsDatalist() {
+      const list = document.getElementById('pointsList');
+      list.innerHTML = '';
       pointsCache.forEach(point => {
         const option = document.createElement('option');
         option.value = point;
-        option.textContent = point;
-        select.appendChild(option);
+        list.appendChild(option);
       });
-      select.addEventListener('change', applyRouteHistory);
-      return select;
     }
 
     function setDefaultEmployee() {
@@ -260,23 +684,37 @@
     }
 
     function formatMonthName(month) {
-      const names = {'01':'Январь','02':'Февраль','03':'Март','04':'Апрель','05':'Май','06':'Июнь','07':'Июль','08':'Август','09':'Сентябрь','10':'Октябрь','11':'Ноябрь','12':'Декабрь'};
+      const names = {
+        '01':'Январь','02':'Февраль','03':'Март','04':'Апрель',
+        '05':'Май','06':'Июнь','07':'Июль','08':'Август',
+        '09':'Сентябрь','10':'Октябрь','11':'Ноябрь','12':'Декабрь'
+      };
       if (!month || !month.includes('-')) return month;
       const [year, m] = month.split('-');
       return `${names[m] || m} ${year}`;
+    }
+
+    function toggleForm() {
+      const form = document.getElementById('formCard');
+      const btn = document.getElementById('formToggleBtn');
+
+      form.classList.toggle('hidden');
+      btn.textContent = form.classList.contains('hidden')
+        ? '➕ Добавить новую поездку'
+        : '✖️ Скрыть новую поездку';
+
+      if (!form.classList.contains('hidden')) {
+        setTimeout(() => form.scrollIntoView({ behavior:'smooth', block:'start' }), 80);
+      }
     }
 
     function toggleReport() {
       const panel = document.getElementById('reportPanel');
       const btn = document.getElementById('reportToggleBtn');
       panel.classList.toggle('hidden');
-      btn.textContent = panel.classList.contains('hidden') ? '📊 Открыть отчет за месяц' : '📊 Скрыть отчет за месяц';
-    }
-
-    function toggleReportAndScroll() {
-      const panel = document.getElementById('reportPanel');
-      if (panel.classList.contains('hidden')) toggleReport();
-      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      btn.textContent = panel.classList.contains('hidden')
+        ? '📊 Открыть отчет за месяц'
+        : '📊 Скрыть отчет за месяц';
     }
 
     function toggleExportActions() {
@@ -302,33 +740,25 @@
 
       const block = document.createElement('div');
       block.className = 'row extraPointRow';
+      block.innerHTML = `
+        <div>
+          <label>Точка ${letter}</label>
+          <input list="pointsList" class="extraPoint" placeholder="Введите или выберите точку ${letter}">
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <button type="button" class="btnRed smallRemove" onclick="this.closest('.extraPointRow').remove(); applyRouteHistory();">Удалить</button>
+        </div>
+      `;
 
-      const left = document.createElement('div');
-      left.innerHTML = `<label>Точка ${letter}</label>`;
-      left.appendChild(makePointSelect('extraPoint'));
-
-      const right = document.createElement('div');
-      right.innerHTML = '<label>&nbsp;</label>';
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'btnRed smallRemove';
-      btn.textContent = 'Удалить';
-      btn.onclick = () => {
-        block.remove();
-        applyRouteHistory();
-      };
-      right.appendChild(btn);
-
-      block.appendChild(left);
-      block.appendChild(right);
       container.appendChild(block);
-
+      block.querySelector('.extraPoint').addEventListener('change', applyRouteHistory);
       routePointIndex++;
     }
 
     function applyRouteHistory() {
-      const from = document.getElementById('from').value;
-      const to = document.getElementById('to').value;
+      const from = document.getElementById('from').value.trim();
+      const to = document.getElementById('to').value.trim();
       if (!from || !to) return;
 
       const sameRoute = allTrips.find(t => {
@@ -347,16 +777,18 @@
       const middle = parts.slice(1, -1);
       middle.forEach(point => {
         addRoutePoint();
-        const selects = document.querySelectorAll('.extraPoint');
-        const last = selects[selects.length - 1];
-        if ([...last.options].some(o => o.value === point)) last.value = point;
+        const inputs = document.querySelectorAll('.extraPoint');
+        inputs[inputs.length - 1].value = point;
       });
 
       showToast('Маршрут подставлен из истории');
     }
 
     function getPayload() {
-      const extraPoints = Array.from(document.querySelectorAll('.extraPoint')).map(input => input.value.trim()).filter(Boolean);
+      const extraPoints = Array.from(document.querySelectorAll('.extraPoint'))
+        .map(input => input.value.trim())
+        .filter(Boolean);
+
       const fromValue = document.getElementById('from').value.trim();
       const toValue = document.getElementById('to').value.trim();
 
@@ -395,12 +827,18 @@
     }
 
     async function saveTrip() {
+      const saveBtn = document.getElementById('saveBtn');
+
       try {
         const payload = getPayload();
+
         if (!payload.date) return alert('Укажите дату');
         if (!payload.employee) return alert('Укажите сотрудника');
         if (!payload.from) return alert('Укажите точку А');
         if (!payload.to) return alert('Укажите конечную точку');
+
+        saveBtn.classList.add('saving');
+        saveBtn.textContent = 'Сохраняем поездку...';
 
         const result = await api('addTrip', { payload: JSON.stringify(payload) });
         if (!result.ok) throw new Error(result.error || 'Ошибка сохранения');
@@ -412,20 +850,30 @@
         fillMonths(result.months || []);
         applyMonthFilter();
         showToast('Поездка сохранена');
+
+        document.getElementById('formCard').classList.add('hidden');
+        document.getElementById('formToggleBtn').textContent = '➕ Добавить новую поездку';
       } catch (err) {
         alert('Ошибка сохранения: ' + err.message);
+      } finally {
+        saveBtn.classList.remove('saving');
+        saveBtn.textContent = '✅ Сохранить поездку';
       }
     }
 
     function clearForm() {
       document.getElementById('date').valueAsDate = new Date();
+      document.getElementById('from').value = '';
+      document.getElementById('to').value = '';
       document.getElementById('km').value = '';
       document.getElementById('minutes').value = '';
       document.getElementById('taxiAmount').value = '';
       document.getElementById('comment').value = '';
       document.getElementById('roundTrip').checked = false;
+
       document.querySelectorAll('.extraPointRow').forEach(row => row.remove());
       routePointIndex = 3;
+
       setDefaultEmployee();
       updatePreview();
     }
@@ -460,7 +908,10 @@
           </div>
           <div class="tripMeta">
             📍 ${escapeHtml(trip.from)}<br>
-            ${trip.transport === 'Такси' ? `🚕 Такси: ${trip.taxiAmount || 0} с.` : `🚗 ${trip.km || 0} км · ${trip.minutes || 0} мин`}
+            ${trip.transport === 'Такси'
+              ? `🚕 Такси: ${trip.taxiAmount || 0} с.`
+              : `🚗 ${trip.km || 0} км · ${trip.minutes || 0} мин`
+            }
             ${trip.roundTrip === 'Да' ? '<br>🔁 Туда и обратно' : ''}
             ${trip.comment ? `<br>💬 ${escapeHtml(trip.comment)}` : ''}
           </div>
@@ -513,7 +964,15 @@
       `;
 
       trips.forEach(t => {
-        html += `<tr><td>${escapeHtml(t.date)}</td><td>${escapeHtml(t.employee)}</td><td>${escapeHtml(t.from)}</td><td>${escapeHtml(t.transport)}</td><td>${t.km || ''}</td><td>${t.minutes || ''}</td><td>${Number(t.total || 0).toFixed(2)}</td></tr>`;
+        html += `<tr>
+          <td>${escapeHtml(t.date)}</td>
+          <td>${escapeHtml(t.employee)}</td>
+          <td>${escapeHtml(t.from)}</td>
+          <td>${escapeHtml(t.transport)}</td>
+          <td>${t.km || ''}</td>
+          <td>${t.minutes || ''}</td>
+          <td>${Number(t.total || 0).toFixed(2)}</td>
+        </tr>`;
       });
 
       const total = trips.reduce((sum, t) => sum + Number(t.total || 0), 0);
@@ -533,8 +992,10 @@
       csv += 'Дата;Сотрудник;Маршрут;Транспорт;Километраж;Время;Такси;Туда и обратно;Сумма;Комментарий\n';
 
       trips.forEach(t => {
-        csv += [t.date, t.employee, t.from, t.transport, t.km || '', t.minutes || '', t.taxiAmount || '', t.roundTrip || '', Number(t.total || 0).toFixed(2), t.comment || '']
-          .map(v => `"${String(v).replaceAll('"', '""')}"`).join(';') + '\n';
+        csv += [
+          t.date, t.employee, t.from, t.transport, t.km || '', t.minutes || '',
+          t.taxiAmount || '', t.roundTrip || '', Number(t.total || 0).toFixed(2), t.comment || ''
+        ].map(v => `"${String(v).replaceAll('"', '""')}"`).join(';') + '\n';
       });
 
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -542,10 +1003,6 @@
       link.href = URL.createObjectURL(blob);
       link.download = `Smartpay_report_${monthName}.csv`;
       link.click();
-    }
-
-    function scrollToForm() {
-      document.getElementById('formCard').scrollIntoView({ behavior:'smooth', block:'start' });
     }
 
     function showToast(text) {
@@ -556,7 +1013,12 @@
     }
 
     function escapeHtml(text) {
-      return String(text || '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;");
+      return String(text || '')
+        .replaceAll('&','&amp;')
+        .replaceAll('<','&lt;')
+        .replaceAll('>','&gt;')
+        .replaceAll('"','&quot;')
+        .replaceAll("'","&#039;");
     }
 
     function registerPWA() {

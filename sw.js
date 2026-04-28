@@ -1,5 +1,12 @@
-const CACHE_NAME = 'smartpay-trips-v2';
-const ASSETS = ['./', './index.html', './manifest.json'];
+const CACHE_NAME = 'smartpay-trips-v3';
+const ASSETS = [
+  './',
+  './index.html',
+  './manifest.json',
+  './smartpay-logo.png',
+  './icon-192.png',
+  './icon-512.png'
+];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)));
@@ -7,9 +14,11 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('activate', event => {
-  event.waitUntil(caches.keys().then(keys =>
-    Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))
-  ));
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))
+    )
+  );
   self.clients.claim();
 });
 
