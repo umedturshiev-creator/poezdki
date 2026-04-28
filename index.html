@@ -366,21 +366,23 @@
           </div>
         </div>
 
-        <div class="row">
-          <div>
-            <label>Точка А</label>
-            <input list="pointsList" id="from" placeholder="Откуда">
-          </div>
+        <div id="routeFields">
+          <div class="row">
+            <div>
+              <label>Точка А</label>
+              <input list="pointsList" id="from" placeholder="Откуда">
+            </div>
 
-          <div>
-            <label>Точка Б</label>
-            <input list="pointsList" id="to" placeholder="Куда">
+            <div>
+              <label>Точка Б</label>
+              <input list="pointsList" id="to" placeholder="Куда">
+            </div>
           </div>
         </div>
 
         <datalist id="pointsList"></datalist>
 
-        <button class="btnFull btnGhost" onclick="addPointFromInputs()">+ Добавить точку</button>
+        <button class="btnFull btnGhost" onclick="addRoutePoint()">+ Добавить точку</button>
 
         <label style="margin-top:14px;">Тип транспорта</label>
         <div class="transport">
@@ -462,11 +464,12 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzoYctMaVyVHf0nbhm_q4gR9jmoXGiMNCaaFORKEFlcY_RzRq77Uy1Ib_3bNBAqUGA/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbywU34N4EJMwl_bCLM5BoUDif43oxYzLdTuh3Ji2JcuYbO3nFm4LDm42Bui8aydkVBO/exec';
 
     let transportType = 'car';
     let allTrips = [];
     let currentMonth = '';
+    let routePointIndex = 3;
 
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('date').valueAsDate = new Date();
@@ -552,11 +555,33 @@
       months.forEach(month => {
         const option = document.createElement('option');
         option.value = month;
-        option.textContent = month;
+        option.textContent = formatMonthName(month);
         select.appendChild(option);
       });
 
       select.value = selected;
+    }
+
+    function formatMonthName(month) {
+      const names = {
+        '01': 'Январь',
+        '02': 'Февраль',
+        '03': 'Март',
+        '04': 'Апрель',
+        '05': 'Май',
+        '06': 'Июнь',
+        '07': 'Июль',
+        '08': 'Август',
+        '09': 'Сентябрь',
+        '10': 'Октябрь',
+        '11': 'Ноябрь',
+        '12': 'Декабрь'
+      };
+
+      if (!month || !month.includes('-')) return month;
+
+      const [year, m] = month.split('-');
+      return `${names[m]} ${year}`;
     }
 
     function setTransport(type) {
@@ -571,12 +596,54 @@
       updatePreview();
     }
 
+    function addRoutePoint() {
+      const container = document.getElementById('routeFields');
+
+      const letters = {
+        3: 'C',
+        4: 'D',
+        5: 'E',
+        6: 'F',
+        7: 'G',
+        8: 'H'
+      };
+
+      const letter = letters[routePointIndex] || routePointIndex;
+
+      const block = document.createElement('div');
+      block.className = 'row extraPointRow';
+      block.innerHTML = `
+        <div>
+          <label>Точка ${letter}</label>
+          <input list="pointsList" class="extraPoint" placeholder="Введите точку ${letter}">
+        </div>
+
+        <div>
+          <label>&nbsp;</label>
+          <button type="button" class="btnRed btnFull" onclick="this.closest('.extraPointRow').remove()">Удалить точку</button>
+        </div>
+      `;
+
+      container.appendChild(block);
+      routePointIndex++;
+    }
+
     function getPayload() {
+      const extraPoints = Array.from(document.querySelectorAll('.extraPoint'))
+        .map(input => input.value.trim())
+        .filter(Boolean);
+
       return {
         date: document.getElementById('date').value,
         employee: document.getElementById('employee').value.trim(),
         from: document.getElementById('from').value.trim(),
         to: document.getElementById('to').value.trim(),
+        extraPoints: extraPoints,
+        routeText: [
+          document.getElementById('from').value.trim(),
+          ...extraPoints,
+          document.getElementById('to').value.trim()
+        ].filter(Boolean).join(' → '),
         transportType,
         km: Number(document.getElementById('km').value || 0),
         minutes: Number(document.getElementById('minutes').value || 0),
@@ -615,7 +682,7 @@
         if (!payload.date) return alert('Укажите дату');
         if (!payload.employee) return alert('Укажите сотрудника');
         if (!payload.from) return alert('Укажите точку А');
-        if (!payload.to) return alert('Укажите точку Б');
+        if (!payload.to) return alert('Укажите конечную точку');
 
         const result = await api('addTrip', {
           payload: JSON.stringify(payload)
@@ -641,6 +708,10 @@
       document.getElementById('taxiAmount').value = '';
       document.getElementById('comment').value = '';
       document.getElementById('roundTrip').checked = false;
+
+      document.querySelectorAll('.extraPointRow').forEach(row => row.remove());
+      routePointIndex = 3;
+
       updatePreview();
     }
 
@@ -659,25 +730,6 @@
         showToast('Запись удалена');
       } catch (err) {
         alert('Ошибка удаления: ' + err.message);
-      }
-    }
-
-    async function addPointFromInputs() {
-      const from = document.getElementById('from').value.trim();
-      const to = document.getElementById('to').value.trim();
-      const name = prompt('Введите новую точку:', from || to || '');
-
-      if (!name) return;
-
-      try {
-        const result = await api('addPoint', { name });
-
-        if (!result.ok) throw new Error(result.error || 'Ошибка');
-
-        fillDatalist('pointsList', result.points || []);
-        showToast('Точка добавлена');
-      } catch (err) {
-        alert('Ошибка: ' + err.message);
       }
     }
 
@@ -711,7 +763,7 @@
           </div>
 
           <div class="tripMeta">
-            📍 ${escapeHtml(trip.from)} → ${escapeHtml(trip.to)}<br>
+            📍 ${escapeHtml(trip.from)}<br>
             ${trip.transport === 'Такси'
               ? `🚕 Такси: ${trip.taxiAmount || 0} с.`
               : `🚗 ${trip.km || 0} км · ${trip.minutes || 0} мин`
@@ -727,13 +779,12 @@
 
     function renderReport(sourceTrips) {
       const trips = sourceTrips || allTrips;
-      const month = currentMonth || 'Все';
 
       const total = trips.reduce((sum, item) => sum + Number(item.total || 0), 0);
 
       document.getElementById('reportCount').textContent = trips.length;
       document.getElementById('reportTotal').textContent = total.toFixed(2);
-      document.getElementById('reportMonth').textContent = month;
+      document.getElementById('reportMonth').textContent = currentMonth ? formatMonthName(currentMonth) : 'Все';
 
       const map = {};
 
