@@ -985,7 +985,7 @@ function fillMonths(months) {
           <div class="tripTop">
             <div>
               <div class="tripTitle">${escapeHtml(trip.employee)}</div>
-              <div class="tripMeta">${escapeHtml(trip.date)} · ${escapeHtml(trip.transport)}</div>
+              <div class="tripMeta">${escapeHtml(trip.date)} · ${trip.transport === 'Личный автомобиль' ? t('car') : t('taxi')}</div>
             </div>
             <div class="tripTotal">${Number(trip.total).toFixed(2)} с.</div>
           </div>
