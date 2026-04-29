@@ -1,13 +1,227 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 <link rel="icon" href="icon-192.png">
 <title>Smartpay Trips</title>
+
+<style>
+body{margin:0;font-family:Arial;background:#0f172a;color:#fff}
+.container{max-width:900px;margin:auto;padding:16px}
+.card{background:#1e293b;padding:16px;border-radius:16px;margin-bottom:12px}
+button{padding:10px;border:none;border-radius:10px;cursor:pointer}
+.btn{background:#2563eb;color:#fff}
+.btnGreen{background:#22c55e}
+.btnGhost{background:#334155;color:#fff}
+input,select{width:100%;padding:10px;margin-bottom:10px;border-radius:10px;border:none}
+.trip{background:#1e293b;padding:12px;border-radius:12px;margin-bottom:10px}
+.hidden{display:none}
+</style>
 </head>
+
 <body>
-<h2>ЗАМЕНИ НА ТВОЙ INDEX (ИЗ ПРЕДЫДУЩЕГО СООБЩЕНИЯ)</h2>
-<p>Этот архив содержит backend + service worker. Индекс уже давался выше полностью.</p>
+<div class="container">
+
+<!-- LOGIN -->
+<div id="loginBlock" class="card">
+<h3>Вход</h3>
+<input id="loginName" placeholder="Имя">
+<input id="loginPin" placeholder="PIN">
+<button class="btn" onclick="login()">Войти</button>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
+
+<div class="card">
+<b id="userInfo"></b>
+<button class="btnGhost" onclick="logout()">Выйти</button>
+</div>
+
+<div class="card">
+<h3>Новая поездка</h3>
+
+<input type="date" id="date">
+
+<input id="from" placeholder="Откуда">
+<input id="to" placeholder="Куда">
+
+<select id="transport">
+<option value="car">Своя машина</option>
+<option value="taxi">Такси</option>
+</select>
+
+<div id="carFields">
+<input id="km" placeholder="Км">
+<input id="minutes" placeholder="Минуты">
+</div>
+
+<div id="taxiFields" class="hidden">
+<input id="taxiAmount" placeholder="Сумма">
+</div>
+
+<label>
+<input type="checkbox" id="roundTrip"> Туда обратно
+</label>
+
+<button class="btnGreen" onclick="saveTrip()" id="saveBtn">
+Сохранить
+</button>
+
+</div>
+
+<div class="card">
+<h3>Отчет</h3>
+<select id="monthFilter" onchange="loadTrips()"></select>
+
+<div id="adminReportBtn" class="hidden">
+<button class="btn" onclick="printReport()">Печать отчета</button>
+</div>
+
+</div>
+
+<div id="list"></div>
+
+</div>
+
+</div>
+
+<script>
+
+const API = "https://script.google.com/macros/s/AKfycbxD3joOzgtScFHXKXBiQvzuJIad1b7EG7jEj9vziTS8ZRGi3PdVglVjXk3YAzc1yP0h/exec";
+
+let user = "";
+let role = "";
+let trips = [];
+let editId = "";
+
+function api(action,data={}) {
+return fetch(API + "?action="+action+"&payload="+encodeURIComponent(JSON.stringify(data)))
+.then(r=>r.json());
+}
+
+async function login(){
+let name = loginName.value;
+let pin = loginPin.value;
+
+let res = await fetch(API + "?action=login&employee="+name+"&pin="+pin)
+.then(r=>r.json());
+
+if(!res.ok) return alert("Ошибка");
+
+user = res.employee;
+role = res.role;
+
+loginBlock.classList.add("hidden");
+app.classList.remove("hidden");
+
+userInfo.innerText = user + " ("+role+")";
+
+loadTrips();
+}
+
+function logout(){
+location.reload();
+}
+
+async function loadTrips(){
+let res = await fetch(API + "?action=getTrips&employee="+user+"&role="+role)
+.then(r=>r.json());
+
+trips = res.trips;
+
+renderTrips();
+
+if(role === "admin"){
+adminReportBtn.classList.remove("hidden");
+}
+}
+
+function renderTrips(){
+list.innerHTML = "";
+
+trips.forEach(t=>{
+let div = document.createElement("div");
+div.className="trip";
+
+div.innerHTML = `
+<b>${t.employee}</b><br>
+${t.from}<br>
+${t.total} сомони<br>
+
+${role==="admin" || t.employee===user ? `
+<button onclick="edit('${t.id}')">✏️</button>
+`:""}
+`;
+
+list.appendChild(div);
+});
+}
+
+function edit(id){
+let t = trips.find(x=>x.id==id);
+
+editId = id;
+
+date.value = t.date;
+from.value = t.from;
+to.value = t.to;
+
+saveBtn.innerText = "Сохранить изменения";
+}
+
+async function saveTrip(){
+
+let payload = {
+date: date.value,
+employee: user,
+from: from.value,
+to: to.value,
+transportType: transport.value,
+km: km.value,
+minutes: minutes.value,
+taxiAmount: taxiAmount.value,
+roundTrip: roundTrip.checked
+};
+
+if(editId) payload.id = editId;
+
+let action = editId ? "updateTrip" : "addTrip";
+
+let res = await api(action, payload);
+
+editId = "";
+saveBtn.innerText = "Сохранить";
+
+loadTrips();
+}
+
+function printReport(){
+
+let map = {};
+
+trips.forEach(t=>{
+if(!map[t.employee]) map[t.employee]={sum:0,count:0};
+map[t.employee].sum += Number(t.total);
+map[t.employee].count++;
+});
+
+let html = "<h2>Отчет</h2><table border=1>";
+
+for(let e in map){
+html+=`<tr><td>${e}</td><td>${map[e].count}</td><td>${map[e].sum}</td></tr>`;
+}
+
+html+="</table>";
+
+let w = window.open();
+w.document.write(html);
+w.print();
+}
+
+</script>
+
 </body>
 </html>
