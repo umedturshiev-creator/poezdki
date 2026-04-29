@@ -998,16 +998,14 @@ function fillMonths(months) {
             ${trip.roundTrip === 'Да' ? '<br>🔁 ' + t('roundTrip') : ''}
             ${trip.comment ? `<br>💬 ${escapeHtml(trip.comment)}` : ''}
           </div>
+
           ${currentRole !== 'admin' ? `
-  <div style="margin-top:10px; display:flex; gap:8px;">
-    <button class="btnGhost btnSmall" onclick="editTrip('${trip.id}')">${t('edit')}</button>
-    <button class="btnRed btnSmall" onclick="deleteTripConfirm('${trip.id}')">${t('delete')}</button>
-  </div>
-` : ''}
-          <div class="tripActions">
-            <button class="btnGhost btnSmall" onclick="editTrip('${escapeAttr(trip.id)}')">✏️ ${t('edit')}</button>
-            <button class="btnRed btnSmall" onclick="deleteTripConfirm('${escapeAttr(trip.id)}')">🗑 ${t('delete')}</button>
-          </div>
+            <div style="margin-top:10px; display:flex; gap:8px;">
+              <button class="btnGhost btnSmall" onclick="editTrip('${trip.id}')">${t('edit')}</button>
+              <button class="btnRed btnSmall" onclick="deleteTripConfirm('${trip.id}')">${t('delete')}</button>
+            </div>
+          ` : ''}
+
         </div>
       `).join('');
     }
