@@ -11,6 +11,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Smartpay Trips" />
   <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
 
   <title>Smartpay — Учет поездок</title>
 
@@ -424,6 +426,7 @@ taxiSum:'Такси',
 finalSum:'Сумма',
 commentText:'Комментарий',
 totalText:'Итого',
+minutesShort:'мин',
       },
       tj: {
         loginTitle:'Воридшавӣ ба система', loginSub:'Номи корманд ва PIN-рамзро ворид кунед', employee:'Корманд', pin:'PIN-рамз', loginBtn:'Ворид шудан',
@@ -463,6 +466,7 @@ taxiSum:'Таксӣ',
 finalSum:'Маблағ',
 commentText:'Шарҳ',
 totalText:'Ҳамагӣ',
+minutesShort:'дақ'
       }
     };
 
@@ -993,7 +997,7 @@ function fillMonths(months) {
             📍 ${escapeHtml(trip.from)}<br>
             ${trip.transport === 'Такси'
               ? `🚕 Такси: ${trip.taxiAmount || 0} с.`
-              : `🚗 ${trip.km || 0} км · ${trip.minutes || 0} мин`
+              🚗 ${trip.km || 0} км · ${trip.minutes || 0} ${t('minutesShort')}
             }
             ${trip.roundTrip === 'Да' ? '<br>🔁 ' + t('roundTrip') : ''}
             ${trip.comment ? `<br>💬 ${escapeHtml(trip.comment)}` : ''}
