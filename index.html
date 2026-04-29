@@ -996,8 +996,8 @@ function fillMonths(months) {
           <div class="tripMeta">
             📍 ${escapeHtml(trip.from)}<br>
             ${trip.transport === 'Такси'
-              ? `🚕 Такси: ${trip.taxiAmount || 0} с.`
-              🚗 ${trip.km || 0} км · ${trip.minutes || 0} ${t('minutesShort')}
+              ? `🚕 ${t('taxi')}: ${trip.taxiAmount || 0} с.`
+              : `🚗 ${trip.km || 0} км · ${trip.minutes || 0} ${t('minutesShort')}`
             }
             ${trip.roundTrip === 'Да' ? '<br>🔁 ' + t('roundTrip') : ''}
             ${trip.comment ? `<br>💬 ${escapeHtml(trip.comment)}` : ''}
