@@ -11,6 +11,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Smartpay Trips" />
   <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
 
   <title>Smartpay — Учет поездок</title>
 
@@ -359,6 +361,11 @@
             <button onclick="exportPDF()">📄 PDF</button>
             <button onclick="exportExcel()">📊 Excel</button>
           </div>
+          <div id="adminPrintBlock" class="hidden">
+  <button class="btnFull" onclick="printAdminReport()">
+    🖨 Распечатать сводный отчет
+  </button>
+</div>
         </div>
       </div>
     </div>
@@ -372,8 +379,8 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbxk2gXWCAsfNe6-WIftUF797jkR5bQWF6Mt12AM5Wl1iRAnhfVaxTnMpHIRWb_YvN4W/exec';
-    const APP_VERSION = 'v. 1.0.0';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxXCFI_OfFnMJp2YIXVl5Lh5WMDu9FF13DoYRfNoIozug8pB_l91vyGNge4QUf6eE2i/exec';
+    const APP_VERSION = 'v. 1.0.1';
 
     const I18N = {
       ru: {
@@ -636,6 +643,13 @@
         applyMonthFilter();
         updatePreview();
         updateTopUser();
+
+        // показываем кнопку только админу
+if (currentRole === 'admin') {
+  document.getElementById('adminPrintBlock').classList.remove('hidden');
+} else {
+  document.getElementById('adminPrintBlock').classList.add('hidden');
+}
 
         showToast(t('dataLoaded'));
       } catch (err) {
