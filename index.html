@@ -6,7 +6,7 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#073f52" />
+  <meta name="theme-color" content="#e8edff" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Smartpay Trips" />
@@ -16,381 +16,219 @@
 
   <title>Smartpay — Учет поездок</title>
 
-  <style>
-    :root{
-      --bg1:#052f3f;
-      --bg2:#111827;
-      --glass:rgba(255,255,255,.13);
-      --border:rgba(255,255,255,.22);
-      --text:#ffffff;
-      --muted:#b8ddf3;
-      --green:#22c55e;
-      --red:#ef4444;
-      --shadow:0 24px 80px rgba(0,0,0,.28);
-    }
-
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      min-height:100vh;
-      font-family:Arial,sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(circle at top left,rgba(14,165,233,.42),transparent 34%),
-        radial-gradient(circle at bottom right,rgba(109,40,217,.42),transparent 36%),
-        linear-gradient(135deg,var(--bg1),var(--bg2));
-      overflow-x:hidden;
-    }
-
-    @keyframes rise{from{transform:translateY(12px);opacity:0}to{transform:translateY(0);opacity:1}}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    @keyframes pulseSave{0%,100%{transform:scale(1)}50%{transform:scale(.985);box-shadow:0 0 32px rgba(34,197,94,.45)}}
-
-    .app{width:min(1180px,100%);margin:0 auto;padding:22px 22px 28px}
-    .header{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:18px;animation:rise .45s ease both}
-    .brand{display:flex;align-items:center;gap:14px}
-    .logoBox{width:60px;height:60px;border-radius:22px;background:linear-gradient(135deg,rgba(255,255,255,.24),rgba(255,255,255,.08));display:grid;place-items:center;border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden;padding:8px}
-    .logoBox img{width:100%;height:100%;object-fit:contain}
-    h1{margin:0;font-size:30px;letter-spacing:-.6px}
-    .subtitle,.topUser{color:var(--muted);font-size:13px;margin-top:4px}
-    .version{color:var(--muted);font-size:12px;margin-top:4px}
-
-    .grid{display:grid;grid-template-columns:1.08fr .92fr;gap:18px;align-items:start}
-    .card{background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:28px;padding:20px;box-shadow:var(--shadow);animation:rise .5s ease both}
-    .card h2{margin:0 0 16px;font-size:20px;letter-spacing:-.25px}
-
-    label{display:block;margin-bottom:7px;color:var(--muted);font-size:13px;font-weight:800}
-    input,select,textarea{width:100%;min-width:0;border:1px solid rgba(255,255,255,.22);border-radius:18px;padding:14px;outline:none;color:#fff;background:rgba(255,255,255,.13);font-size:15px;margin-bottom:14px;transition:.2s ease}
-    input:focus,select:focus,textarea:focus{border-color:rgba(14,165,233,.8);box-shadow:0 0 0 4px rgba(14,165,233,.14);background:rgba(255,255,255,.18)}
-    option{color:#111827}
-    textarea{resize:vertical;min-height:76px}
-    input[type=date]{padding:10px 8px;font-size:14px;max-width:100%}
-
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    .transport{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
-
-    button{border:none;color:#fff;padding:14px 18px;border-radius:18px;font-weight:900;cursor:pointer;background:linear-gradient(135deg,#6d28d9,#2563eb);transition:.18s ease;box-shadow:0 12px 30px rgba(0,0,0,.16)}
-    button:active{transform:scale(.98)}
-    button:hover{filter:brightness(1.08);transform:translateY(-1px)}
-    button:disabled{opacity:.7;pointer-events:none}
-
-    .btnFull{width:100%;margin-top:6px}
-    .btnGreen{background:linear-gradient(135deg,#22c55e,#16a34a)}
-    .btnRed{background:linear-gradient(135deg,#ef4444,#b91c1c)}
-    .btnGhost{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.25);box-shadow:none}
-    .btnSmall{padding:10px 12px;border-radius:14px;font-size:13px;min-height:42px}
-    .langMini{display:flex;gap:4px;align-items:center}
-    .langMini button{padding:5px 7px;font-size:11px;min-height:auto;border-radius:9px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);box-shadow:none}
-    .langMini button.active{background:linear-gradient(135deg,#0ea5e9,#2563eb)}
-    .tripActions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-    .tripActions button{flex:0 0 auto}
-
-    .transport button{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.25);box-shadow:none}
-    .transport button.active{background:linear-gradient(135deg,#0ea5e9,#2563eb);box-shadow:0 14px 32px rgba(14,165,233,.22)}
-
-    .loadingDot::before,.saveBtn.saving::before,.loginBtn.loading::before{
-      content:"";
-      display:inline-block;
-      width:16px;
-      height:16px;
-      border:3px solid rgba(255,255,255,.45);
-      border-top-color:#fff;
-      border-radius:50%;
-      margin-right:8px;
-      vertical-align:-3px;
-      animation:spin .8s linear infinite;
-    }
-
-    .saveBtn.saving{pointer-events:none;animation:pulseSave .9s ease-in-out infinite;opacity:.92}
-
-    .loaderBox{
-      display:none;
-      align-items:center;
-      gap:10px;
-      padding:14px;
-      margin-bottom:14px;
-      border-radius:18px;
-      background:rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.16);
-      color:var(--muted);
-      font-weight:800;
-    }
-    .loaderBox.show{display:flex}
-
-    .loaderCircle{
-      width:20px;
-      height:20px;
-      border:3px solid rgba(255,255,255,.35);
-      border-top-color:#fff;
-      border-radius:50%;
-      animation:spin .8s linear infinite;
-    }
-
-    .totalBox{padding:18px;background:linear-gradient(135deg,rgba(14,165,233,.26),rgba(34,197,94,.18));border:1px solid rgba(14,165,233,.45);border-radius:22px;margin-bottom:14px}
-    .totalBox span{display:block;color:var(--muted);font-size:13px;margin-bottom:6px}
-    .totalBox strong{font-size:28px;letter-spacing:-.5px}
-
-    .switchLine{display:flex;align-items:center;gap:10px;margin-bottom:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:12px}
-    .switchLine input{width:22px;height:22px;margin:0}
-
-    .hidden{display:none!important}
-    .filters{display:grid;grid-template-columns:1fr auto;gap:10px;margin-bottom:14px}
-    .reportGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-    .mini,.employeeReport,.trip{padding:14px;border-radius:20px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.16)}
-    .mini span{color:var(--muted);font-size:12px}
-    .mini strong{display:block;font-size:20px;margin-top:5px}
-    .employeeReport{margin-bottom:8px;font-size:14px}
-    .exportActions{display:none;gap:10px;margin-top:10px}
-    .exportActions.show{display:grid;grid-template-columns:1fr 1fr}
-
-    .list{display:grid;gap:12px;max-height:520px;overflow:auto;padding-right:4px}
-    .trip{transition:.2s ease;animation:rise .35s ease both}
-    .tripTop{display:flex;justify-content:space-between;gap:10px;margin-bottom:8px}
-    .tripTitle{font-weight:900}
-    .tripMeta{color:var(--muted);font-size:13px;line-height:1.5}
-    .tripTotal{font-size:19px;font-weight:950;color:#a7f3d0;white-space:nowrap}
-
-    .extraPointRow{position:relative;align-items:end}
-    .smallRemove{min-height:42px;padding:10px 12px;border-radius:14px;font-size:13px;width:auto;margin-bottom:14px}
-    .hint{color:var(--muted);font-size:12px;margin-top:-6px;margin-bottom:12px}
-
-    .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);padding:14px 18px;background:rgba(0,0,0,.78);border:1px solid rgba(255,255,255,.2);border-radius:18px;display:none;z-index:1000;box-shadow:var(--shadow)}
-
-    .loginScreen{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:18px;background:radial-gradient(circle at top left,rgba(14,165,233,.38),transparent 36%),linear-gradient(135deg,#052f3f,#111827)}
-    .loginCard{width:min(390px,100%);padding:22px;border-radius:28px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);box-shadow:var(--shadow);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);animation:rise .4s ease both}
-    .loginLogo{width:72px;height:72px;border-radius:24px;background:rgba(255,255,255,.13);padding:10px;margin-bottom:14px}
-    .loginLogo img{width:100%;height:100%;object-fit:contain}
-
-    .topActions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-
-    .langSwitch{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-    .langSwitch button{padding:10px;min-height:42px;border-radius:14px}
-    .langSwitch button.active{background:linear-gradient(135deg,#0ea5e9,#2563eb)}
-
-    .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:9998;padding:18px}
-    .modal.show{display:flex}
-    .modalCard{width:min(420px,100%);background:rgba(15,38,52,.95);border:1px solid rgba(255,255,255,.2);border-radius:24px;padding:20px;box-shadow:var(--shadow)}
-
-    @media(max-width:768px){
-      .app{padding:12px 12px 28px}
-      h1{font-size:22px}
-      .subtitle{font-size:12px}
-      .logoBox{width:48px;height:48px;border-radius:17px;padding:6px}
-      .header{flex-direction:column;align-items:stretch;gap:12px}
-      .topActions{justify-content:stretch}
-      .topActions button{flex:1}
-      .brand{align-items:center}
-      .grid{grid-template-columns:1fr;gap:14px}
-      .card{padding:16px;border-radius:24px}
-      .row,.filters,.reportGrid,.exportActions.show{grid-template-columns:1fr;gap:0}
-      .transport{grid-template-columns:1fr 1fr;gap:8px}
-      .transport button{min-height:42px;font-size:13px;padding:9px 8px;border-radius:14px}
-      input,select,textarea,button{font-size:16px;min-height:50px}
-      .tripTop{flex-direction:column}
-      .tripTotal{font-size:22px}
-      .list{max-height:none}
-      .extraPointRow{grid-template-columns:1fr auto;gap:8px}
-      .smallRemove{min-height:34px;padding:7px 10px;font-size:11px;margin-top:-8px;margin-bottom:12px;border-radius:12px}
-    }
-  </style>
-</head>
+<style>
+:root{
+  color-scheme:light;
+  --ink:#172036;--muted:#68738d;--line:rgba(255,255,255,.74);
+  --glass:rgba(255,255,255,.58);--glass-strong:rgba(255,255,255,.77);
+  --blue:#4263eb;--blue-dark:#304dc6;--cyan:#49b9d9;--green:#16896b;
+  --red:#d94c68;--shadow:0 22px 70px rgba(75,91,150,.16);
+  --soft-shadow:0 8px 28px rgba(75,91,150,.10);--radius:28px
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;background:radial-gradient(ellipse at 12% 8%,rgba(126,151,255,.44),transparent 32%),radial-gradient(ellipse at 88% 15%,rgba(104,220,236,.42),transparent 32%),radial-gradient(ellipse at 78% 90%,rgba(219,180,255,.34),transparent 34%),linear-gradient(140deg,#e8edff 0%,#e5f5f8 48%,#f4edff 100%);background-attachment:fixed;overflow-x:hidden}
+body:before,body:after{content:"";position:fixed;z-index:-1;border-radius:50%;filter:blur(2px);pointer-events:none}
+body:before{width:290px;height:290px;top:36%;left:-170px;background:rgba(255,255,255,.42)}
+body:after{width:370px;height:370px;right:-210px;top:54%;background:rgba(255,255,255,.32)}
+button,input,select,textarea{font:inherit}button{border:0;cursor:pointer;color:inherit}button:disabled{opacity:.55;cursor:wait}
+:focus-visible{outline:3px solid rgba(66,99,235,.35);outline-offset:2px}
+@keyframes rise{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulseSave{50%{transform:scale(.985);box-shadow:0 0 28px rgba(22,137,107,.22)}}
+.app{width:min(1320px,100%);margin:0 auto;padding:24px 28px 48px}
+.header{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:18px;animation:rise .4s ease both}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}.logoBox,.loginLogo{display:grid;place-items:center;background:linear-gradient(145deg,rgba(255,255,255,.87),rgba(255,255,255,.4));border:1px solid var(--line);box-shadow:var(--soft-shadow);overflow:hidden;padding:9px;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+.logoBox{width:58px;height:58px;border-radius:21px;flex:0 0 auto}.logoBox img,.loginLogo img{width:100%;height:100%;object-fit:contain}
+h1{font-size:clamp(22px,3vw,30px);line-height:1.05;letter-spacing:-.8px;margin:0;font-weight:760}.subtitle,.topUser{color:var(--muted);font-size:13px;margin-top:5px}.version{color:#8992a8;font-size:11px;margin-top:3px}
+.topActions{display:flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:wrap}.langMini{display:flex;gap:3px;padding:4px;border-radius:999px;background:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.72);box-shadow:var(--soft-shadow);backdrop-filter:blur(18px)}
+.glass,.card,.hero,.filterPanel,.navWrap,.loginCard,.modalCard{background:var(--glass);border:1px solid var(--line);box-shadow:var(--shadow);backdrop-filter:blur(28px) saturate(145%);-webkit-backdrop-filter:blur(28px) saturate(145%)}
+.card{border-radius:var(--radius);padding:22px;animation:rise .45s ease both}.card h2{font-size:20px;letter-spacing:-.35px;margin:0 0 5px}.sectionSub{color:var(--muted);font-size:13px;margin:0 0 18px;line-height:1.5}
+.navWrap{display:flex;gap:5px;width:max-content;max-width:100%;padding:5px;border-radius:999px;margin-bottom:18px;background:rgba(255,255,255,.48);box-shadow:var(--soft-shadow)}
+.navTab{display:flex;align-items:center;gap:8px;padding:11px 18px;border-radius:999px;background:transparent;color:var(--muted);font-size:14px;font-weight:720;transition:.2s ease}.navTab.active{background:linear-gradient(135deg,#526ff1,#6c84ff);color:#fff;box-shadow:0 8px 20px rgba(66,99,235,.25)}
+.hero{display:flex;align-items:center;justify-content:space-between;gap:22px;padding:24px 28px;border-radius:32px;margin-bottom:18px;background:linear-gradient(115deg,rgba(255,255,255,.78),rgba(255,255,255,.42));position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:330px;height:330px;right:14%;top:-240px;border-radius:50%;background:rgba(117,142,255,.22);filter:blur(3px);pointer-events:none}.heroCopy,.heroActions{position:relative;z-index:1}.eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:750;color:var(--blue-dark);background:rgba(92,119,239,.1);padding:7px 11px;border-radius:999px;margin-bottom:10px}.statusDot{width:7px;height:7px;background:#31b989;border-radius:50%;box-shadow:0 0 0 4px rgba(49,185,137,.12)}.hero h2{font-size:clamp(23px,3vw,34px);letter-spacing:-1px;margin:0 0 6px}.hero p{color:var(--muted);margin:0;line-height:1.5;font-size:14px;max-width:560px}.heroActions{display:flex;flex-direction:column;align-items:flex-end;gap:12px;min-width:240px}.heroStats{display:flex;gap:18px}.heroStat{min-width:92px}.heroStat span{display:block;color:var(--muted);font-size:11px;margin-bottom:4px}.heroStat strong{font-size:18px;letter-spacing:-.4px;white-space:nowrap}
+.btn,.btnGhost,.btnPrimary,.btnDanger{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:11px 16px;border-radius:16px;font-size:14px;font-weight:730;transition:transform .18s ease,box-shadow .18s ease,background .18s ease}.btnPrimary{background:linear-gradient(135deg,#526ff1,#6d85ff);color:#fff;box-shadow:0 10px 22px rgba(66,99,235,.25)}.btnPrimary:hover{transform:translateY(-1px);box-shadow:0 13px 26px rgba(66,99,235,.28)}.btnGhost{background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.84);color:#49536f;box-shadow:0 5px 16px rgba(73,89,139,.07)}.btnGhost:hover{background:rgba(255,255,255,.8)}.btnDanger{color:#b83755;background:rgba(255,239,243,.76);border:1px solid rgba(255,210,221,.86);box-shadow:none}.btnSmall{min-height:36px;padding:8px 11px;border-radius:13px;font-size:12px}.btnFull{width:100%}.btnGreen{background:linear-gradient(135deg,#25a783,#16896b);color:#fff;box-shadow:0 10px 22px rgba(22,137,107,.2)}.btnGreen:hover{transform:translateY(-1px)}
+.langMini button{background:transparent;color:var(--muted);font-size:11px;font-weight:760;padding:7px 9px;border-radius:999px;min-width:34px}.langMini button.active{background:rgba(255,255,255,.92);color:var(--blue-dark);box-shadow:0 3px 9px rgba(66,99,235,.10)}
+.filterPanel{border-radius:24px;padding:16px 18px;margin-bottom:18px;background:rgba(255,255,255,.48);box-shadow:var(--soft-shadow)}.filterHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.filterHead strong{font-size:13px}.filterGrid{display:grid;grid-template-columns:1.15fr 1.1fr 1fr .8fr .8fr auto;gap:10px;align-items:end}.filterField label{font-size:11px;color:var(--muted);font-weight:690;margin:0 0 5px 4px}.filterField input,.filterField select{margin:0;min-height:42px;padding:10px 12px;border-radius:14px;font-size:13px}
+.workspace-grid{display:grid;grid-template-columns:minmax(330px,.92fr) minmax(0,1.08fr);gap:18px;align-items:start}.workspace-grid.form-collapsed{grid-template-columns:minmax(0,1fr)}.formCard{position:sticky;top:14px}.formHead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:18px}.formHead h2{margin-bottom:4px}.formActions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.formSection{border-top:1px solid rgba(102,119,163,.12);padding-top:17px;margin-top:17px}.formSection:first-of-type{border-top:0;padding-top:0;margin-top:0}.fieldLabel{display:block;margin:0 0 7px 3px;color:#53607a;font-size:12px;font-weight:720}.row{display:grid;grid-template-columns:1fr 1fr;gap:11px}.routeRow{display:grid;grid-template-columns:minmax(0,1fr) 42px minmax(0,1fr);gap:8px;align-items:end}.routeArrow{width:42px;height:42px;border-radius:14px;background:rgba(88,110,200,.1);color:var(--blue-dark);font-size:18px;margin-bottom:14px}.routeTools{display:flex;gap:8px;margin-top:2px;flex-wrap:wrap}.hint{color:var(--muted);font-size:11px;line-height:1.45;margin:8px 3px 0}
+input,select,textarea{width:100%;min-width:0;color:var(--ink);background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.92);border-radius:15px;padding:12px 13px;outline:none;font-size:14px;margin-bottom:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,.68);transition:border-color .18s ease,background .18s ease,box-shadow .18s ease}input::placeholder,textarea::placeholder{color:#a0a9bd}input:focus,select:focus,textarea:focus{border-color:rgba(83,111,241,.55);background:rgba(255,255,255,.88);box-shadow:0 0 0 4px rgba(83,111,241,.1)}input[type=date]{padding:10px 12px}select option{color:#20283c}textarea{min-height:78px;resize:vertical}
+.transport{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:5px;border-radius:17px;background:rgba(108,124,175,.08);margin-bottom:14px}.transport button{background:transparent;color:#67728d;border-radius:13px;min-height:42px;font-size:13px;font-weight:700;box-shadow:none;padding:9px}.transport button.active{background:rgba(255,255,255,.9);color:var(--blue-dark);box-shadow:0 4px 12px rgba(67,83,134,.12)}
+.switchLine{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:15px;background:rgba(255,255,255,.48);margin:2px 0 14px;color:#46516b;font-size:13px}.switchLine input{width:18px;height:18px;margin:0;accent-color:var(--blue)}.totalBox{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:16px 17px;margin:2px 0 13px;border-radius:19px;background:linear-gradient(120deg,rgba(82,111,241,.12),rgba(73,185,217,.11));border:1px solid rgba(255,255,255,.85)}.totalBox span{display:block;color:var(--muted);font-size:12px}.totalBox strong{font-size:23px;letter-spacing:-.6px;color:#263b9b}.totalHint{font-size:11px;color:var(--muted);display:block;margin-top:3px}.saveBtn{min-height:52px;border-radius:17px}.saveBtn.saving{animation:pulseSave .8s ease-in-out infinite;pointer-events:none}
+.loaderBox{display:none;align-items:center;gap:10px;padding:12px 16px;margin:0 0 14px;border-radius:16px;background:rgba(255,255,255,.62);color:var(--muted);font-size:13px}.loaderBox.show{display:flex}.loaderCircle{width:18px;height:18px;border:2px solid rgba(66,99,235,.2);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
+.view{animation:rise .35s ease both}.hidden{display:none!important}.tripPanelHead{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:15px}.tripPanelHead h2{margin:0 0 5px}.countPill{color:var(--blue-dark);font-size:12px;font-weight:720;background:rgba(80,107,232,.1);padding:7px 10px;border-radius:999px;white-space:nowrap}.homeStats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:16px}.statTile,.reportStat{background:rgba(255,255,255,.46);border:1px solid rgba(255,255,255,.8);border-radius:18px;padding:13px}.statTile span,.reportStat span{display:block;color:var(--muted);font-size:11px;margin-bottom:5px}.statTile strong,.reportStat strong{font-size:17px;letter-spacing:-.3px;display:block;overflow-wrap:anywhere}.list{display:grid;gap:10px}.trip{padding:16px;border-radius:21px;background:rgba(255,255,255,.51);border:1px solid rgba(255,255,255,.82);box-shadow:0 6px 18px rgba(65,78,122,.06);transition:transform .18s ease,box-shadow .18s ease}.trip:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(65,78,122,.1)}.tripTop{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}.tripTitle{font-size:14px;font-weight:760}.tripMeta{font-size:12px;color:var(--muted);line-height:1.55}.tripTotal{font-size:17px;font-weight:790;color:#253da7;white-space:nowrap}.tripRoute{display:flex;align-items:flex-start;gap:9px;color:#3b4661;font-size:13px;line-height:1.5;margin-bottom:8px}.routePin{width:24px;height:24px;display:grid;place-items:center;flex:0 0 auto;border-radius:9px;color:var(--blue-dark);background:rgba(83,111,241,.1);font-size:12px}.tripActions{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}.emptyState{padding:30px 16px;text-align:center;border:1px dashed rgba(100,114,153,.28);border-radius:20px;color:var(--muted);font-size:13px;background:rgba(255,255,255,.27)}
+.reportHero{padding:22px 24px;border-radius:27px;margin-bottom:16px;background:linear-gradient(118deg,rgba(255,255,255,.78),rgba(255,255,255,.45))}.reportHero h2{font-size:25px;letter-spacing:-.8px;margin:0 0 5px}.reportHero p{color:var(--muted);font-size:13px;margin:0;line-height:1.5}.reportGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0 0 16px}.reportStat{padding:16px;border-radius:20px}.reportStat strong{font-size:21px}.reportStat.primary{background:linear-gradient(140deg,rgba(83,111,241,.17),rgba(255,255,255,.58))}.reportColumns{display:grid;grid-template-columns:minmax(250px,.72fr) minmax(0,1.28fr);gap:14px}.subcard{padding:18px;border-radius:22px;background:rgba(255,255,255,.42);border:1px solid rgba(255,255,255,.78)}.subcard h3{font-size:15px;margin:0 0 12px;letter-spacing:-.2px}.employeeReport{padding:12px 0;border-top:1px solid rgba(95,109,148,.13);font-size:12px;color:var(--muted)}.employeeReport:first-child{border-top:0;padding-top:0}.employeeReportHead{display:flex;justify-content:space-between;align-items:center;gap:9px;margin-bottom:7px}.employeeReportHead strong{color:var(--ink);font-size:13px}.employeeReportHead span{color:#354aa8;font-weight:730;white-space:nowrap}.progressTrack{height:6px;border-radius:8px;background:rgba(88,104,159,.12);overflow:hidden}.progressTrack i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#6079f2,#59c4d6)}.exportActions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.exportActions button{flex:0 0 auto}.reportList{margin-top:14px}
+.extraPointRow{align-items:end}.smallRemove{margin-bottom:14px}.modal{position:fixed;inset:0;z-index:9998;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(34,43,68,.28);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}.modal.show{display:flex}.modalCard{width:min(430px,100%);padding:23px;border-radius:27px;background:rgba(245,247,255,.8)}.modalCard h2{margin:0 0 17px}.toast{position:fixed;z-index:10000;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);display:none;padding:12px 17px;background:rgba(25,34,58,.88);color:#fff;border:1px solid rgba(255,255,255,.22);border-radius:999px;box-shadow:0 12px 32px rgba(24,34,66,.23);font-size:13px;font-weight:700;backdrop-filter:blur(16px)}
+.loginScreen{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(ellipse at 20% 10%,rgba(126,151,255,.42),transparent 40%),radial-gradient(ellipse at 80% 80%,rgba(107,216,228,.34),transparent 40%),linear-gradient(140deg,#e9edff,#e6f5f8 56%,#f2ecff)}.loginCard{width:min(410px,100%);padding:26px;border-radius:30px;background:rgba(255,255,255,.57);animation:rise .4s ease both}.loginLogo{width:68px;height:68px;border-radius:23px;margin-bottom:18px}.loginCard h2{font-size:23px;letter-spacing:-.6px;margin:0 0 6px}.loginCard .subtitle{margin-bottom:20px}.loginCard label{display:block;margin:0 0 7px 3px;color:#53607a;font-size:12px;font-weight:720}.loginCard input{min-height:48px}.loginCard .btnFull{min-height:50px}.loginCard .langSwitch{display:flex;justify-content:flex-end;gap:6px;margin-bottom:14px}.langSwitch button{padding:7px 11px;border-radius:999px;font-size:12px}.langSwitch button.active{background:rgba(82,111,241,.12);color:var(--blue-dark)}
+@media(max-width:1000px){.filterGrid{grid-template-columns:repeat(3,1fr)}.workspace-grid{grid-template-columns:minmax(300px,.9fr) minmax(0,1.1fr)}.reportColumns{grid-template-columns:1fr}.reportGrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){.app{padding:14px 14px calc(34px + env(safe-area-inset-bottom))}.header{align-items:flex-start;gap:12px}.brand{gap:10px}.logoBox{width:46px;height:46px;border-radius:17px;padding:6px}h1{font-size:20px}.subtitle{font-size:11px}.topActions{gap:6px}.topActions>.btnGhost{min-height:38px;padding:8px 10px;font-size:11px}.navWrap{width:100%;margin-bottom:13px}.navTab{flex:1;justify-content:center;padding:10px 8px;font-size:13px}.hero{align-items:flex-start;flex-direction:column;padding:20px;border-radius:26px;gap:17px}.heroActions{width:100%;align-items:stretch;min-width:0;flex-direction:row;justify-content:space-between}.heroStats{gap:12px}.heroStat{min-width:0;flex:1}.heroStat strong{font-size:15px}.heroStat span{font-size:10px}.heroActions .btn{flex:0 0 auto}.filterPanel{padding:14px;border-radius:21px}.filterGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.filterGrid .searchField{grid-column:1/-1}.filterGrid .resetField{grid-column:1/-1}.filterField input,.filterField select{font-size:13px;min-height:44px}.workspace-grid,.workspace-grid.form-collapsed{grid-template-columns:1fr;gap:13px}.formCard{position:static}.card{padding:17px;border-radius:24px}.formHead{flex-direction:column}.formActions{justify-content:flex-start}.row{gap:9px}.routeRow{grid-template-columns:minmax(0,1fr) 36px minmax(0,1fr);gap:6px}.routeArrow{width:36px;height:42px}.tripPanelHead{align-items:center}.homeStats{gap:7px}.statTile{padding:11px 9px}.statTile strong{font-size:15px}.trip{padding:14px}.tripTop{gap:8px}.tripTotal{font-size:15px}.reportHero{padding:18px}.reportHero h2{font-size:22px}.reportStat{padding:13px}.reportStat strong{font-size:18px}.reportGrid{gap:8px}.reportColumns{gap:10px}.subcard{padding:15px}.exportActions{display:grid;grid-template-columns:1fr 1fr}.exportActions button{width:100%;font-size:12px;padding:10px 9px}.loginCard{padding:22px}.toast{max-width:calc(100vw - 28px);text-align:center}}
+@media(max-width:390px){.app{padding-left:10px;padding-right:10px}.header{flex-wrap:wrap}.topActions{width:100%;justify-content:flex-start}.heroActions{align-items:flex-end}.heroStats{gap:8px}.heroStat strong{font-size:14px}.filterGrid{gap:7px}.routeRow{grid-template-columns:minmax(0,1fr) 32px minmax(0,1fr);gap:5px}.routeArrow{width:32px}.row{grid-template-columns:1fr}.reportGrid{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
 
 <body>
   <div id="loginScreen" class="loginScreen">
     <div class="loginCard">
       <div class="loginLogo"><img src="smartpay-logo.png" alt="Smartpay"></div>
-
       <div class="langSwitch">
-        <button id="langRuBtn" class="btnGhost active" onclick="setLanguage('ru')">Рус</button>
-        <button id="langTjBtn" class="btnGhost" onclick="setLanguage('tj')">Тоҷ</button>
+        <button id="langRuBtn" class="btnGhost active" type="button" onclick="setLanguage('ru')">Рус</button>
+        <button id="langTjBtn" class="btnGhost" type="button" onclick="setLanguage('tj')">Тоҷ</button>
       </div>
-
-      <h2 style="margin:0 0 6px;" data-i18n="loginTitle">Вход в систему</h2>
-      <div class="subtitle" style="margin-bottom:18px;" data-i18n="loginSub">Введите имя сотрудника и PIN-код</div>
-
+      <h2 data-i18n="loginTitle">Вход в систему</h2>
+      <div class="subtitle" data-i18n="loginSub">Введите имя сотрудника и PIN-код</div>
       <label data-i18n="employee">Сотрудник</label>
       <input type="text" id="loginEmployee" placeholder="Введите имя сотрудника" autocomplete="username">
-
       <label data-i18n="pin">PIN-код</label>
-      <input type="password" id="loginPin" placeholder="Например: 1234" inputmode="numeric" autocomplete="current-password">
-
-      <button class="btnFull btnGreen loginBtn" id="loginBtn" onclick="login()" data-i18n="loginBtn">Войти</button>
+      <input type="password" id="loginPin" placeholder="Введите PIN-код" inputmode="numeric" autocomplete="current-password">
+      <button class="btnFull btnGreen loginBtn" id="loginBtn" type="button" onclick="login()" data-i18n="loginBtn">Войти</button>
     </div>
   </div>
 
   <div id="changePinModal" class="modal">
     <div class="modalCard">
-      <h2 style="margin-top:0;" data-i18n="changePin">Сменить PIN</h2>
-
-      <label data-i18n="oldPin">Старый PIN</label>
-      <input type="password" id="oldPin" inputmode="numeric">
-
-      <label data-i18n="newPin">Новый PIN</label>
-      <input type="password" id="newPin" inputmode="numeric">
-
-      <label data-i18n="repeatPin">Повторите новый PIN</label>
-      <input type="password" id="repeatPin" inputmode="numeric">
-
-      <button class="btnFull btnGreen" onclick="changePassword()" data-i18n="savePin">Сохранить PIN</button>
-      <button class="btnFull btnGhost" onclick="toggleChangePin(false)" data-i18n="cancel">Отмена</button>
+      <h2 data-i18n="changePin">Сменить PIN</h2>
+      <label class="fieldLabel" data-i18n="oldPin">Старый PIN</label><input type="password" id="oldPin" inputmode="numeric">
+      <label class="fieldLabel" data-i18n="newPin">Новый PIN</label><input type="password" id="newPin" inputmode="numeric">
+      <label class="fieldLabel" data-i18n="repeatPin">Повторите новый PIN</label><input type="password" id="repeatPin" inputmode="numeric">
+      <button class="btnFull btnGreen" type="button" onclick="changePassword()" data-i18n="savePin">Сохранить PIN</button>
+      <button class="btnFull btnGhost" type="button" onclick="toggleChangePin(false)" data-i18n="cancel" style="margin-top:8px">Отмена</button>
     </div>
   </div>
 
   <div class="app">
-    <div class="header">
+    <header class="header">
       <div class="brand">
         <div class="logoBox"><img src="smartpay-logo.png" alt="Smartpay"></div>
-        <div>
-          <h1 data-i18n="title">🚗 Учет поездок</h1>
-          <div class="subtitle" data-i18n="subtitle">Smartpay — контроль поездок сотрудников</div>
-          <div class="topUser" id="topUser"></div>
-          <div class="version">v. 1.0.1</div>
-        </div>
+        <div><h1 data-i18n="title">Учет поездок</h1><div class="subtitle" data-i18n="subtitle">Smartpay — контроль поездок сотрудников</div><div class="topUser" id="topUser"></div></div>
       </div>
-
       <div class="topActions">
-        <div class="langMini">
-          <button id="langMiniRuBtn" type="button" onclick="setLanguage('ru')">RU</button>
-          <button id="langMiniTjBtn" type="button" onclick="setLanguage('tj')">TJ</button>
-        </div>
-        <button class="btnGhost btnSmall" onclick="toggleChangePin(true)" data-i18n="changePin">Сменить PIN</button>
-        <button class="btnGhost btnSmall" onclick="logout()" data-i18n="logout">Выйти</button>
+        <div class="langMini"><button id="langMiniRuBtn" type="button" onclick="setLanguage('ru')">RU</button><button id="langMiniTjBtn" type="button" onclick="setLanguage('tj')">TJ</button></div>
+        <button class="btnGhost btnSmall" type="button" onclick="toggleChangePin(true)" data-i18n="changePin">Сменить PIN</button>
+        <button class="btnGhost btnSmall" type="button" onclick="logout()" data-i18n="logout">Выйти</button>
       </div>
-    </div>
+    </header>
 
-    <div class="loaderBox" id="dataLoader">
-      <div class="loaderCircle"></div>
-      <span data-i18n="loadingData">Данные загружаются...</span>
-    </div>
+    <nav class="navWrap" aria-label="Навигация">
+      <button id="tripsTab" class="navTab active" type="button" onclick="setView('trips')"><span>◷</span><span data-i18n="navTrips">Поездки</span></button>
+      <button id="reportToggleBtn" class="navTab" type="button" onclick="toggleReport()"><span>▥</span><span data-i18n="navReports">Отчёты</span></button>
+    </nav>
 
-    <div class="grid">
-      <div class="card hidden" id="formCard">
-        <button class="btnFull btnGhost" onclick="toggleForm()" data-i18n="hideForm">✖️ Скрыть новую поездку</button>
+    <div class="loaderBox" id="dataLoader"><div class="loaderCircle"></div><span data-i18n="loadingData">Данные загружаются...</span></div>
 
-        <h2 style="margin-top:16px;" data-i18n="newTrip">Новая поездка</h2>
-
-        <div>
-          <label data-i18n="tripDate">Дата поездки</label>
-          <input type="date" id="date">
-        </div>
-
-        <div id="routeFields">
-          <div class="row">
-            <div>
-              <label data-i18n="pointA">Точка А</label>
-              <input list="pointsList" id="from" data-placeholder-key="fromPlaceholder" placeholder="Откуда">
-            </div>
-            <div>
-              <label data-i18n="pointB">Точка Б</label>
-              <input list="pointsList" id="to" data-placeholder-key="toPlaceholder" placeholder="Куда">
-            </div>
-          </div>
-        </div>
-
-        <datalist id="pointsList"></datalist>
-
-        <div class="hint" data-i18n="pointHint">Можно выбрать точку из списка и дописать текст, например: “Банк Эсхата”.</div>
-
-        <button class="btnFull btnGhost" onclick="addRoutePoint()" data-i18n="addPoint">+ Добавить промежуточную точку</button>
-
-        <label style="margin-top:14px;" data-i18n="transportType">Тип транспорта</label>
-        <div class="transport">
-          <button id="carBtn" class="active" onclick="setTransport('car')" data-i18n="car">🚗 Своя</button>
-          <button id="taxiBtn" onclick="setTransport('taxi')" data-i18n="taxi">🚕 Такси</button>
-        </div>
-
-        <div id="carFields" class="row">
-          <div>
-            <label data-i18n="km">Километраж</label>
-            <input type="number" id="km" min="0" step="0.1" data-placeholder-key="kmPlaceholder" placeholder="Например: 12">
-          </div>
-          <div>
-            <label data-i18n="minutes">Время поездки, минут</label>
-            <input type="number" id="minutes" min="0" step="1" data-placeholder-key="minutesPlaceholder" placeholder="Например: 21">
-          </div>
-        </div>
-
-        <div id="taxiFields" class="hidden">
-          <label data-i18n="taxiAmount">Сумма такси</label>
-          <input type="number" id="taxiAmount" min="0" step="0.01" data-placeholder-key="taxiPlaceholder" placeholder="Например: 35">
-        </div>
-
-        <div class="switchLine">
-          <input type="checkbox" id="roundTrip">
-          <strong data-i18n="roundTrip">Туда и обратно</strong>
-        </div>
-
-        <label data-i18n="comment">Комментарий</label>
-        <textarea id="comment" data-placeholder-key="commentPlaceholder" placeholder="Например: встреча с клиентом"></textarea>
-
-        <div class="totalBox">
-          <span data-i18n="total">Итоговая сумма</span>
-          <strong id="totalPreview">0.00 сомони</strong>
-        </div>
-
-        <button class="btnFull btnGreen saveBtn" id="saveBtn" onclick="saveTrip()" data-i18n="saveTrip">✅ Сохранить поездку</button>
+    <section class="hero">
+      <div class="heroCopy">
+        <div class="eyebrow"><i class="statusDot"></i><span data-i18n="heroEyebrow">Управление поездками</span></div>
+        <h2 data-i18n="homeTitle">Все рабочие поездки — в одном месте</h2>
+        <p data-i18n="homeSub">Добавляйте маршрут за минуту и сразу видите сумму к возмещению.</p>
       </div>
+      <div class="heroActions">
+        <div class="heroStats">
+          <div class="heroStat"><span data-i18n="tripsCount">Поездок</span><strong id="homeCount">0</strong></div>
+          <div class="heroStat"><span data-i18n="sum">Сумма</span><strong id="homeTotal">0</strong></div>
+        </div>
+        <button id="formToggleBtn" class="btn btnPrimary" type="button" onclick="toggleForm()"><span>＋</span><span data-i18n="addTripBtn">Добавить поездку</span></button>
+      </div>
+    </section>
 
-      <div class="card">
-        <button class="btnFull btnGhost" onclick="toggleForm()" id="formToggleBtn" data-i18n="addTripBtn">➕ Добавить новую поездку</button>
+    <section class="filterPanel" aria-label="Фильтры">
+      <div class="filterHead"><strong data-i18n="filterTitle">Фильтры и поиск</strong><span class="countPill" id="filterCount">0</span></div>
+      <div class="filterGrid">
+        <div class="filterField searchField"><label for="tripSearch" data-i18n="search">Поиск</label><input id="tripSearch" type="search" data-placeholder-key="searchPlaceholder" placeholder="Маршрут, комментарий или сотрудник" oninput="applyMonthFilter()"></div>
+        <div class="filterField"><label for="monthFilter" data-i18n="period">Период</label><select id="monthFilter" onchange="applyMonthFilter()"><option value="" data-i18n="allMonths">Все месяцы</option></select></div>
+        <div class="filterField adminFilter hidden"><label for="employeeFilter" data-i18n="employee">Сотрудник</label><select id="employeeFilter" onchange="applyMonthFilter()"><option value="" data-i18n="allEmployees">Все сотрудники</option></select></div>
+        <div class="filterField"><label for="transportFilter" data-i18n="transport">Транспорт</label><select id="transportFilter" onchange="applyMonthFilter()"><option value="" data-i18n="allTransport">Любой</option><option value="car" data-i18n="ownCar">Личный автомобиль</option><option value="taxi" data-i18n="taxi">Такси</option></select></div>
+        <div class="filterField"><label for="dateFrom" data-i18n="fromDate">С даты</label><input id="dateFrom" type="date" onchange="applyMonthFilter()"></div>
+        <div class="filterField"><label for="dateTo" data-i18n="toDate">По дату</label><input id="dateTo" type="date" onchange="applyMonthFilter()"></div>
+        <div class="filterField resetField"><label>&nbsp;</label><button class="btnGhost btnSmall btnFull" type="button" onclick="resetFilters()" data-i18n="resetFilters">Сбросить</button></div>
+      </div>
+    </section>
 
-        <button class="btnFull btnGhost" onclick="toggleReport()" id="reportToggleBtn" style="margin-top:12px;" data-i18n="openReport">📊 Открыть отчет за месяц</button>
-
-        <div id="reportPanel" class="hidden" style="margin-top:16px;">
-          <h2 data-i18n="monthlyReport">Отчет за месяц</h2>
-
-          <div class="filters">
-            <select id="monthFilter" onchange="applyMonthFilter()">
-              <option value="" data-i18n="allMonths">Все месяцы</option>
-            </select>
-            <button onclick="applyMonthFilter()" data-i18n="show">Показать</button>
+    <section id="tripView" class="view">
+      <div id="workspaceGrid" class="workspace-grid form-collapsed">
+        <section class="card formCard hidden" id="formCard">
+          <div class="formHead">
+            <div><h2 data-i18n="newTrip">Новая поездка</h2><p class="sectionSub" data-i18n="formSub">Укажите маршрут, транспорт и расходы.</p></div>
+            <div class="formActions"><button class="btnGhost btnSmall" type="button" onclick="repeatLastTrip()" data-i18n="repeatLast">Повторить прошлую</button><button class="btnGhost btnSmall" type="button" onclick="toggleForm()" aria-label="Закрыть">✕</button></div>
           </div>
-
-          <div class="reportGrid">
-            <div class="mini">
-              <span data-i18n="tripsCount">Поездок</span>
-              <strong id="reportCount">0</strong>
+          <div class="formSection">
+            <label class="fieldLabel" for="date" data-i18n="tripDate">Дата поездки</label>
+            <input type="date" id="date">
+            <div id="routeFields">
+              <div class="routeRow">
+                <div><label class="fieldLabel" for="from" data-i18n="pointA">Откуда</label><input list="pointsList" id="from" data-placeholder-key="fromPlaceholder" placeholder="Начальная точка" autocomplete="off"></div>
+                <button class="routeArrow" type="button" onclick="swapRoute()" title="Поменять местами" aria-label="Поменять точки местами">⇄</button>
+                <div><label class="fieldLabel" for="to" data-i18n="pointB">Куда</label><input list="pointsList" id="to" data-placeholder-key="toPlaceholder" placeholder="Конечная точка" autocomplete="off"></div>
+              </div>
+              <datalist id="pointsList"></datalist>
             </div>
-            <div class="mini">
-              <span data-i18n="sum">Сумма</span>
-              <strong id="reportTotal">0</strong>
-            </div>
-            <div class="mini">
-              <span data-i18n="month">Месяц</span>
-              <strong id="reportMonth">Все</strong>
-            </div>
+            <div class="routeTools"><button class="btnGhost btnSmall" type="button" onclick="addRoutePoint()" data-i18n="addPoint">＋ Добавить остановку</button></div>
+            <p class="hint" data-i18n="pointHint">Выберите сохранённую точку или введите новую.</p>
           </div>
-
-          <div id="employeeReport"></div>
-
-          <button class="btnFull btnGhost" onclick="toggleExportActions()" id="exportToggleBtn" data-i18n="exportReport">📤 Экспорт отчета</button>
-
-          <div class="exportActions" id="exportActions">
-            <button onclick="exportPDF()">📄 PDF</button>
-            <button onclick="exportExcel()">📊 Excel</button>
-            <button id="summaryExportBtn" onclick="exportSummary()" data-i18n="summaryReport">📑 Сводный отчет</button>
+          <div class="formSection">
+            <label class="fieldLabel" data-i18n="transportType">Тип транспорта</label>
+            <div class="transport"><button id="carBtn" class="active" type="button" onclick="setTransport('car')" data-i18n="car">Личный автомобиль</button><button id="taxiBtn" type="button" onclick="setTransport('taxi')" data-i18n="taxi">Такси</button></div>
+            <div id="carFields" class="row">
+              <div><label class="fieldLabel" for="km" data-i18n="km">Километраж</label><input type="number" id="km" min="0" step="0.1" data-placeholder-key="kmPlaceholder" placeholder="Например: 12"></div>
+              <div><label class="fieldLabel" for="minutes" data-i18n="minutes">Время поездки, минут</label><input type="number" id="minutes" min="0" step="1" data-placeholder-key="minutesPlaceholder" placeholder="Например: 21"></div>
+            </div>
+            <p class="hint" data-i18n="fareRule">Первые 3 км — 10 сомони, затем 3 сомони/км; после 20 минут — 0,10 сомони за минуту.</p>
+            <div id="taxiFields" class="hidden"><label class="fieldLabel" for="taxiAmount" data-i18n="taxiAmount">Сумма такси</label><input type="number" id="taxiAmount" min="0" step="0.01" data-placeholder-key="taxiPlaceholder" placeholder="Например: 35"></div>
+            <div class="switchLine"><input type="checkbox" id="roundTrip"><strong data-i18n="roundTrip">Туда и обратно</strong></div>
+            <label class="fieldLabel" for="comment" data-i18n="comment">Комментарий</label><textarea id="comment" data-placeholder-key="commentPlaceholder" placeholder="Например: встреча с клиентом"></textarea>
           </div>
+          <div class="totalBox"><div><span data-i18n="total">Итоговая сумма</span><small class="totalHint" data-i18n="estimateHint">Расчёт обновляется автоматически</small></div><strong id="totalPreview">0.00 сомони</strong></div>
+          <button class="btnFull btnGreen saveBtn" id="saveBtn" type="button" onclick="saveTrip()" data-i18n="saveTrip">Сохранить поездку</button>
+          <div class="hint" data-i18n="draftHint">Черновик сохраняется автоматически на этом устройстве.</div>
+        </section>
+
+        <section class="card">
+          <div class="tripPanelHead"><div><h2 data-i18n="tripList">Поездки</h2><p class="sectionSub" data-i18n="recentSub">Последние поездки и их расходы.</p></div><span class="countPill" id="tripCountPill">0</span></div>
+          <div class="homeStats">
+            <div class="statTile"><span data-i18n="sum">Сумма</span><strong id="homeTotalCard">0</strong></div>
+            <div class="statTile"><span data-i18n="totalDistance">Пробег</span><strong id="homeKm">0 км</strong></div>
+            <div class="statTile"><span data-i18n="activePeriod">Период</span><strong id="homePeriod">Все месяцы</strong></div>
+          </div>
+          <div id="tripList" class="list"></div>
+        </section>
+      </div>
+    </section>
+
+    <section id="reportView" class="view hidden">
+      <div id="reportPanel">
+        <section class="reportHero glass"><h2 data-i18n="reportOverview">Отчёт по поездкам</h2><p data-i18n="reportSub">Проверьте расходы за выбранный период и выгрузите готовый отчёт.</p></section>
+        <div class="reportGrid">
+          <div class="reportStat primary"><span data-i18n="tripsCount">Поездок</span><strong id="reportCount">0</strong></div>
+          <div class="reportStat"><span data-i18n="sum">Сумма</span><strong id="reportTotal">0</strong></div>
+          <div class="reportStat"><span data-i18n="ownCar">Личный автомобиль</span><strong id="reportCarTotal">0</strong></div>
+          <div class="reportStat"><span data-i18n="taxi">Такси</span><strong id="reportTaxiTotal">0</strong></div>
+        </div>
+        <div class="card">
+          <div class="tripPanelHead"><div><h2 data-i18n="monthlyReport">Сводка</h2><p class="sectionSub" id="reportMonth">Все месяцы</p></div><span class="countPill" id="reportKm">0 км</span></div>
+          <div class="exportActions show" id="exportActions">
+            <button class="btnGhost" type="button" onclick="exportPDF()" data-i18n="exportPDF">▤ PDF / печать</button>
+            <button class="btnGhost" type="button" onclick="exportExcel()" data-i18n="exportExcel">▦ Excel</button>
+            <button class="btnPrimary hidden" id="summaryExportBtn" type="button" onclick="exportSummary()" data-i18n="summaryReport">Сводный отчет</button>
+          </div>
+          <div class="reportColumns">
+            <section class="subcard"><h3 data-i18n="employeeBreakdown">По сотрудникам</h3><div id="employeeReport"></div></section>
+            <section class="subcard"><h3 data-i18n="transportBreakdown">Расходы по транспорту</h3><div id="transportReport"></div></section>
+          </div>
+          <section class="subcard reportList"><h3 data-i18n="reportTrips">Детализация поездок</h3><div id="reportTripList" class="list"></div></section>
         </div>
       </div>
-    </div>
-
-    <div class="card" style="margin-top:18px;">
-      <h2 data-i18n="tripList">Список поездок</h2>
-      <div id="tripList" class="list"></div>
-    </div>
+    </section>
   </div>
 
-  <div id="toast" class="toast"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbynBw-dcbNbRwXqBrBhVvB1aU1_RERiP9d7wZrg3lFGhaOXN64t414-lPtz3PJT_rMM/exec';
-    const APP_VERSION = 'v. 1.0.1';
+    const APP_VERSION = 'v. 2.0.0';
 
     const I18N = {
       ru: {
         loginTitle:'Вход в систему', loginSub:'Введите имя сотрудника и PIN-код', employee:'Сотрудник', pin:'PIN-код', loginBtn:'Войти',
-        title:'🚗 Учет поездок', subtitle:'Smartpay — контроль поездок сотрудников', logout:'Выйти', changePin:'Сменить PIN',
+        title:'SmartPay Trips', subtitle:'Smartpay — рабочие поездки и расходы', logout:'Выйти', changePin:'Сменить PIN',
         oldPin:'Старый PIN', newPin:'Новый PIN', repeatPin:'Повторите новый PIN', savePin:'Сохранить PIN', cancel:'Отмена',
         loadingData:'Данные загружаются...', newTrip:'Новая поездка', hideForm:'✖️ Скрыть новую поездку', tripDate:'Дата поездки',
         pointA:'Точка А', pointB:'Точка Б', fromPlaceholder:'Откуда', toPlaceholder:'Куда',
@@ -430,7 +268,7 @@ minutesShort:'мин',
       },
       tj: {
         loginTitle:'Воридшавӣ ба система', loginSub:'Номи корманд ва PIN-рамзро ворид кунед', employee:'Корманд', pin:'PIN-рамз', loginBtn:'Ворид шудан',
-        title:'🚗 Ҳисоби сафарҳо', subtitle:'Smartpay — назорати сафарҳои кормандон', logout:'Баромадан', changePin:'Иваз кардани PIN',
+        title:'SmartPay Trips', subtitle:'Smartpay — сафарҳои корӣ ва хароҷот', logout:'Баромадан', changePin:'Иваз кардани PIN',
         oldPin:'PIN-и кӯҳна', newPin:'PIN-и нав', repeatPin:'PIN-и навро такрор кунед', savePin:'Сабт кардани PIN', cancel:'Бекор кардан',
         loadingData:'Маълумот бор шуда истодааст...', newTrip:'Сафари нав', hideForm:'✖️ Пинҳон кардани сафари нав', tripDate:'Санаи сафар',
         pointA:'Нуқтаи А', pointB:'Нуқтаи Б', fromPlaceholder:'Аз куҷо', toPlaceholder:'Ба куҷо',
@@ -470,13 +308,31 @@ minutesShort:'дақ'
       }
     };
 
+
+    const EXTRA_I18N = {
+      ru: {
+        navTrips:'Поездки',navReports:'Отчёты',heroEyebrow:'Управление поездками',homeTitle:'Все рабочие поездки — в одном месте',homeSub:'Добавляйте маршрут за минуту и сразу видите сумму к возмещению.',
+        filterTitle:'Фильтры и поиск',search:'Поиск',searchPlaceholder:'Маршрут, комментарий или сотрудник',allEmployees:'Все сотрудники',allTransport:'Любой транспорт',ownCar:'Личный автомобиль',fromDate:'С даты',toDate:'По дату',resetFilters:'Сбросить',
+        formSub:'Укажите маршрут, транспорт и расходы.',repeatLast:'Повторить прошлую',swapRoute:'Поменять местами',estimateHint:'Расчёт обновляется автоматически',draftHint:'Черновик сохраняется автоматически на этом устройстве.',recentSub:'Последние поездки и их расходы.',totalDistance:'Пробег',activePeriod:'Период',reportOverview:'Отчёт по поездкам',reportSub:'Проверьте расходы за выбранный период и выгрузите готовый отчёт.',employeeBreakdown:'По сотрудникам',transportBreakdown:'Расходы по транспорту',reportTrips:'Детализация поездок',noMatches:'По этим фильтрам ничего не найдено',allPeriod:'Все месяцы',allTripsPeriod:'Весь период',currency:'сомони',carCost:'Личный автомобиль',taxiCost:'Такси',noReportData:'Нет данных за выбранный период',draftRestored:'Черновик восстановлен',lastTripMissing:'Пока нет поездок для повтора',
+        tripCountLabel:'поездок',roundTripShort:'Туда и обратно',enterKm:'Укажите километраж',enterTaxi:'Укажите сумму такси',fareRule:'Первые 3 км — 10 сомони, затем 3 сомони/км; после 20 минут — 0,10 сомони за минуту.',exportPDF:'▤ PDF / печать',exportExcel:'▦ Excel',stop:'Остановка',close:'Закрыть',
+      },
+      tj: {
+        navTrips:'Сафарҳо',navReports:'Ҳисоботҳо',heroEyebrow:'Идоракунии сафарҳо',homeTitle:'Ҳамаи сафарҳои корӣ дар як ҷо',homeSub:'Масирро зуд ворид кунед ва маблағи ҷубронро фавран бинед.',
+        filterTitle:'Ҷустуҷӯ ва филтрҳо',search:'Ҷустуҷӯ',searchPlaceholder:'Масир, шарҳ ё корманд',allEmployees:'Ҳамаи кормандон',allTransport:'Ҳамаи нақлиёт',ownCar:'Мошини шахсӣ',fromDate:'Аз сана',toDate:'То сана',resetFilters:'Тоза кардан',
+        formSub:'Масир, нақлиёт ва хароҷотро ворид кунед.',repeatLast:'Такрори сафари охирин',swapRoute:'Иваз кардани нуқтаҳо',estimateHint:'Ҳисоб худкор нав мешавад',draftHint:'Лоиҳа худкор дар ин дастгоҳ нигоҳ дошта мешавад.',recentSub:'Сафарҳои охирин ва хароҷоти онҳо.',totalDistance:'Масофа',activePeriod:'Давра',reportOverview:'Ҳисоботи сафарҳо',reportSub:'Хароҷотро барои давраи интихобшуда санҷед ва ҳисоботро содир кунед.',employeeBreakdown:'Аз рӯйи кормандон',transportBreakdown:'Хароҷот аз рӯйи нақлиёт',reportTrips:'Рӯйхати муфассали сафарҳо',noMatches:'Аз рӯйи ин филтрҳо маълумот ёфт нашуд',allPeriod:'Ҳамаи моҳҳо',allTripsPeriod:'Тамоми давра',currency:'сомонӣ',carCost:'Мошини шахсӣ',taxiCost:'Таксӣ',noReportData:'Барои давраи интихобшуда маълумот нест',draftRestored:'Лоиҳа барқарор шуд',lastTripMissing:'Барои такрор ҳоло сафар нест',
+        tripCountLabel:'сафар',roundTripShort:'Рафту баргашт',enterKm:'Масофаро ворид кунед',enterTaxi:'Маблағи таксиро ворид кунед',fareRule:'3 км-и аввал — 10 сомонӣ, баъд 3 сомонӣ барои ҳар км; пас аз 20 дақиқа — 0,10 сомонӣ барои як дақиқа.',exportPDF:'▤ PDF / чоп',exportExcel:'▦ Excel',stop:'Истгоҳ',close:'Пӯшидан',
+      }
+    };
+
     let lang = localStorage.getItem('smartpay_lang') || 'ru';
     let transportType = 'car';
     let allTrips = [];
     let currentMonth = '';
     let routePointIndex = 3;
     let pointsCache = [];
+    let employeesCache = [];
     let editingTripId = null;
+    let restoringDraft = false;
 
     let currentUser = localStorage.getItem('smartpay_user') || '';
     let currentRole = localStorage.getItem('smartpay_role') || '';
@@ -487,18 +343,17 @@ minutesShort:'дақ'
       const savedLogin = localStorage.getItem('smartpay_last_login') || '';
       document.getElementById('loginEmployee').value = savedLogin;
 
-      ['km','minutes','taxiAmount','roundTrip'].forEach(id => {
-        document.getElementById(id).addEventListener('input', updatePreview);
-        document.getElementById(id).addEventListener('change', updatePreview);
+      ['km','minutes','taxiAmount','roundTrip','date','from','to','comment'].forEach(id => {
+        const field = document.getElementById(id);
+        field.addEventListener('input', () => { updatePreview(); saveDraft(); });
+        field.addEventListener('change', () => { updatePreview(); saveDraft(); });
       });
-
-      ['from','to'].forEach(id => {
-        document.getElementById(id).addEventListener('change', applyRouteHistory);
-      });
-
       document.getElementById('loginPin').addEventListener('keydown', event => {
         if (event.key === 'Enter') login();
       });
+      document.getElementById('from').addEventListener('change', applyRouteHistory);
+      document.getElementById('to').addEventListener('change', applyRouteHistory);
+      document.getElementById('tripSearch').addEventListener('keydown', event => { if (event.key === 'Enter') applyMonthFilter(); });
 
       applyLanguage();
       registerPWA();
@@ -510,7 +365,7 @@ minutesShort:'дақ'
     });
 
     function t(key) {
-      return (I18N[lang] && I18N[lang][key]) || I18N.ru[key] || key;
+      return (EXTRA_I18N[lang] && EXTRA_I18N[lang][key]) || (I18N[lang] && I18N[lang][key]) || I18N.ru[key] || key;
     }
 
     function setLanguage(value) {
@@ -544,6 +399,7 @@ minutesShort:'дақ'
       }
 
       updateTopUser();
+      fillEmployeeFilter();
       updatePreview();
       applyMonthFilter();
     
@@ -696,14 +552,17 @@ minutesShort:'дақ'
 
         allTrips = data.trips || [];
         pointsCache = data.points || [];
+        employeesCache = data.employees || [];
 
         fillPointsDatalist();
+        fillEmployeeFilter();
         fillMonths(data.months || []);
 
         applyMonthFilter();
         updatePreview();
         updateTopUser();
         updateAdminControls();
+        restoreDraft();
 
         showToast(t('dataLoaded'));
       } catch (err) {
@@ -724,8 +583,24 @@ minutesShort:'дақ'
     }
 
     function updateAdminControls() {
+      const isAdmin = currentRole === 'admin';
       const summaryBtn = document.getElementById('summaryExportBtn');
-      if (summaryBtn) summaryBtn.classList.toggle('hidden', currentRole !== 'admin');
+      if (summaryBtn) summaryBtn.classList.toggle('hidden', !isAdmin);
+      document.querySelectorAll('.adminFilter').forEach(el => el.classList.toggle('hidden', !isAdmin));
+    }
+
+    function fillEmployeeFilter() {
+      const select = document.getElementById('employeeFilter');
+      if (!select) return;
+      const selected = select.value;
+      select.innerHTML = `<option value="">${t('allEmployees')}</option>`;
+      [...new Set(employeesCache)].sort((a,b) => String(a).localeCompare(String(b), lang === 'tj' ? 'tg' : 'ru')).forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        option.textContent = name;
+        select.appendChild(option);
+      });
+      select.value = selected;
     }
 
     function fillPointsDatalist() {
@@ -770,28 +645,27 @@ function fillMonths(months) {
       const btn = document.getElementById('formToggleBtn');
 
       form.classList.toggle('hidden');
-      btn.textContent = form.classList.contains('hidden') ? t('addTripBtn') : t('hideForm');
+      const isHidden = form.classList.contains('hidden');
+      document.getElementById('workspaceGrid').classList.toggle('form-collapsed', isHidden);
+      btn.innerHTML = isHidden ? `<span>＋</span><span data-i18n="addTripBtn">${t('addTripBtn')}</span>` : `<span>−</span><span data-i18n="hideForm">${t('hideForm')}</span>`;
 
-      if (!form.classList.contains('hidden')) {
+      if (!isHidden) {
+        restoreDraft();
         setTimeout(() => form.scrollIntoView({ behavior:'smooth', block:'start' }), 80);
       }
     }
 
-    function toggleReport() {
-      const panel = document.getElementById('reportPanel');
-      const btn = document.getElementById('reportToggleBtn');
-
-      panel.classList.toggle('hidden');
-      btn.textContent = panel.classList.contains('hidden') ? t('openReport') : t('closeReport');
+    function setView(view) {
+      const reports = view === 'reports';
+      document.getElementById('tripView').classList.toggle('hidden', reports);
+      document.getElementById('reportView').classList.toggle('hidden', !reports);
+      document.getElementById('tripsTab').classList.toggle('active', !reports);
+      document.getElementById('reportToggleBtn').classList.toggle('active', reports);
+      if (reports) renderReport(getFilteredTrips());
     }
 
-    function toggleExportActions() {
-      const panel = document.getElementById('exportActions');
-      const btn = document.getElementById('exportToggleBtn');
+    function toggleReport() { setView('reports'); }
 
-      panel.classList.toggle('show');
-      btn.textContent = panel.classList.contains('show') ? t('hideExport') : t('exportReport');
-    }
 
     function setTransport(type) {
       transportType = type;
@@ -803,6 +677,16 @@ function fillMonths(months) {
       document.getElementById('taxiFields').classList.toggle('hidden', type !== 'taxi');
 
       updatePreview();
+      saveDraft();
+    }
+
+    function swapRoute() {
+      const from = document.getElementById('from');
+      const to = document.getElementById('to');
+      [from.value, to.value] = [to.value, from.value];
+      applyRouteHistory();
+      updatePreview();
+      saveDraft();
     }
 
     function addRoutePoint() {
@@ -819,13 +703,15 @@ function fillMonths(months) {
         </div>
         <div>
           <label>&nbsp;</label>
-          <button type="button" class="btnRed smallRemove" onclick="this.closest('.extraPointRow').remove(); applyRouteHistory();">${lang === 'tj' ? 'Нест кардан' : 'Удалить'}</button>
+          <button type="button" class="btnDanger btnSmall smallRemove" onclick="this.closest('.extraPointRow').remove(); saveDraft();">${lang === 'tj' ? 'Нест кардан' : 'Удалить'}</button>
         </div>
       `;
 
       container.appendChild(block);
-      block.querySelector('.extraPoint').addEventListener('change', applyRouteHistory);
+      block.querySelector('.extraPoint').addEventListener('change', () => { applyRouteHistory(); saveDraft(); });
+      block.querySelector('.extraPoint').addEventListener('input', saveDraft);
       routePointIndex++;
+      saveDraft();
     }
 
     function applyRouteHistory() {
@@ -899,7 +785,7 @@ function fillMonths(months) {
 
     function updatePreview() {
       const total = calculateLocal(getPayload());
-      document.getElementById('totalPreview').textContent = total.toFixed(2) + ' сомони';
+      document.getElementById('totalPreview').textContent = formatMoney(total);
     }
 
     async function saveTrip() {
@@ -912,6 +798,8 @@ function fillMonths(months) {
         if (!payload.employee) return alert(lang === 'tj' ? 'Корманд муайян нашуд. Аз нав ворид шавед.' : 'Не определен сотрудник. Выйдите и войдите заново.');
         if (!payload.from) return alert(lang === 'tj' ? 'Нуқтаи А-ро ворид кунед' : 'Укажите точку А');
         if (!payload.to) return alert(lang === 'tj' ? 'Нуқтаи охиринро ворид кунед' : 'Укажите конечную точку');
+        if (payload.transportType === 'car' && payload.km <= 0) { alert(t('enterKm')); document.getElementById('km').focus(); return; }
+        if (payload.transportType === 'taxi' && payload.taxiAmount <= 0) { alert(t('enterTaxi')); document.getElementById('taxiAmount').focus(); return; }
 
         saveBtn.classList.add('saving');
         saveBtn.textContent = t('saving');
@@ -933,7 +821,8 @@ function fillMonths(months) {
         showToast(t(wasEditing ? 'updated' : 'saved'));
 
         document.getElementById('formCard').classList.add('hidden');
-        document.getElementById('formToggleBtn').textContent = t('addTripBtn');
+        document.getElementById('workspaceGrid').classList.add('form-collapsed');
+        document.getElementById('formToggleBtn').innerHTML = `<span>＋</span><span data-i18n="addTripBtn">${t('addTripBtn')}</span>`;
       } catch (err) {
         alert('Ошибка сохранения: ' + err.message);
       } finally {
@@ -956,114 +845,178 @@ function fillMonths(months) {
       routePointIndex = 3;
 
       editingTripId = null;
+      localStorage.removeItem(draftKey());
       document.getElementById('saveBtn').textContent = t('saveTrip');
       updatePreview();
     }
 
     function applyMonthFilter() {
       currentMonth = document.getElementById('monthFilter').value;
-      const filtered = currentMonth
-        ? allTrips.filter(item => item.month === currentMonth)
-        : allTrips;
-
-      renderTrips(filtered);
+      const filtered = getFilteredTrips();
+      renderTrips(filtered, 'tripList');
+      renderHomeStats(filtered);
       renderReport(filtered);
+      document.getElementById('filterCount').textContent = formatTripCount(filtered.length);
+      document.getElementById('tripCountPill').textContent = filtered.length;
     }
 
     function getFilteredTrips() {
-      return currentMonth
-        ? allTrips.filter(item => item.month === currentMonth)
-        : allTrips;
+      const month = document.getElementById('monthFilter')?.value || '';
+      const fromDate = document.getElementById('dateFrom')?.value || '';
+      const toDate = document.getElementById('dateTo')?.value || '';
+      const employee = currentRole === 'admin' ? (document.getElementById('employeeFilter')?.value || '') : '';
+      const transport = document.getElementById('transportFilter')?.value || '';
+      const query = (document.getElementById('tripSearch')?.value || '').trim().toLocaleLowerCase();
+      return allTrips.filter(item => {
+        if (month && item.month !== month) return false;
+        if (fromDate && String(item.date) < fromDate) return false;
+        if (toDate && String(item.date) > toDate) return false;
+        if (employee && item.employee !== employee) return false;
+        if (transport === 'taxi' && item.transport !== 'Такси') return false;
+        if (transport === 'car' && item.transport === 'Такси') return false;
+        if (query) {
+          const haystack = [item.employee,item.from,item.to,item.comment,item.transport,item.date].join(' ').toLocaleLowerCase();
+          if (!haystack.includes(query)) return false;
+        }
+        return true;
+      });
     }
 
-    function renderTrips(trips) {
-      const list = document.getElementById('tripList');
+    function resetFilters() {
+      ['tripSearch','dateFrom','dateTo','employeeFilter','transportFilter','monthFilter'].forEach(id => {
+        const field = document.getElementById(id);
+        if (field) field.value = '';
+      });
+      applyMonthFilter();
+    }
 
+    function formatMoney(value) {
+      return `${Number(value || 0).toFixed(2)} ${t('currency')}`;
+    }
+
+    function formatTripCount(count) {
+      if (lang === 'tj') return `${count} ${t('tripCountLabel')}`;
+      const mod100 = count % 100;
+      const mod10 = count % 10;
+      const word = mod100 >= 11 && mod100 <= 14 ? 'поездок' : mod10 === 1 ? 'поездка' : mod10 >= 2 && mod10 <= 4 ? 'поездки' : 'поездок';
+      return `${count} ${word}`;
+    }
+
+    function getPeriodLabel() {
+      const month = document.getElementById('monthFilter')?.value || '';
+      const from = document.getElementById('dateFrom')?.value || '';
+      const to = document.getElementById('dateTo')?.value || '';
+      if (from || to) return `${from || '…'} — ${to || '…'}`;
+      return month ? formatMonthName(month) : t('allTripsPeriod');
+    }
+
+    function renderHomeStats(trips) {
+      const total = trips.reduce((sum,item) => sum + Number(item.total || 0), 0);
+      const km = trips.reduce((sum,item) => sum + Number(item.km || 0), 0);
+      document.getElementById('homeCount').textContent = trips.length;
+      document.getElementById('homeTotal').textContent = formatMoney(total);
+      document.getElementById('homeTotalCard').textContent = formatMoney(total);
+      document.getElementById('homeKm').textContent = `${km.toFixed(1)} км`;
+      document.getElementById('homePeriod').textContent = getPeriodLabel();
+    }
+
+    function renderTrips(trips, targetId = 'tripList') {
+      const list = document.getElementById(targetId);
+      if (!list) return;
       if (!trips.length) {
-        list.innerHTML = `<div class="trip">${t('noTrips')}</div>`;
+        const hasData = allTrips.length > 0;
+        list.innerHTML = `<div class="emptyState">${hasData ? t('noMatches') : t('noTrips')}</div>`;
         return;
       }
-
       list.innerHTML = trips.map(trip => `
-        <div class="trip">
+        <article class="trip">
           <div class="tripTop">
-            <div>
-              <div class="tripTitle">${escapeHtml(trip.employee)}</div>
-              <div class="tripMeta">${escapeHtml(trip.date)} · ${trip.transport === 'Личный автомобиль' ? t('car') : t('taxi')}</div>
-            </div>
-            <div class="tripTotal">${Number(trip.total).toFixed(2)} с.</div>
+            <div><div class="tripTitle">${escapeHtml(trip.employee)} · ${escapeHtml(trip.date)}</div><div class="tripMeta">${trip.transport === 'Такси' ? t('taxi') : t('ownCar')}${trip.roundTrip === 'Да' ? ` · ${t('roundTripShort')}` : ''}</div></div>
+            <div class="tripTotal">${formatMoney(trip.total)}</div>
           </div>
-          <div class="tripMeta">
-            📍 ${escapeHtml(trip.from)}<br>
-            ${trip.transport === 'Такси'
-              ? `🚕 ${t('taxi')}: ${trip.taxiAmount || 0} с.`
-              : `🚗 ${trip.km || 0} км · ${trip.minutes || 0} ${t('minutesShort')}`
-            }
-            ${trip.roundTrip === 'Да' ? '<br>🔁 ' + t('roundTrip') : ''}
-            ${trip.comment ? `<br>💬 ${escapeHtml(trip.comment)}` : ''}
-          </div>
-
-          ${currentRole !== 'admin' ? `
-            <div style="margin-top:10px; display:flex; gap:8px;">
-              <button class="btnGhost btnSmall" onclick="editTrip('${trip.id}')">${t('edit')}</button>
-              <button class="btnRed btnSmall" onclick="deleteTripConfirm('${trip.id}')">${t('delete')}</button>
-            </div>
-          ` : ''}
-
-        </div>
+          <div class="tripRoute"><span class="routePin">⌖</span><span>${escapeHtml(trip.from || trip.to || '')}</span></div>
+          <div class="tripMeta">${trip.transport === 'Такси' ? `${t('taxiAmount')}: ${formatMoney(trip.taxiAmount || 0)}` : `${Number(trip.km || 0)} км · ${Number(trip.minutes || 0)} ${t('minutesShort')}`}${trip.comment ? `<br>💬 ${escapeHtml(trip.comment)}` : ''}</div>
+          ${currentRole !== 'admin' ? `<div class="tripActions"><button class="btnGhost btnSmall" type="button" onclick="editTrip('${escapeAttr(trip.id)}')">${t('edit')}</button><button class="btnDanger btnSmall" type="button" onclick="deleteTripConfirm('${escapeAttr(trip.id)}')">${t('delete')}</button></div>` : ''}
+        </article>
       `).join('');
+    }
+
+    function renderReport(sourceTrips) {
+      const trips = sourceTrips || getFilteredTrips();
+      const total = trips.reduce((sum,item) => sum + Number(item.total || 0), 0);
+      const taxiTotal = trips.filter(item => item.transport === 'Такси').reduce((sum,item) => sum + Number(item.total || 0), 0);
+      const carTotal = total - taxiTotal;
+      const km = trips.reduce((sum,item) => sum + Number(item.km || 0), 0);
+      document.getElementById('reportCount').textContent = trips.length;
+      document.getElementById('reportTotal').textContent = formatMoney(total);
+      document.getElementById('reportCarTotal').textContent = formatMoney(carTotal);
+      document.getElementById('reportTaxiTotal').textContent = formatMoney(taxiTotal);
+      document.getElementById('reportMonth').textContent = getPeriodLabel();
+      document.getElementById('reportKm').textContent = `${km.toFixed(1)} км`;
+
+      const grouped = {};
+      trips.forEach(trip => {
+        if (!grouped[trip.employee]) grouped[trip.employee] = { count:0,total:0 };
+        grouped[trip.employee].count++;
+        grouped[trip.employee].total += Number(trip.total || 0);
+      });
+      const rows = Object.entries(grouped).sort((a,b) => b[1].total - a[1].total);
+      const maxValue = Math.max(1,...rows.map(([,value]) => value.total));
+      document.getElementById('employeeReport').innerHTML = rows.length ? rows.map(([name,value]) => `
+        <div class="employeeReport"><div class="employeeReportHead"><strong>${escapeHtml(name)} <small>· ${formatTripCount(value.count)}</small></strong><span>${formatMoney(value.total)}</span></div><div class="progressTrack"><i style="width:${Math.max(3,Math.round(value.total/maxValue*100))}%"></i></div></div>
+      `).join('') : `<div class="emptyState">${t('noReportData')}</div>`;
+
+      const taxiCount = trips.filter(item => item.transport === 'Такси').length;
+      const carCount = trips.length - taxiCount;
+      const parts = [
+        {label:t('carCost'),count:carCount,total:carTotal,color:'#5d75ee'},
+        {label:t('taxiCost'),count:taxiCount,total:taxiTotal,color:'#42abc5'}
+      ];
+      const maxPart = Math.max(1,...parts.map(part => part.total));
+      document.getElementById('transportReport').innerHTML = parts.map(part => `
+        <div class="employeeReport"><div class="employeeReportHead"><strong>${part.label} <small>· ${formatTripCount(part.count)}</small></strong><span>${formatMoney(part.total)}</span></div><div class="progressTrack"><i style="width:${Math.max(3,Math.round(part.total/maxPart*100))}%;background:${part.color}"></i></div></div>
+      `).join('');
+      renderTrips(trips,'reportTripList');
     }
 
     function editTrip(id) {
       const trip = allTrips.find(item => String(item.id) === String(id));
-      if (!trip) return;
-
+      if (!trip || currentRole === 'admin') return;
+      clearForm();
       editingTripId = id;
-      const routeParts = String(trip.from || '').split('→').map(item => item.trim()).filter(Boolean);
-      const firstPoint = routeParts.length ? routeParts[0] : trip.from;
-      const lastPoint = routeParts.length > 1 ? routeParts[routeParts.length - 1] : trip.to;
-      const middlePoints = routeParts.length > 2 ? routeParts.slice(1, -1) : [];
-
+      const parts = String(trip.from || '').split('→').map(part => part.trim()).filter(Boolean);
       document.getElementById('date').value = trip.date || '';
-      document.getElementById('from').value = firstPoint || '';
-      document.getElementById('to').value = lastPoint || trip.to || '';
+      document.getElementById('from').value = parts[0] || trip.from || '';
+      document.getElementById('to').value = parts.length > 1 ? parts[parts.length - 1] : (trip.to || '');
       document.getElementById('comment').value = trip.comment || '';
       document.getElementById('roundTrip').checked = trip.roundTrip === 'Да';
-
-      document.querySelectorAll('.extraPointRow').forEach(row => row.remove());
-      routePointIndex = 3;
-      middlePoints.forEach(point => {
+      parts.slice(1, -1).forEach(point => {
         addRoutePoint();
         const inputs = document.querySelectorAll('.extraPoint');
         inputs[inputs.length - 1].value = point;
       });
-
       if (trip.transport === 'Такси') {
         setTransport('taxi');
         document.getElementById('taxiAmount').value = trip.taxiAmount || '';
-        document.getElementById('km').value = '';
-        document.getElementById('minutes').value = '';
       } else {
         setTransport('car');
         document.getElementById('km').value = trip.km || '';
         document.getElementById('minutes').value = trip.minutes || '';
-        document.getElementById('taxiAmount').value = '';
       }
-
-      updatePreview();
       document.getElementById('saveBtn').textContent = t('editMode');
-      const form = document.getElementById('formCard');
-      if (form.classList.contains('hidden')) toggleForm();
-      setTimeout(() => form.scrollIntoView({ behavior:'smooth', block:'start' }), 80);
+      setView('trips');
+      if (document.getElementById('formCard').classList.contains('hidden')) toggleForm();
+      updatePreview();
+      setTimeout(() => document.getElementById('formCard').scrollIntoView({behavior:'smooth',block:'start'}), 80);
     }
 
     async function deleteTripConfirm(id) {
       if (!confirm(t('confirmDelete'))) return;
       try {
-        const res = await api('deleteTrip', { id, employee: currentUser, role: currentRole });
-        if (!res.ok) throw new Error(res.error || 'Ошибка удаления');
-        allTrips = res.trips || [];
-        fillMonths(res.months || []);
+        const result = await api('deleteTrip', { id, employee:currentUser, role:currentRole });
+        if (!result.ok) throw new Error(result.error || 'Ошибка удаления');
+        allTrips = result.trips || [];
+        fillMonths(result.months || []);
         applyMonthFilter();
         showToast(t('deleted'));
       } catch (err) {
@@ -1071,33 +1024,67 @@ function fillMonths(months) {
       }
     }
 
+    function repeatLastTrip() {
+      const trip = allTrips[0];
+      if (!trip) return showToast(t('lastTripMissing'));
+      editingTripId = null;
+      document.getElementById('date').valueAsDate = new Date();
+      document.getElementById('comment').value = '';
+      document.getElementById('roundTrip').checked = trip.roundTrip === 'Да';
+      const parts = String(trip.from || '').split('→').map(part => part.trim()).filter(Boolean);
+      document.getElementById('from').value = parts[0] || '';
+      document.getElementById('to').value = parts.length > 1 ? parts[parts.length-1] : (trip.to || '');
+      document.querySelectorAll('.extraPointRow').forEach(row => row.remove());
+      routePointIndex = 3;
+      parts.slice(1,-1).forEach(point => { addRoutePoint(); const inputs=document.querySelectorAll('.extraPoint'); inputs[inputs.length-1].value=point; });
+      if (trip.transport === 'Такси') { setTransport('taxi'); document.getElementById('taxiAmount').value = trip.taxiAmount || ''; }
+      else { setTransport('car'); document.getElementById('km').value = trip.km || ''; document.getElementById('minutes').value = trip.minutes || ''; }
+      const form=document.getElementById('formCard'); if (form.classList.contains('hidden')) toggleForm();
+      updatePreview(); saveDraft();
+    }
 
-    function renderReport(sourceTrips) {
-      const trips = sourceTrips || allTrips;
-      const total = trips.reduce((sum, item) => sum + Number(item.total || 0), 0);
+    function saveDraft() {
+      if (!currentUser || restoringDraft || editingTripId) return;
+      const payload = getPayload();
+      if (!payload.from && !payload.to && !payload.comment && !payload.km && !payload.minutes && !payload.taxiAmount) {
+        localStorage.removeItem(draftKey()); return;
+      }
+      const points = [...document.querySelectorAll('.extraPoint')].map(input => input.value);
+      localStorage.setItem(draftKey(), JSON.stringify({
+        date:payload.date,from:payload.from,to:payload.to,extraPoints:points,transportType,
+        km:document.getElementById('km').value,minutes:document.getElementById('minutes').value,
+        taxiAmount:document.getElementById('taxiAmount').value,roundTrip:payload.roundTrip,comment:payload.comment
+      }));
+    }
 
-      document.getElementById('reportCount').textContent = trips.length;
-      document.getElementById('reportTotal').textContent = total.toFixed(2);
-      document.getElementById('reportMonth').textContent = currentMonth ? formatMonthName(currentMonth) : t('allMonths');
+    function draftKey() { return `smartpay_trip_draft_${currentUser}`; }
 
-      const map = {};
-      trips.forEach(trip => {
-        if (!map[trip.employee]) map[trip.employee] = { count: 0, total: 0 };
-        map[trip.employee].count++;
-        map[trip.employee].total += Number(trip.total || 0);
-      });
-
-      document.getElementById('employeeReport').innerHTML = Object.keys(map).map(employee => `
-        <div class="employeeReport">
-          <strong>${escapeHtml(employee)}</strong><br>
-          ${t('tripsCount')}: ${map[employee].count} · ${t('sum')}: ${map[employee].total.toFixed(2)} сомони
-        </div>
-      `).join('') || `<div class="employeeReport">${lang === 'tj' ? 'Маълумот нест' : 'Нет данных'}</div>`;
+    function restoreDraft() {
+      if (!currentUser || editingTripId) return;
+      const raw = localStorage.getItem(draftKey());
+      if (!raw) return;
+      let draft;
+      try { draft = JSON.parse(raw); } catch (_) { localStorage.removeItem(draftKey()); return; }
+      restoringDraft = true;
+      document.getElementById('date').value = draft.date || document.getElementById('date').value;
+      document.getElementById('from').value = draft.from || '';
+      document.getElementById('to').value = draft.to || '';
+      document.getElementById('km').value = draft.km || '';
+      document.getElementById('minutes').value = draft.minutes || '';
+      document.getElementById('taxiAmount').value = draft.taxiAmount || '';
+      document.getElementById('roundTrip').checked = !!draft.roundTrip;
+      document.getElementById('comment').value = draft.comment || '';
+      document.querySelectorAll('.extraPointRow').forEach(row => row.remove());
+      routePointIndex = 3;
+      (draft.extraPoints || []).filter(Boolean).forEach(point => { addRoutePoint(); const inputs=document.querySelectorAll('.extraPoint'); inputs[inputs.length-1].value=point; });
+      setTransport(draft.transportType === 'taxi' ? 'taxi' : 'car');
+      restoringDraft = false;
+      updatePreview();
     }
 
 function exportPDF() {
   const trips = getFilteredTrips();
-  const monthName = currentMonth ? formatMonthName(currentMonth) : t('allMonths');
+  const monthName = getPeriodLabel();
 
   let html = `
     <html>
@@ -1149,7 +1136,7 @@ function exportPDF() {
   html += `
         </tbody>
       </table>
-      <div class="total">${t('totalText')}: ${total.toFixed(2)} сомони</div>
+      <div class="total">${t('totalText')}: ${total.toFixed(2)} ${t('currency')}</div>
     </body>
     </html>
   `;
@@ -1162,7 +1149,7 @@ function exportPDF() {
 
 function exportExcel() {
   const trips = getFilteredTrips();
-  const monthName = currentMonth ? formatMonthName(currentMonth) : t('allMonths');
+  const monthName = getPeriodLabel();
 
   let csv = '\uFEFF';
   csv += `${t('date')};${t('employee')};${t('route')};${t('transport')};${t('distance')};${t('time')};${t('taxiSum')};${t('roundTrip')};${t('finalSum')};${t('commentText')}\n`;
@@ -1198,7 +1185,7 @@ function exportSummary() {
     map[item.employee] += Number(item.total || 0);
   });
 
-  const monthName = currentMonth ? formatMonthName(currentMonth) : t('allMonths');
+  const monthName = getPeriodLabel();
 
   let html = `
     <html>
@@ -1235,7 +1222,7 @@ function exportSummary() {
       <tr>
         <td>${index + 1}</td>
         <td>${escapeHtml(name)}</td>
-        <td>${map[name].toFixed(2)} сомони</td>
+        <td>${map[name].toFixed(2)} ${t('currency')}</td>
         <td class="signature"></td>
       </tr>
     `;
