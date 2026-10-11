@@ -241,7 +241,8 @@ input,select,textarea{width:100%;min-width:0;color:var(--ink);background:rgba(25
 
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbynBw-dcbNbRwXqBrBhVvB1aU1_RERiP9d7wZrg3lFGhaOXN64t414-lPtz3PJT_rMM/exec';
-    const APP_VERSION = 'v. 3.4.2';
+    const APP_VERSION = 'v. 3.4.3';
+    const EXPECTED_API_VERSION = '3.4.3';
 
     const I18N = {
       ru: {
@@ -356,6 +357,7 @@ minutesShort:'дақ'
         xlsxNoDates:'Нет записей', xlsxNoData:'За выбранный период записей нет',
         xlsxExportReady:'Excel-файл сформирован', xlsxExportFailed:'Не удалось создать Excel-файл. Проверьте подключение к интернету и попробуйте ещё раз.',
         addressFailed:'Не удалось определить адрес. Проверьте подключение или введите название места вручную.',
+        addressServerOld:'Сервер адресов не обновлён. Опубликуйте новую версию приложения в Apps Script.',
         addressLoading:'Определяем адрес…', mapPointSelected:'Точка выбрана. Нажмите «Выбрать эту точку», чтобы определить адрес.',
         close:'Закрыть', amount:'Сумма расхода', amountPlaceholder:'Например: 35',
         pointA:'Точка А — откуда (необязательно)', pointB:'Точка Б — куда (необязательно)',
@@ -408,6 +410,7 @@ minutesShort:'дақ'
         xlsxNoDates:'Сабт нест', xlsxNoData:'Дар давраи интихобшуда сабт нест',
         xlsxExportReady:'Файли Excel омода шуд', xlsxExportFailed:'Файли Excel сохта нашуд. Пайвасти интернетро санҷида, бори дигар кӯшиш кунед.',
         addressFailed:'Суроға муайян нашуд. Пайвастшавиро санҷед ё номи ҷойро дастӣ ворид кунед.',
+        addressServerOld:'Сервери суроға нав карда нашудааст. Версияи нави барномаро дар Apps Script нашр кунед.',
         addressLoading:'Суроға муайян мешавад…', mapPointSelected:'Нуқта интихоб шуд. Барои муайян кардани суроға тугмаро пахш кунед.',
         close:'Пӯшидан', amount:'Маблағи хароҷот', amountPlaceholder:'Масалан: 35',
         pointA:'Нуқтаи А — аз куҷо (ихтиёрӣ)', pointB:'Нуқтаи Б — ба куҷо (ихтиёрӣ)',
@@ -909,6 +912,9 @@ function fillMonths(months) {
       const result = await api('reverseGeocode', {
         lat: Number(point.lat), lng: Number(point.lng), language: lang
       });
+      if (!result || String(result.apiVersion || '') !== EXPECTED_API_VERSION) {
+        throw new Error(t('addressServerOld'));
+      }
       if (!result || !result.ok || !String(result.address || '').trim()) {
         throw new Error(t('addressFailed'));
       }
