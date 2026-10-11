@@ -15,6 +15,7 @@
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js" crossorigin="anonymous" defer></script>
 
   <title>Smartpay — Учет поездок</title>
 
@@ -62,6 +63,7 @@ input,select,textarea{width:100%;min-width:0;color:var(--ink);background:rgba(25
 .reportHero{padding:22px 24px;border-radius:27px;margin-bottom:16px;background:linear-gradient(118deg,rgba(255,255,255,.78),rgba(255,255,255,.45))}.reportHero h2{font-size:25px;letter-spacing:-.8px;margin:0 0 5px}.reportHero p{color:var(--muted);font-size:13px;margin:0;line-height:1.5}.reportGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 16px}.reportStat{padding:16px;border-radius:20px}.reportStat strong{font-size:21px}.reportStat.primary{background:linear-gradient(140deg,rgba(83,111,241,.17),rgba(255,255,255,.58))}.reportColumns{display:grid;grid-template-columns:1fr;gap:14px}.reportColumns.adminSummary{grid-template-columns:minmax(250px,.72fr) minmax(0,1.28fr)}.subcard{padding:18px;border-radius:22px;background:rgba(255,255,255,.42);border:1px solid rgba(255,255,255,.78)}.subcard h3{font-size:15px;margin:0 0 12px;letter-spacing:-.2px}.employeeReport{padding:12px 0;border-top:1px solid rgba(95,109,148,.13);font-size:12px;color:var(--muted)}.employeeReport:first-child{border-top:0;padding-top:0}.employeeReportHead{display:flex;justify-content:space-between;align-items:center;gap:9px;margin-bottom:7px}.employeeReportHead strong{color:var(--ink);font-size:13px}.employeeReportHead span{color:#354aa8;font-weight:730;white-space:nowrap}.progressTrack{height:6px;border-radius:8px;background:rgba(88,104,159,.12);overflow:hidden}.progressTrack i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#6079f2,#59c4d6)}.exportActions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.exportActions button{flex:0 0 auto}.reportList{margin-top:14px}
 .extraPointRow{align-items:end}.smallRemove{margin-bottom:14px}.modal{position:fixed;inset:0;z-index:9998;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(34,43,68,.28);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}.modal.show{display:flex}.modalCard{width:min(430px,100%);padding:23px;border-radius:27px;background:rgba(245,247,255,.8)}.modalCard h2{margin:0 0 17px}.toast{position:fixed;z-index:10000;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);display:none;padding:12px 17px;background:rgba(25,34,58,.88);color:#fff;border:1px solid rgba(255,255,255,.22);border-radius:999px;box-shadow:0 12px 32px rgba(24,34,66,.23);font-size:13px;font-weight:700;backdrop-filter:blur(16px)}
 .pointInputRow{display:flex;align-items:center;gap:7px;margin-bottom:14px}.pointInputRow input{margin:0;min-width:0}.pointIconButton{width:44px;height:44px;flex:0 0 44px;display:grid;place-items:center;padding:0;border-radius:14px;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.92);color:var(--blue-dark);box-shadow:0 5px 16px rgba(73,89,139,.07)}.pointIconButton:hover{background:#fff}.pointIconButton svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.pointIconButton span{font-size:23px;line-height:1}.mapModal{position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(28,36,59,.42);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}.mapDialog{width:min(920px,100%);height:min(90vh,780px);display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(255,255,255,.82);border-radius:27px;background:rgba(247,249,255,.96);box-shadow:0 28px 90px rgba(22,32,64,.34)}.mapDialogHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:19px 21px 12px}.mapDialogHead h2{font-size:19px;margin:0 0 4px}.mapDialogHead p{font-size:12px;line-height:1.45;color:var(--muted);margin:0}.mapCanvas{flex:1;min-height:280px;width:100%;z-index:0;background:#e9eef6}.mapFallback{padding:25px;text-align:center;color:var(--muted);font-size:13px;line-height:1.5}.mapDialogFooter{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 17px 17px}.mapSelectionText{min-width:0;color:var(--muted);font-size:12px;line-height:1.45;overflow-wrap:anywhere}.mapDialogActions{display:flex;gap:8px;flex:0 0 auto}.mapDialogActions button{white-space:nowrap}
+.hintLink{display:inline-block;color:var(--muted);text-decoration:underline;text-underline-offset:2px}
 .loginScreen{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(ellipse at 20% 10%,rgba(126,151,255,.42),transparent 40%),radial-gradient(ellipse at 80% 80%,rgba(107,216,228,.34),transparent 40%),linear-gradient(140deg,#e9edff,#e6f5f8 56%,#f2ecff)}.loginCard{width:min(410px,100%);padding:26px;border-radius:30px;background:rgba(255,255,255,.57);animation:rise .4s ease both}.loginLogo{width:68px;height:68px;border-radius:23px;margin-bottom:18px}.loginCard h2{font-size:23px;letter-spacing:-.6px;margin:0 0 6px}.loginCard .subtitle{margin-bottom:20px}.loginCard label{display:block;margin:0 0 7px 3px;color:#53607a;font-size:12px;font-weight:720}.loginCard input{min-height:48px}.loginCard .btnFull{min-height:50px}.loginCard .langSwitch{display:flex;justify-content:flex-end;gap:6px;margin-bottom:14px}.langSwitch button{padding:7px 11px;border-radius:999px;font-size:12px}.langSwitch button.active{background:rgba(82,111,241,.12);color:var(--blue-dark)}
 @media(max-width:1000px){.filterGrid{grid-template-columns:repeat(3,1fr)}.workspace-grid{grid-template-columns:minmax(300px,.9fr) minmax(0,1.1fr)}.reportColumns{grid-template-columns:1fr}.reportGrid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:760px){.app{padding:14px 14px calc(34px + env(safe-area-inset-bottom))}.header{align-items:flex-start;gap:12px}.brand{gap:10px}.logoBox{width:46px;height:46px;border-radius:17px;padding:6px}h1{font-size:20px}.subtitle{font-size:11px}.topActions{gap:6px}.topActions>.btnGhost{min-height:38px;padding:8px 10px;font-size:11px}.navWrap{width:100%;margin-bottom:13px}.navTab{flex:1;justify-content:center;padding:10px 8px;font-size:13px}.hero{align-items:flex-start;flex-direction:column;padding:20px;border-radius:26px;gap:17px}.heroActions{width:100%;align-items:stretch;min-width:0;flex-direction:column;gap:12px}.heroButtons{justify-content:stretch}.heroButtons .btn{flex:1}.heroStats{gap:12px}.heroStat{min-width:0;flex:1}.heroStat strong{font-size:15px}.heroStat span{font-size:10px}.heroActions .btn{flex:0 0 auto}.filterPanel{padding:14px;border-radius:21px}.filterGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.filterGrid .searchField{grid-column:1/-1}.filterGrid .resetField{grid-column:1/-1}.filterField input,.filterField select{font-size:13px;min-height:44px}.workspace-grid,.workspace-grid.form-collapsed{grid-template-columns:1fr;gap:13px}.formCard{position:static}.card{padding:17px;border-radius:24px}.formHead{flex-direction:column}.formActions{justify-content:flex-start}.row{gap:9px}.routeRow{grid-template-columns:minmax(0,1fr) 36px minmax(0,1fr);gap:6px}.routeArrow{width:36px;height:42px}.tripPanelHead{align-items:center}.homeStats{gap:7px}.statTile{padding:11px 9px}.statTile strong{font-size:15px}.trip{padding:14px}.tripTop{gap:8px}.tripTotal{font-size:15px}.reportHero{padding:18px}.reportHero h2{font-size:22px}.reportStat{padding:13px}.reportStat strong{font-size:18px}.reportGrid{gap:8px}.reportColumns{gap:10px}.subcard{padding:15px}.exportActions{display:grid;grid-template-columns:1fr 1fr}.exportActions button{width:100%;font-size:12px;padding:10px 9px}.loginCard{padding:22px}.toast{max-width:calc(100vw - 28px);text-align:center}}
@@ -161,18 +163,19 @@ input,select,textarea{width:100%;min-width:0;color:var(--ink);background:rgba(25
             <input type="number" id="amount" min="0.01" step="0.01" inputmode="decimal" data-placeholder-key="amountPlaceholder" placeholder="Например: 35">
             <label class="fieldLabel" for="pointA" data-i18n="pointA">Точка А — откуда (необязательно)</label>
             <div class="pointInputRow">
-              <input list="pointsList" id="pointA" data-placeholder-key="pointPlaceholder" placeholder="Название или координаты" autocomplete="off">
+              <input list="pointsList" id="pointA" data-placeholder-key="pointPlaceholder" placeholder="Название или адрес" autocomplete="off">
               <button class="pointIconButton" type="button" onclick="captureCurrentLocation('pointA', this)" data-title-key="useCurrentLocation"><span aria-hidden="true">◎</span></button>
               <button class="pointIconButton" type="button" onclick="openMapPicker('pointA')" data-title-key="chooseOnMap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg></button>
             </div>
             <label class="fieldLabel" for="pointB" data-i18n="pointB">Точка Б — куда (необязательно)</label>
             <div class="pointInputRow">
-              <input list="pointsList" id="pointB" data-placeholder-key="pointPlaceholder" placeholder="Название или координаты" autocomplete="off">
+              <input list="pointsList" id="pointB" data-placeholder-key="pointPlaceholder" placeholder="Название или адрес" autocomplete="off">
               <button class="pointIconButton" type="button" onclick="captureCurrentLocation('pointB', this)" data-title-key="useCurrentLocation"><span aria-hidden="true">◎</span></button>
               <button class="pointIconButton" type="button" onclick="openMapPicker('pointB')" data-title-key="chooseOnMap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg></button>
             </div>
             <datalist id="pointsList"></datalist>
-            <div class="hint" data-i18n="mapPointHint">Выберите точку по GPS или на карте. Координаты можно заменить названием места.</div>
+            <div class="hint" data-i18n="mapPointHint">Адреса берутся из OpenStreetMap. После выбора координаты передаются для определения адреса; название можно ввести вручную.</div>
+            <a class="hint hintLink" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener" data-i18n="mapAttribution">© OpenStreetMap contributors</a>
             <label class="fieldLabel" for="comment" data-i18n="comment">Комментарий (необязательно)</label>
             <textarea id="comment" data-placeholder-key="commentPlaceholder" placeholder="Например: встреча с клиентом"></textarea>
           </div>
@@ -230,7 +233,7 @@ input,select,textarea{width:100%;min-width:0;color:var(--ink);background:rgba(25
         <div id="mapSelectionText" class="mapSelectionText" data-i18n="mapTapHint">Нажмите на карту, чтобы отметить точку.</div>
         <div class="mapDialogActions">
           <button class="btnGhost btnSmall" type="button" onclick="locateOnMap(this)" data-i18n="mapUseCurrent">◎ Моё местоположение</button>
-          <button class="btn btnPrimary btnSmall" type="button" onclick="useSelectedMapPoint()" data-i18n="mapApply">Выбрать эту точку</button>
+          <button id="mapApplyButton" class="btn btnPrimary btnSmall" type="button" onclick="useSelectedMapPoint(this)" data-i18n="mapApply">Выбрать эту точку</button>
         </div>
       </div>
     </section>
@@ -238,7 +241,7 @@ input,select,textarea{width:100%;min-width:0;color:var(--ink);background:rgba(25
 
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbynBw-dcbNbRwXqBrBhVvB1aU1_RERiP9d7wZrg3lFGhaOXN64t414-lPtz3PJT_rMM/exec';
-    const APP_VERSION = 'v. 3.1.0';
+    const APP_VERSION = 'v. 3.2.0';
 
     const I18N = {
       ru: {
@@ -347,13 +350,21 @@ minutesShort:'дақ'
         noReportData:'Нет записей за выбранный период',
         draftRestored:'Черновик восстановлен', lastTripMissing:'Пока нет поездок для повтора',
         tripCountLabel:'поездок', exportPDF:'▤ Печать / PDF', exportExcel:'▦ Excel',
+        xlsxTitle:'SmartPay — отчёт по расходам', xlsxSubtitle:'Детальная выгрузка расходов',
+        xlsxPeriod:'Расчётный период', xlsxDateRange:'Даты записей', xlsxEmployee:'Сотрудник',
+        xlsxCreated:'Выгружено', xlsxCount:'Количество записей', xlsxTotal:'Общая сумма',
+        xlsxNoDates:'Нет записей', xlsxNoData:'За выбранный период записей нет',
+        xlsxExportReady:'Excel-файл сформирован', xlsxExportFailed:'Не удалось создать Excel-файл. Проверьте подключение к интернету и попробуйте ещё раз.',
+        addressFailed:'Не удалось определить адрес. Проверьте подключение или введите название места вручную.',
+        addressLoading:'Определяем адрес…', mapPointSelected:'Точка выбрана. Нажмите «Выбрать эту точку», чтобы определить адрес.',
         close:'Закрыть', amount:'Сумма расхода', amountPlaceholder:'Например: 35',
         pointA:'Точка А — откуда (необязательно)', pointB:'Точка Б — куда (необязательно)',
-        pointPlaceholder:'Название места или координаты', useCurrentLocation:'Указать текущее местоположение',
-        chooseOnMap:'Выбрать точку на карте', mapPointHint:'Выберите точку по GPS или на карте. Координаты можно заменить названием места.',
+        pointPlaceholder:'Название или адрес места', useCurrentLocation:'Указать текущее местоположение',
+        chooseOnMap:'Выбрать точку на карте', mapPointHint:'Адреса берутся из OpenStreetMap. После выбора координаты передаются для определения адреса; название можно ввести вручную.',
+        mapAttribution:'© OpenStreetMap contributors',
         mapTitle:'Выбор точки на карте', mapTapHint:'Нажмите на карту, чтобы отметить точку.',
         mapUseCurrent:'◎ Моё местоположение', mapApply:'Выбрать эту точку',
-        mapUnavailable:'Карта не загрузилась. Можно определить GPS или ввести координаты вручную.',
+        mapUnavailable:'Карта не загрузилась. Можно определить GPS или ввести адрес вручную.',
         mapNoSelection:'Сначала отметьте точку на карте или определите местоположение.',
         locationAdded:'Текущее местоположение добавлено', mapPointAdded:'Точка добавлена в маршрут',
         geoUnavailable:'Этот браузер не поддерживает геолокацию.', geoHttps:'Для геолокации откройте приложение по защищённому HTTPS-адресу.',
@@ -391,13 +402,21 @@ minutesShort:'дақ'
         noReportData:'Дар давраи интихобшуда сабт нест',
         draftRestored:'Лоиҳа барқарор шуд', lastTripMissing:'Барои такрор ҳоло сафар нест',
         tripCountLabel:'сафар', exportPDF:'▤ Чоп / PDF', exportExcel:'▦ Excel',
+        xlsxTitle:'SmartPay — ҳисоботи хароҷот', xlsxSubtitle:'Содироти муфассали хароҷот',
+        xlsxPeriod:'Давраи ҳисоб', xlsxDateRange:'Санаҳои сабтҳо', xlsxEmployee:'Корманд',
+        xlsxCreated:'Содирот шуд', xlsxCount:'Шумораи сабтҳо', xlsxTotal:'Маблағи умумӣ',
+        xlsxNoDates:'Сабт нест', xlsxNoData:'Дар давраи интихобшуда сабт нест',
+        xlsxExportReady:'Файли Excel омода шуд', xlsxExportFailed:'Файли Excel сохта нашуд. Пайвасти интернетро санҷида, бори дигар кӯшиш кунед.',
+        addressFailed:'Суроға муайян нашуд. Пайвастшавиро санҷед ё номи ҷойро дастӣ ворид кунед.',
+        addressLoading:'Суроға муайян мешавад…', mapPointSelected:'Нуқта интихоб шуд. Барои муайян кардани суроға тугмаро пахш кунед.',
         close:'Пӯшидан', amount:'Маблағи хароҷот', amountPlaceholder:'Масалан: 35',
         pointA:'Нуқтаи А — аз куҷо (ихтиёрӣ)', pointB:'Нуқтаи Б — ба куҷо (ихтиёрӣ)',
-        pointPlaceholder:'Номи ҷой ё координатаҳо', useCurrentLocation:'Ҷойгиршавии ҳозираро нишон додан',
-        chooseOnMap:'Интихоби нуқта дар харита', mapPointHint:'Нуқтаро бо GPS ё дар харита интихоб кунед. Координатҳоро бо номи ҷой иваз кардан мумкин аст.',
+        pointPlaceholder:'Номи ҷой ё суроға', useCurrentLocation:'Ҷойгиршавии ҳозираро нишон додан',
+        chooseOnMap:'Интихоби нуқта дар харита', mapPointHint:'Суроғаҳо аз OpenStreetMap гирифта мешаванд. Пас аз интихоб координатаҳо барои муайян кардани суроға фиристода мешаванд; номро дастӣ ворид кардан мумкин аст.',
+        mapAttribution:'© OpenStreetMap contributors',
         mapTitle:'Интихоби нуқта дар харита', mapTapHint:'Барои нишон додани нуқта ба харита пахш кунед.',
         mapUseCurrent:'◎ Ҷойгиршавии ман', mapApply:'Ин нуқтаро интихоб кардан',
-        mapUnavailable:'Харита бор нашуд. GPS-ро истифода баред ё координатҳоро дастӣ ворид кунед.',
+        mapUnavailable:'Харита бор нашуд. GPS-ро истифода баред ё суроғаро дастӣ ворид кунед.',
         mapNoSelection:'Аввал нуқтаро дар харита интихоб кунед ё ҷойгиршавиро муайян кунед.',
         locationAdded:'Ҷойгиршавии ҳозира илова шуд', mapPointAdded:'Нуқта ба масир илова шуд',
         geoUnavailable:'Ин браузер геолокатсияро дастгирӣ намекунад.', geoHttps:'Барои геолокатсия барномаро бо суроғаи HTTPS кушоед.',
@@ -846,12 +865,8 @@ function fillMonths(months) {
       return { from: parts.shift(), to: parts.join(' → ') };
     }
 
-    function formatCoordinates(lat, lng) {
-      return Number(lat).toFixed(6) + ', ' + Number(lng).toFixed(6);
-    }
-
     function parseCoordinates(value) {
-      const match = String(value || '').match(/(-?\d{1,2}(?:\.\d+)?)\s*[,;]\s*(-?\d{1,3}(?:\.\d+)?)/);
+      const match = String(value || '').match(/^\s*(-?\d{1,2}(?:\.\d+)?)\s*[,;]\s*(-?\d{1,3}(?:\.\d+)?)\s*$/);
       if (!match) return null;
       const lat = Number(match[1]);
       const lng = Number(match[2]);
@@ -879,14 +894,25 @@ function fillMonths(months) {
       if (button) button.disabled = true;
       try {
         const point = await getBrowserLocation();
-        field.value = formatCoordinates(point.lat, point.lng);
+        const address = await resolveAddress(point);
+        field.value = address;
         field.dispatchEvent(new Event('input', { bubbles: true }));
         showToast(t('locationAdded'));
       } catch (error) {
-        alert(error.message || t('geoFailed'));
+        alert(error.message || t('addressFailed'));
       } finally {
         if (button) button.disabled = false;
       }
+    }
+
+    async function resolveAddress(point) {
+      const result = await api('reverseGeocode', {
+        lat: Number(point.lat), lng: Number(point.lng), language: lang
+      });
+      if (!result || !result.ok || !String(result.address || '').trim()) {
+        throw new Error(t('addressFailed'));
+      }
+      return String(result.address).trim();
     }
 
     function openMapPicker(fieldId) {
@@ -904,7 +930,7 @@ function fillMonths(months) {
         mapElement.classList.add('hidden');
         fallback.classList.remove('hidden');
         document.getElementById('mapSelectionText').textContent = selectedMapPoint
-          ? formatCoordinates(selectedMapPoint.lat, selectedMapPoint.lng)
+          ? t('mapPointSelected')
           : t('mapNoSelection');
         return;
       }
@@ -936,8 +962,7 @@ function fillMonths(months) {
 
     function setMapPickerPoint(lat, lng, pan) {
       selectedMapPoint = { lat: Number(lat), lng: Number(lng) };
-      const label = formatCoordinates(selectedMapPoint.lat, selectedMapPoint.lng);
-      document.getElementById('mapSelectionText').textContent = label;
+      document.getElementById('mapSelectionText').textContent = t('mapPointSelected');
       if (!routeMap) return;
       const latLng = [selectedMapPoint.lat, selectedMapPoint.lng];
       if (!routeMapMarker) {
@@ -964,13 +989,25 @@ function fillMonths(months) {
       }
     }
 
-    function useSelectedMapPoint() {
+    async function useSelectedMapPoint(button) {
       if (!selectedMapPoint || !routeMapTarget) return alert(t('mapNoSelection'));
       const field = document.getElementById(routeMapTarget);
-      field.value = formatCoordinates(selectedMapPoint.lat, selectedMapPoint.lng);
-      field.dispatchEvent(new Event('input', { bubbles: true }));
-      closeMapPicker();
-      showToast(t('mapPointAdded'));
+      const point = { lat: selectedMapPoint.lat, lng: selectedMapPoint.lng };
+      const selectionText = document.getElementById('mapSelectionText');
+      if (button) button.disabled = true;
+      selectionText.textContent = t('addressLoading');
+      try {
+        const address = await resolveAddress(point);
+        field.value = address;
+        field.dispatchEvent(new Event('input', { bubbles: true }));
+        closeMapPicker();
+        showToast(t('mapPointAdded'));
+      } catch (error) {
+        selectionText.textContent = t('mapPointSelected');
+        alert(error.message || t('addressFailed'));
+      } finally {
+        if (button) button.disabled = false;
+      }
     }
 
     function closeMapPicker(event) {
@@ -1042,7 +1079,7 @@ function fillMonths(months) {
     async function saveTrip() {
       const saveBtn = document.getElementById('saveBtn');
       try {
-        const payload = getPayload();
+        let payload = getPayload();
         if (!payload.date) return alert(lang === 'tj' ? 'Санаро интихоб кунед' : 'Укажите дату');
         if (!payload.employee) return alert(lang === 'tj' ? 'Корманд муайян нашуд. Аз нав ворид шавед.' : 'Не определен сотрудник. Выйдите и войдите заново.');
         if (!Number.isFinite(payload.amount) || payload.amount <= 0) {
@@ -1053,6 +1090,8 @@ function fillMonths(months) {
 
         saveBtn.classList.add('saving');
         saveBtn.textContent = t('saving');
+        await normalizeCoordinateInputsForSave();
+        payload = getPayload();
         const wasEditing = !!editingTripId;
         if (wasEditing) payload.id = editingTripId;
         payload.requestEmployee = currentUser;
@@ -1073,6 +1112,23 @@ function fillMonths(months) {
       } finally {
         saveBtn.classList.remove('saving');
         saveBtn.textContent = t('saveTrip');
+      }
+    }
+
+    async function normalizeCoordinateInputsForSave() {
+      if (document.getElementById('pointA').disabled || document.getElementById('pointB').disabled) {
+        throw new Error(t('addressLoading'));
+      }
+      for (const fieldId of ['pointA', 'pointB']) {
+        const field = document.getElementById(fieldId);
+        const point = parseCoordinates(field.value);
+        if (!point) continue;
+        try {
+          field.value = await resolveAddress(point);
+          field.dispatchEvent(new Event('input', { bubbles: true }));
+        } catch (_) {
+          throw new Error(t('addressFailed'));
+        }
       }
     }
 
@@ -1201,6 +1257,7 @@ function fillMonths(months) {
       document.getElementById('pointA').value = routePoints.from;
       document.getElementById('pointB').value = routePoints.to;
       document.getElementById('comment').value = trip.comment || '';
+      convertLegacyCoordinateInputs();
       document.getElementById('saveBtn').textContent = t('editMode');
       setView('trips');
       if (document.getElementById('formCard').classList.contains('hidden')) toggleForm();
@@ -1250,6 +1307,7 @@ function fillMonths(months) {
       document.getElementById('pointA').value = routePoints.from;
       document.getElementById('pointB').value = routePoints.to;
       document.getElementById('comment').value = '';
+      convertLegacyCoordinateInputs();
       editingTripId = null;
       updatePreview();
       saveDraft();
@@ -1297,6 +1355,31 @@ function fillMonths(months) {
       }
       restoringDraft = false;
       updatePreview();
+      convertLegacyCoordinateInputs();
+    }
+
+    async function convertLegacyCoordinateInputs() {
+      for (const fieldId of ['pointA', 'pointB']) {
+        const field = document.getElementById(fieldId);
+        if (!field || field.disabled) continue;
+        const original = field.value.trim();
+        const point = parseCoordinates(original);
+        if (!point) continue;
+
+        const oldPlaceholder = field.placeholder;
+        field.value = '';
+        field.placeholder = t('addressLoading');
+        field.disabled = true;
+        try {
+          field.value = await resolveAddress(point);
+          field.dispatchEvent(new Event('input', { bubbles: true }));
+        } catch (_) {
+          field.value = original;
+        } finally {
+          field.disabled = false;
+          field.placeholder = oldPlaceholder;
+        }
+      }
     }
 
     function exportPDF() {
@@ -1316,11 +1399,11 @@ function fillMonths(months) {
   const employeeHeader = isAdmin ? '<th>Сотрудник</th>' : '';
   const title = t('reportByTrips');
   const html = '<!doctype html><html><head><meta charset="utf-8"><title>' + escapeHtml(title) + '</title>' +
-    '<style>body{font-family:Arial,sans-serif;padding:28px;color:#182033}h1{font-size:21px;color:#304dc6}p{color:#56617a}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{border:1px solid #ccd2e2;padding:9px;text-align:left;font-size:12px}th{background:#eef1fa}.amount{text-align:right;white-space:nowrap}.total{margin-top:18px;font-size:17px;font-weight:bold;text-align:right}@media print{body{padding:0}}</style>' +
+    '<style>body{font-family:Arial,sans-serif;padding:28px;color:#182033}h1{font-size:21px;color:#304dc6}p{color:#56617a}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{border:1px solid #ccd2e2;padding:9px;text-align:left;font-size:12px}th{background:#eef1fa}.amount{text-align:right;white-space:nowrap}.total{margin-top:18px;font-size:17px;font-weight:bold;text-align:right}.attribution{font-size:10px;margin-top:24px}@media print{body{padding:0}}</style>' +
     '</head><body><h1>' + escapeHtml(title) + '</h1><p>' + escapeHtml(t('employee')) + ': ' + escapeHtml(isAdmin ? t('allEmployees') : currentUser) + '</p>' +
     '<p>' + escapeHtml(t('period')) + ': ' + escapeHtml(getPeriodLabel()) + '</p><table><thead><tr><th>' + escapeHtml(t('date')) + '</th>' + employeeHeader +
     '<th>' + escapeHtml(t('route')) + '</th><th>' + escapeHtml(t('commentText')) + '</th><th>' + escapeHtml(t('finalSum')) + '</th></tr></thead><tbody>' + rows +
-    '</tbody></table><div class="total">' + escapeHtml(t('totalText')) + ': ' + total.toFixed(2) + ' ' + escapeHtml(t('currency')) + '</div></body></html>';
+    '</tbody></table><div class="total">' + escapeHtml(t('totalText')) + ': ' + total.toFixed(2) + ' ' + escapeHtml(t('currency')) + '</div><p class="attribution"><a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a></p></body></html>';
 
   const win = window.open('', '_blank');
   if (!win) return alert(lang === 'tj' ? 'Равзанаи чоп кушода нашуд. Иҷозати popup-ро санҷед.' : 'Не удалось открыть окно печати. Разрешите всплывающие окна.');
@@ -1331,40 +1414,228 @@ function fillMonths(months) {
   setTimeout(() => win.print(), 250);
 }
 
-function csvCell(value) {
-  let text = String(value == null ? '' : value);
-  if (/^[=+@-]/.test(text)) text = "'" + text;
-  return '"' + text.replaceAll('"', '""').replaceAll('\r', ' ').replaceAll('\n', ' ') + '"';
+function getExportDateRange(trips) {
+  const dates = trips.map(item => String(item.date || '').slice(0, 10))
+    .filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort();
+  if (dates.length) {
+    const first = formatPeriodDate(dates[0]);
+    const last = formatPeriodDate(dates[dates.length - 1]);
+    return first === last ? first : first + ' — ' + last;
+  }
+
+  const fromDate = document.getElementById('dateFrom')?.value || '';
+  const toDate = document.getElementById('dateTo')?.value || '';
+  if (fromDate || toDate) {
+    return (fromDate ? formatPeriodDate(fromDate) : '…') + ' — ' +
+      (toDate ? formatPeriodDate(toDate) : t('today'));
+  }
+  const choice = document.getElementById('periodFilter')?.value || 'current';
+  if (choice === 'current' && currentPeriod && currentPeriod.startDate) {
+    return formatPeriodDate(currentPeriod.startDate) + ' — ' + t('today');
+  }
+  const period = periodsCache.find(item => String(item.id) === String(choice));
+  if (period) return formatPeriodDate(period.startDate) + ' — ' +
+    (period.endDate ? formatPeriodDate(period.endDate) : t('today'));
+  return t('xlsxNoDates');
 }
 
-function exportExcel() {
-  const trips = getFilteredTrips();
-  const isAdmin = currentRole === 'admin';
-  const header = [t('date')];
-  if (isAdmin) header.push(t('employee'));
-  header.push(t('route'), t('commentText'), t('finalSum'));
+function excelDateFromIso(value) {
+  const match = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return match ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]), 12, 0, 0) : String(value || '');
+}
 
-  let csv = '\uFEFF' + csvCell('Smartpay Trips') + '\n' +
-    csvCell(t('period') + ': ' + getPeriodLabel()) + '\n' +
-    header.map(csvCell).join(';') + '\n';
+function styleExcelRange(sheet, row, firstColumn, lastColumn, style) {
+  for (let column = firstColumn; column <= lastColumn; column++) {
+    Object.assign(sheet.getCell(row, column), style);
+  }
+}
 
-  trips.forEach(item => {
-    const row = [item.date];
-    if (isAdmin) row.push(item.employee);
-    row.push(getTripRoute(item), item.comment || '', Number(item.total || 0).toFixed(2));
-    csv += row.map(csvCell).join(';') + '\n';
-  });
+async function exportExcel() {
+  if (!window.ExcelJS) return alert(t('xlsxExportFailed'));
+  const button = document.querySelector('[onclick="exportExcel()"]');
+  if (button) button.disabled = true;
 
-  const total = trips.reduce((sum, item) => sum + Number(item.total || 0), 0);
-  csv += csvCell(t('totalText')) + ';' + csvCell(total.toFixed(2) + ' ' + t('currency')) + '\n';
+  try {
+    const trips = getFilteredTrips().slice().sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')));
+    const total = trips.reduce((sum, item) => sum + Number(item.total || 0), 0);
+    const workbook = new ExcelJS.Workbook();
+    workbook.creator = 'SmartPay Trips';
+    workbook.subject = t('xlsxTitle');
+    workbook.title = t('xlsxTitle');
+    workbook.created = new Date();
+    workbook.modified = new Date();
+    workbook.calcProperties.fullCalcOnLoad = true;
+    workbook.calcProperties.forceFullCalc = true;
 
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement('a');
-  const safeLabel = getPeriodLabel().replace(/[^\w\u0400-\u04FF.-]+/g, '_');
-  link.href = URL.createObjectURL(blob);
-  link.download = 'Smartpay_expenses_' + safeLabel + '.csv';
-  link.click();
-  setTimeout(() => URL.revokeObjectURL(link.href), 1500);
+    const sheet = workbook.addWorksheet('Расходы', {
+      properties: { tabColor: { argb: 'FF4263EB' }, defaultRowHeight: 21 },
+      views: [{ state: 'frozen', ySplit: 10, showGridLines: false }]
+    });
+    sheet.columns = [
+      { key: 'number', width: 7 }, { key: 'date', width: 15 },
+      { key: 'employee', width: 24 }, { key: 'route', width: 39 },
+      { key: 'comment', width: 38 }, { key: 'amount', width: 19 }
+    ];
+    sheet.mergeCells('A1:F1');
+    sheet.getCell('A1').value = t('xlsxTitle');
+    sheet.getCell('A1').font = { name: 'Arial', size: 19, bold: true, color: { argb: 'FFFFFFFF' } };
+    sheet.getCell('A1').fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF253B83' } };
+    sheet.getCell('A1').alignment = { vertical: 'middle', horizontal: 'left', indent: 1 };
+    sheet.getRow(1).height = 37;
+
+    sheet.mergeCells('A2:F2');
+    sheet.getCell('A2').value = t('xlsxSubtitle');
+    sheet.getCell('A2').font = { name: 'Arial', size: 11, italic: true, color: { argb: 'FF53617D' } };
+    sheet.getCell('A2').fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFEAF0FF' } };
+    sheet.getCell('A2').alignment = { vertical: 'middle', indent: 1 };
+    sheet.getRow(2).height = 25;
+
+    const reportEmployee = currentRole === 'admin'
+      ? (document.getElementById('employeeFilter')?.value || t('allEmployees'))
+      : currentUser;
+    const metadata = [
+      [t('xlsxPeriod'), getPeriodLabel()],
+      [t('xlsxDateRange'), getExportDateRange(trips)],
+      [t('xlsxEmployee'), reportEmployee],
+      [t('xlsxCreated'), new Date().toLocaleString(lang === 'tj' ? 'tg-TJ' : 'ru-RU')]
+    ];
+    metadata.forEach((pair, index) => {
+      const row = index + 3;
+      sheet.mergeCells('A' + row + ':B' + row);
+      sheet.mergeCells('C' + row + ':F' + row);
+      sheet.getCell('A' + row).value = pair[0];
+      sheet.getCell('C' + row).value = pair[1] || '—';
+      sheet.getCell('A' + row).font = { name: 'Arial', size: 10, bold: true, color: { argb: 'FF53617D' } };
+      sheet.getCell('C' + row).font = { name: 'Arial', size: 10, color: { argb: 'FF172036' } };
+      sheet.getCell('A' + row).alignment = { vertical: 'middle', indent: 1 };
+      sheet.getCell('C' + row).alignment = { vertical: 'middle', wrapText: true };
+      styleExcelRange(sheet, row, 1, 6, {
+        fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: index % 2 ? 'FFF4F7FC' : 'FFFAFBFE' } },
+        border: { bottom: { style: 'hair', color: { argb: 'FFD9E0EE' } } }
+      });
+      sheet.getRow(row).height = 23;
+    });
+
+    sheet.mergeCells('A7:F7');
+    sheet.getCell('A7').value = { text: t('mapAttribution'), hyperlink: 'https://www.openstreetmap.org/copyright' };
+    sheet.getCell('A7').font = { name: 'Arial', size: 9, color: { argb: 'FF53617D' }, underline: true };
+    sheet.getCell('A7').alignment = { vertical: 'middle', horizontal: 'right', indent: 1 };
+    sheet.getRow(7).height = 20;
+
+    sheet.mergeCells('A8:B8');
+    sheet.mergeCells('D8:E8');
+    sheet.getCell('A8').value = t('xlsxCount');
+    sheet.getCell('C8').value = trips.length;
+    sheet.getCell('D8').value = t('xlsxTotal');
+    sheet.getCell('F8').value = total;
+    styleExcelRange(sheet, 8, 1, 6, {
+      fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE7EDFF' } },
+      border: { top: { style: 'thin', color: { argb: 'FFC9D4F5' } }, bottom: { style: 'thin', color: { argb: 'FFC9D4F5' } } },
+      alignment: { vertical: 'middle' }
+    });
+    ['A8', 'D8'].forEach(address => {
+      sheet.getCell(address).font = { name: 'Arial', size: 10, bold: true, color: { argb: 'FF304DC6' } };
+      sheet.getCell(address).alignment = { vertical: 'middle', indent: 1 };
+    });
+    ['C8', 'F8'].forEach(address => {
+      sheet.getCell(address).font = { name: 'Arial', size: 13, bold: true, color: { argb: 'FF253B83' } };
+      sheet.getCell(address).alignment = { vertical: 'middle', horizontal: 'center' };
+    });
+    sheet.getCell('F8').numFmt = '#,##0.00 "' + t('currency') + '"';
+    sheet.getRow(8).height = 32;
+    sheet.getRow(9).height = 9;
+
+    const headerRow = 10;
+    const headers = ['№', t('date'), t('xlsxEmployee'), t('route'), t('commentText'), t('finalSum')];
+    sheet.addRow([]);
+    headers.forEach((header, index) => {
+      const cell = sheet.getCell(headerRow, index + 1);
+      cell.value = header;
+      cell.font = { name: 'Arial', size: 10, bold: true, color: { argb: 'FFFFFFFF' } };
+      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF304DC6' } };
+      cell.alignment = { vertical: 'middle', horizontal: index === 3 || index === 4 ? 'left' : 'center', wrapText: true };
+      cell.border = { bottom: { style: 'medium', color: { argb: 'FF243C91' } } };
+    });
+    sheet.getRow(headerRow).height = 30;
+
+    const firstDataRow = headerRow + 1;
+    trips.forEach((trip, index) => {
+      const row = sheet.addRow([
+        index + 1,
+        excelDateFromIso(trip.date),
+        trip.employee || currentUser || '',
+        getTripRoute(trip) || '—',
+        trip.comment || '',
+        Number(trip.total || 0)
+      ]);
+      row.height = 31;
+      row.eachCell({ includeEmpty: true }, cell => {
+        cell.font = { name: 'Arial', size: 10, color: { argb: 'FF263149' } };
+        cell.alignment = { vertical: 'middle', wrapText: true };
+        cell.border = { bottom: { style: 'hair', color: { argb: 'FFD9E0EE' } } };
+        if (index % 2 === 1) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF4F7FC' } };
+      });
+      row.getCell(1).alignment = { vertical: 'middle', horizontal: 'center' };
+      row.getCell(2).numFmt = 'dd.mm.yyyy';
+      row.getCell(2).alignment = { vertical: 'middle', horizontal: 'center' };
+      row.getCell(6).numFmt = '#,##0.00 "' + t('currency') + '"';
+      row.getCell(6).alignment = { vertical: 'middle', horizontal: 'right' };
+    });
+
+    let lastDataRow = headerRow + trips.length;
+    if (trips.length) {
+      sheet.autoFilter = { from: 'A' + headerRow, to: 'F' + lastDataRow };
+    } else {
+      sheet.mergeCells('A' + firstDataRow + ':F' + firstDataRow);
+      sheet.getCell('A' + firstDataRow).value = t('xlsxNoData');
+      sheet.getCell('A' + firstDataRow).font = { name: 'Arial', size: 10, italic: true, color: { argb: 'FF68738D' } };
+      sheet.getCell('A' + firstDataRow).alignment = { vertical: 'middle', horizontal: 'center' };
+      lastDataRow = firstDataRow;
+    }
+
+    const totalRow = Math.max(lastDataRow, firstDataRow) + 1;
+    sheet.mergeCells('A' + totalRow + ':E' + totalRow);
+    sheet.getCell('A' + totalRow).value = t('totalText');
+    sheet.getCell('A' + totalRow).alignment = { vertical: 'middle', horizontal: 'right', indent: 1 };
+    sheet.getCell('A' + totalRow).font = { name: 'Arial', size: 11, bold: true, color: { argb: 'FF253B83' } };
+    sheet.getCell('F' + totalRow).value = trips.length
+      ? { formula: 'SUM(F' + firstDataRow + ':F' + lastDataRow + ')', result: total }
+      : total;
+    sheet.getCell('F' + totalRow).numFmt = '#,##0.00 "' + t('currency') + '"';
+    sheet.getCell('F' + totalRow).font = { name: 'Arial', size: 11, bold: true, color: { argb: 'FF253B83' } };
+    sheet.getCell('F' + totalRow).alignment = { vertical: 'middle', horizontal: 'right' };
+    styleExcelRange(sheet, totalRow, 1, 6, {
+      fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE7EDFF' } },
+      border: { top: { style: 'medium', color: { argb: 'FFC9D4F5' } }, bottom: { style: 'thin', color: { argb: 'FFC9D4F5' } } }
+    });
+    sheet.getRow(totalRow).height = 31;
+
+    sheet.pageSetup = {
+      paperSize: 9, orientation: 'landscape', fitToPage: true,
+      fitToWidth: 1, fitToHeight: 0,
+      margins: { left: 0.3, right: 0.3, top: 0.5, bottom: 0.5, header: 0.2, footer: 0.2 }
+    };
+    sheet.pageSetup.printTitlesRow = '10:10';
+    sheet.pageSetup.printArea = 'A1:F' + totalRow;
+    sheet.headerFooter.oddFooter = '&LSmartPay Trips&C' + t('xlsxPeriod') + ': ' + getPeriodLabel() + '&R&P / &N';
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const link = document.createElement('a');
+    const safeLabel = getPeriodLabel().replace(/[^\w\u0400-\u04FF.-]+/g, '_');
+    const now = new Date();
+    const dateLabel = [now.getFullYear(), String(now.getMonth() + 1).padStart(2, '0'), String(now.getDate()).padStart(2, '0')].join('-');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'SmartPay_expenses_' + safeLabel + '_' + dateLabel + '.xlsx';
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(link.href), 1500);
+    showToast(t('xlsxExportReady'));
+  } catch (error) {
+    console.error('Excel export failed:', error);
+    alert(t('xlsxExportFailed'));
+  } finally {
+    if (button) button.disabled = false;
+  }
 }
 
     function showToast(text) {
