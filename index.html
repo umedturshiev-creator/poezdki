@@ -70,6 +70,9 @@ input,select,textarea{width:100%;min-width:0;color:var(--ink);background:rgba(25
 @media(max-width:390px){.app{padding-left:10px;padding-right:10px}.header{flex-wrap:wrap}.topActions{width:100%;justify-content:flex-start}.heroActions{align-items:stretch}.heroStats{gap:8px}.heroStat strong{font-size:14px}.filterGrid{gap:7px}.routeRow{grid-template-columns:minmax(0,1fr) 32px minmax(0,1fr);gap:5px}.routeArrow{width:32px}.row{grid-template-columns:1fr}.reportGrid{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.mapModal{padding:8px}.mapDialog{height:calc(100dvh - 16px);border-radius:20px}.mapDialogHead{padding:16px 15px 10px}.mapDialogFooter{align-items:stretch;flex-direction:column;padding:10px 12px calc(12px + env(safe-area-inset-bottom))}.mapDialogActions{display:grid;grid-template-columns:1fr 1fr}.mapDialogActions button{min-height:42px;padding:9px 7px;font-size:11px}.mapCanvas{min-height:220px}.pointInputRow{gap:5px}.pointIconButton{width:42px;height:44px;flex-basis:42px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+.actionIcon{width:19px;height:19px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.actionIcon.pdfIcon{color:#e45a6d}.actionIcon.excelIcon{color:#16896b}.actionIcon.shareIcon{color:#7256d8}
+@media(max-width:760px){body{background-attachment:scroll}.app{padding-top:max(12px,env(safe-area-inset-top));padding-left:12px;padding-right:12px;padding-bottom:calc(28px + env(safe-area-inset-bottom))}.header,.brand,.workspace-grid,.workspace-grid.form-collapsed,.card,.filterPanel,.hero,.reportHero,.subcard{min-width:0}.brand{flex:1}.brand>div:last-child{min-width:0}.navWrap{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;border-radius:18px}.navTab{min-width:0;justify-content:center;white-space:normal}.reportColumns.adminSummary{grid-template-columns:minmax(0,1fr)}.exportActions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%}.exportActions .exportActionBtn{width:100%;min-width:0;min-height:46px;padding:10px 8px;gap:7px;white-space:normal;line-height:1.2}.exportActions .shareButton{grid-column:1/-1}.exportActions .actionIcon{width:19px;height:19px}.tripRoute,.tripTitle{overflow-wrap:anywhere}.tripTotal{font-size:15px}}
+@media(max-width:420px){.app{padding-left:10px;padding-right:10px}.card{padding:14px}.navTab{padding:10px 6px;font-size:12px;gap:6px}.homeStats{gap:6px}.statTile{padding:10px 7px}.statTile strong{font-size:14px}.reportGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.reportStat{min-width:0;padding:11px}.reportStat strong{font-size:16px}.exportActions .exportActionBtn{font-size:12px}.pointInputRow{gap:5px}}
 </style>
 </head>
 <body>
@@ -206,8 +209,9 @@ input,select,textarea{width:100%;min-width:0;color:var(--ink);background:rgba(25
         <div class="card">
           <div class="tripPanelHead"><div><h2 data-i18n="periodDetails">Сводка периода</h2><p class="sectionSub" id="reportMonth">Текущий период</p></div></div>
           <div class="exportActions show" id="exportActions">
-            <button class="btnGhost" type="button" onclick="exportPDF()" data-i18n="exportPDF">▤ Печать / PDF</button>
-            <button class="btnGhost" type="button" onclick="exportExcel()" data-i18n="exportExcel">▦ Excel</button>
+            <button class="btnGhost exportActionBtn" type="button" onclick="exportPDF()"><svg class="actionIcon pdfIcon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h7l4 4V20H7a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2Z"/><path d="M14 3.5v4h4M8 13h8M8 16h5"/></svg><span data-i18n="exportPDF">Печать / PDF</span></button>
+            <button class="btnGhost exportActionBtn" type="button" onclick="exportExcel()"><svg class="actionIcon excelIcon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4" width="17" height="16" rx="2"/><path d="M3.5 9h17M3.5 14h17M9 4v16M15 4v16"/></svg><span data-i18n="exportExcel">Excel</span></button>
+            <button id="shareReportBtn" class="btnGhost exportActionBtn shareButton" type="button" onclick="shareReport()"><svg class="actionIcon shareIcon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.7 10.5 6.6-4M8.7 13.5l6.6 4"/></svg><span data-i18n="shareReport">Поделиться</span></button>
           </div>
           <div class="reportColumns">
             <section class="subcard"><h3 data-i18n="periodDetails">Сводка периода</h3><div id="periodSummary"></div></section>
@@ -241,7 +245,7 @@ input,select,textarea{width:100%;min-width:0;color:var(--ink);background:rgba(25
 
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbynBw-dcbNbRwXqBrBhVvB1aU1_RERiP9d7wZrg3lFGhaOXN64t414-lPtz3PJT_rMM/exec';
-    const APP_VERSION = 'v. 3.4.3';
+    const APP_VERSION = 'v. 3.4.4';
     const EXPECTED_API_VERSION = '3.4.3';
 
     const I18N = {
@@ -350,7 +354,8 @@ minutesShort:'дақ'
         allTripsPeriod:'Вся история', currency:'сомони',
         noReportData:'Нет записей за выбранный период',
         draftRestored:'Черновик восстановлен', lastTripMissing:'Пока нет поездок для повтора',
-        tripCountLabel:'поездок', exportPDF:'▤ Печать / PDF', exportExcel:'▦ Excel',
+        tripCountLabel:'поездок', exportPDF:'Печать / PDF', exportExcel:'Excel', shareReport:'Поделиться',
+        shareCopied:'Сводка скопирована. Вставьте её в сообщение.', shareDownloaded:'Сводка сохранена текстовым файлом.', shareFailed:'Не удалось подготовить сводку для отправки.',
         xlsxTitle:'SmartPay — отчёт по расходам', xlsxSubtitle:'Детальная выгрузка расходов',
         xlsxPeriod:'Расчётный период', xlsxDateRange:'Даты записей', xlsxEmployee:'Сотрудник',
         xlsxCreated:'Выгружено', xlsxCount:'Количество записей', xlsxTotal:'Общая сумма',
@@ -403,7 +408,8 @@ minutesShort:'дақ'
         allTripsPeriod:'Тамоми таърих', currency:'сомонӣ',
         noReportData:'Дар давраи интихобшуда сабт нест',
         draftRestored:'Лоиҳа барқарор шуд', lastTripMissing:'Барои такрор ҳоло сафар нест',
-        tripCountLabel:'сафар', exportPDF:'▤ Чоп / PDF', exportExcel:'▦ Excel',
+        tripCountLabel:'сафар', exportPDF:'Чоп / PDF', exportExcel:'Excel', shareReport:'Мубодила',
+        shareCopied:'Ҷамъбаст нусхабардорӣ шуд. Онро ба паём гузоред.', shareDownloaded:'Ҷамъбаст ҳамчун файли матнӣ нигоҳ дошта шуд.', shareFailed:'Омода кардани ҷамъбаст барои фиристодан муяссар нашуд.',
         xlsxTitle:'SmartPay — ҳисоботи хароҷот', xlsxSubtitle:'Содироти муфассали хароҷот',
         xlsxPeriod:'Давраи ҳисоб', xlsxDateRange:'Санаҳои сабтҳо', xlsxEmployee:'Корманд',
         xlsxCreated:'Содирот шуд', xlsxCount:'Шумораи сабтҳо', xlsxTotal:'Маблағи умумӣ',
@@ -1418,6 +1424,90 @@ function fillMonths(months) {
   win.document.close();
   win.focus();
   setTimeout(() => win.print(), 250);
+}
+
+async function shareReport() {
+  const button = document.getElementById('shareReportBtn');
+  if (button) button.disabled = true;
+  try {
+    const trips = getFilteredTrips().slice().sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')));
+    const total = trips.reduce((sum, item) => sum + Number(item.total || 0), 0);
+    const isAdmin = currentRole === 'admin';
+    const employee = isAdmin
+      ? (document.getElementById('employeeFilter')?.value || t('allEmployees'))
+      : currentUser;
+    const lines = [
+      t('xlsxTitle'),
+      t('xlsxPeriod') + ': ' + getPeriodLabel(),
+      t('xlsxDateRange') + ': ' + getExportDateRange(trips),
+      t('xlsxEmployee') + ': ' + employee,
+      t('xlsxCount') + ': ' + trips.length,
+      t('xlsxTotal') + ': ' + formatMoney(total),
+      '',
+      ...trips.map((trip, index) => {
+        const date = formatPeriodDate(trip.date) || String(trip.date || '—');
+        const person = isAdmin && trip.employee ? trip.employee + ': ' : '';
+        const route = getTripRoute(trip) || '—';
+        const comment = String(trip.comment || '').trim();
+        return (index + 1) + '. ' + date + ' — ' + person + route + ' — ' + formatMoney(trip.total) +
+          (comment ? ' (' + comment + ')' : '');
+      })
+    ];
+    const text = lines.join('\n');
+
+    if (typeof navigator.share === 'function') {
+      try {
+        await navigator.share({ title: t('xlsxTitle'), text: text });
+        return;
+      } catch (error) {
+        if (error && error.name === 'AbortError') return;
+      }
+    }
+
+    let copied = false;
+    if (navigator.clipboard && window.isSecureContext) {
+      try {
+        await navigator.clipboard.writeText(text);
+        copied = true;
+      } catch (_) {}
+    }
+    if (!copied) copied = copyShareTextFallback_(text);
+    if (copied) {
+      showToast(t('shareCopied'));
+      return;
+    }
+
+    const file = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(file);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'SmartPay_Trips_' + new Date().toISOString().slice(0, 10) + '.txt';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    showToast(t('shareDownloaded'));
+  } catch (error) {
+    console.error('Share report failed:', error);
+    alert(t('shareFailed'));
+  } finally {
+    if (button) button.disabled = false;
+  }
+}
+
+function copyShareTextFallback_(text) {
+  const field = document.createElement('textarea');
+  field.value = text;
+  field.setAttribute('readonly', '');
+  field.style.position = 'fixed';
+  field.style.opacity = '0';
+  field.style.pointerEvents = 'none';
+  document.body.appendChild(field);
+  field.select();
+  let copied = false;
+  try { copied = document.execCommand('copy'); } catch (_) {}
+  field.remove();
+  return copied;
 }
 
 function getExportDateRange(trips) {
