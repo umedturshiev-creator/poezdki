@@ -245,8 +245,8 @@ input,select,textarea{width:100%;min-width:0;color:var(--ink);background:rgba(25
 
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbynBw-dcbNbRwXqBrBhVvB1aU1_RERiP9d7wZrg3lFGhaOXN64t414-lPtz3PJT_rMM/exec';
-    const APP_VERSION = 'v. 3.4.4';
-    const EXPECTED_API_VERSION = '3.4.3';
+    const APP_VERSION = 'v. 3.4.5';
+    const EXPECTED_API_VERSION = '3.4.5';
 
     const I18N = {
       ru: {
@@ -888,7 +888,11 @@ function fillMonths(months) {
         if (!navigator.geolocation) return reject(new Error(t('geoUnavailable')));
         if (!window.isSecureContext) return reject(new Error(t('geoHttps')));
         navigator.geolocation.getCurrentPosition(position => {
-          resolve({ lat: position.coords.latitude, lng: position.coords.longitude });
+          resolve({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+            accuracy: Number(position.coords.accuracy)
+          });
         }, error => {
           if (error && error.code === 1) return reject(new Error(t('geoPermissionDenied')));
           if (error && error.code === 3) return reject(new Error(t('geoTimeout')));
@@ -903,7 +907,7 @@ function fillMonths(months) {
       if (button) button.disabled = true;
       try {
         const point = await getBrowserLocation();
-        const address = await resolveAddress(point);
+        const address = await resolveAddress(point, 'gps', point.accuracy);
         field.value = address;
         field.dispatchEvent(new Event('input', { bubbles: true }));
         showToast(t('locationAdded'));
@@ -914,9 +918,11 @@ function fillMonths(months) {
       }
     }
 
-    async function resolveAddress(point) {
+    async function resolveAddress(point, source = 'map', accuracy) {
       const result = await api('reverseGeocode', {
-        lat: Number(point.lat), lng: Number(point.lng), language: lang
+        lat: Number(point.lat), lng: Number(point.lng), language: lang,
+        source: source,
+        accuracy: Number.isFinite(Number(accuracy)) ? Number(accuracy) : ''
       });
       if (!result || String(result.apiVersion || '') !== EXPECTED_API_VERSION) {
         throw new Error(t('addressServerOld'));
@@ -1009,7 +1015,7 @@ function fillMonths(months) {
       if (button) button.disabled = true;
       selectionText.textContent = t('addressLoading');
       try {
-        const address = await resolveAddress(point);
+        const address = await resolveAddress(point, 'map');
         field.value = address;
         field.dispatchEvent(new Event('input', { bubbles: true }));
         closeMapPicker();
