@@ -13,6 +13,8 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" type="image/png" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous" defer></script>
 
   <title>Smartpay — Учет поездок</title>
 
@@ -59,13 +61,15 @@ input,select,textarea{width:100%;min-width:0;color:var(--ink);background:rgba(25
 .view{animation:rise .35s ease both}.hidden{display:none!important}.tripPanelHead{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:15px}.tripPanelHead h2{margin:0 0 5px}.countPill{color:var(--blue-dark);font-size:12px;font-weight:720;background:rgba(80,107,232,.1);padding:7px 10px;border-radius:999px;white-space:nowrap}.homeStats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:16px}.statTile,.reportStat{background:rgba(255,255,255,.46);border:1px solid rgba(255,255,255,.8);border-radius:18px;padding:13px}.statTile span,.reportStat span{display:block;color:var(--muted);font-size:11px;margin-bottom:5px}.statTile strong,.reportStat strong{font-size:17px;letter-spacing:-.3px;display:block;overflow-wrap:anywhere}.list{display:grid;gap:10px}.trip{padding:16px;border-radius:21px;background:rgba(255,255,255,.51);border:1px solid rgba(255,255,255,.82);box-shadow:0 6px 18px rgba(65,78,122,.06);transition:transform .18s ease,box-shadow .18s ease}.trip:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(65,78,122,.1)}.tripTop{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}.tripTitle{font-size:14px;font-weight:760}.tripMeta{font-size:12px;color:var(--muted);line-height:1.55}.tripTotal{font-size:17px;font-weight:790;color:#253da7;white-space:nowrap}.tripRoute{display:flex;align-items:flex-start;gap:9px;color:#3b4661;font-size:13px;line-height:1.5;margin-bottom:8px}.routePin{width:24px;height:24px;display:grid;place-items:center;flex:0 0 auto;border-radius:9px;color:var(--blue-dark);background:rgba(83,111,241,.1);font-size:12px}.tripActions{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}.emptyState{padding:30px 16px;text-align:center;border:1px dashed rgba(100,114,153,.28);border-radius:20px;color:var(--muted);font-size:13px;background:rgba(255,255,255,.27)}
 .reportHero{padding:22px 24px;border-radius:27px;margin-bottom:16px;background:linear-gradient(118deg,rgba(255,255,255,.78),rgba(255,255,255,.45))}.reportHero h2{font-size:25px;letter-spacing:-.8px;margin:0 0 5px}.reportHero p{color:var(--muted);font-size:13px;margin:0;line-height:1.5}.reportGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 16px}.reportStat{padding:16px;border-radius:20px}.reportStat strong{font-size:21px}.reportStat.primary{background:linear-gradient(140deg,rgba(83,111,241,.17),rgba(255,255,255,.58))}.reportColumns{display:grid;grid-template-columns:1fr;gap:14px}.reportColumns.adminSummary{grid-template-columns:minmax(250px,.72fr) minmax(0,1.28fr)}.subcard{padding:18px;border-radius:22px;background:rgba(255,255,255,.42);border:1px solid rgba(255,255,255,.78)}.subcard h3{font-size:15px;margin:0 0 12px;letter-spacing:-.2px}.employeeReport{padding:12px 0;border-top:1px solid rgba(95,109,148,.13);font-size:12px;color:var(--muted)}.employeeReport:first-child{border-top:0;padding-top:0}.employeeReportHead{display:flex;justify-content:space-between;align-items:center;gap:9px;margin-bottom:7px}.employeeReportHead strong{color:var(--ink);font-size:13px}.employeeReportHead span{color:#354aa8;font-weight:730;white-space:nowrap}.progressTrack{height:6px;border-radius:8px;background:rgba(88,104,159,.12);overflow:hidden}.progressTrack i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#6079f2,#59c4d6)}.exportActions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.exportActions button{flex:0 0 auto}.reportList{margin-top:14px}
 .extraPointRow{align-items:end}.smallRemove{margin-bottom:14px}.modal{position:fixed;inset:0;z-index:9998;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(34,43,68,.28);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}.modal.show{display:flex}.modalCard{width:min(430px,100%);padding:23px;border-radius:27px;background:rgba(245,247,255,.8)}.modalCard h2{margin:0 0 17px}.toast{position:fixed;z-index:10000;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);display:none;padding:12px 17px;background:rgba(25,34,58,.88);color:#fff;border:1px solid rgba(255,255,255,.22);border-radius:999px;box-shadow:0 12px 32px rgba(24,34,66,.23);font-size:13px;font-weight:700;backdrop-filter:blur(16px)}
+.pointInputRow{display:flex;align-items:center;gap:7px;margin-bottom:14px}.pointInputRow input{margin:0;min-width:0}.pointIconButton{width:44px;height:44px;flex:0 0 44px;display:grid;place-items:center;padding:0;border-radius:14px;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.92);color:var(--blue-dark);box-shadow:0 5px 16px rgba(73,89,139,.07)}.pointIconButton:hover{background:#fff}.pointIconButton svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.pointIconButton span{font-size:23px;line-height:1}.mapModal{position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(28,36,59,.42);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}.mapDialog{width:min(920px,100%);height:min(90vh,780px);display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(255,255,255,.82);border-radius:27px;background:rgba(247,249,255,.96);box-shadow:0 28px 90px rgba(22,32,64,.34)}.mapDialogHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:19px 21px 12px}.mapDialogHead h2{font-size:19px;margin:0 0 4px}.mapDialogHead p{font-size:12px;line-height:1.45;color:var(--muted);margin:0}.mapCanvas{flex:1;min-height:280px;width:100%;z-index:0;background:#e9eef6}.mapFallback{padding:25px;text-align:center;color:var(--muted);font-size:13px;line-height:1.5}.mapDialogFooter{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 17px 17px}.mapSelectionText{min-width:0;color:var(--muted);font-size:12px;line-height:1.45;overflow-wrap:anywhere}.mapDialogActions{display:flex;gap:8px;flex:0 0 auto}.mapDialogActions button{white-space:nowrap}
 .loginScreen{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(ellipse at 20% 10%,rgba(126,151,255,.42),transparent 40%),radial-gradient(ellipse at 80% 80%,rgba(107,216,228,.34),transparent 40%),linear-gradient(140deg,#e9edff,#e6f5f8 56%,#f2ecff)}.loginCard{width:min(410px,100%);padding:26px;border-radius:30px;background:rgba(255,255,255,.57);animation:rise .4s ease both}.loginLogo{width:68px;height:68px;border-radius:23px;margin-bottom:18px}.loginCard h2{font-size:23px;letter-spacing:-.6px;margin:0 0 6px}.loginCard .subtitle{margin-bottom:20px}.loginCard label{display:block;margin:0 0 7px 3px;color:#53607a;font-size:12px;font-weight:720}.loginCard input{min-height:48px}.loginCard .btnFull{min-height:50px}.loginCard .langSwitch{display:flex;justify-content:flex-end;gap:6px;margin-bottom:14px}.langSwitch button{padding:7px 11px;border-radius:999px;font-size:12px}.langSwitch button.active{background:rgba(82,111,241,.12);color:var(--blue-dark)}
 @media(max-width:1000px){.filterGrid{grid-template-columns:repeat(3,1fr)}.workspace-grid{grid-template-columns:minmax(300px,.9fr) minmax(0,1.1fr)}.reportColumns{grid-template-columns:1fr}.reportGrid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:760px){.app{padding:14px 14px calc(34px + env(safe-area-inset-bottom))}.header{align-items:flex-start;gap:12px}.brand{gap:10px}.logoBox{width:46px;height:46px;border-radius:17px;padding:6px}h1{font-size:20px}.subtitle{font-size:11px}.topActions{gap:6px}.topActions>.btnGhost{min-height:38px;padding:8px 10px;font-size:11px}.navWrap{width:100%;margin-bottom:13px}.navTab{flex:1;justify-content:center;padding:10px 8px;font-size:13px}.hero{align-items:flex-start;flex-direction:column;padding:20px;border-radius:26px;gap:17px}.heroActions{width:100%;align-items:stretch;min-width:0;flex-direction:column;gap:12px}.heroButtons{justify-content:stretch}.heroButtons .btn{flex:1}.heroStats{gap:12px}.heroStat{min-width:0;flex:1}.heroStat strong{font-size:15px}.heroStat span{font-size:10px}.heroActions .btn{flex:0 0 auto}.filterPanel{padding:14px;border-radius:21px}.filterGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.filterGrid .searchField{grid-column:1/-1}.filterGrid .resetField{grid-column:1/-1}.filterField input,.filterField select{font-size:13px;min-height:44px}.workspace-grid,.workspace-grid.form-collapsed{grid-template-columns:1fr;gap:13px}.formCard{position:static}.card{padding:17px;border-radius:24px}.formHead{flex-direction:column}.formActions{justify-content:flex-start}.row{gap:9px}.routeRow{grid-template-columns:minmax(0,1fr) 36px minmax(0,1fr);gap:6px}.routeArrow{width:36px;height:42px}.tripPanelHead{align-items:center}.homeStats{gap:7px}.statTile{padding:11px 9px}.statTile strong{font-size:15px}.trip{padding:14px}.tripTop{gap:8px}.tripTotal{font-size:15px}.reportHero{padding:18px}.reportHero h2{font-size:22px}.reportStat{padding:13px}.reportStat strong{font-size:18px}.reportGrid{gap:8px}.reportColumns{gap:10px}.subcard{padding:15px}.exportActions{display:grid;grid-template-columns:1fr 1fr}.exportActions button{width:100%;font-size:12px;padding:10px 9px}.loginCard{padding:22px}.toast{max-width:calc(100vw - 28px);text-align:center}}
 @media(max-width:390px){.app{padding-left:10px;padding-right:10px}.header{flex-wrap:wrap}.topActions{width:100%;justify-content:flex-start}.heroActions{align-items:stretch}.heroStats{gap:8px}.heroStat strong{font-size:14px}.filterGrid{gap:7px}.routeRow{grid-template-columns:minmax(0,1fr) 32px minmax(0,1fr);gap:5px}.routeArrow{width:32px}.row{grid-template-columns:1fr}.reportGrid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.mapModal{padding:8px}.mapDialog{height:calc(100dvh - 16px);border-radius:20px}.mapDialogHead{padding:16px 15px 10px}.mapDialogFooter{align-items:stretch;flex-direction:column;padding:10px 12px calc(12px + env(safe-area-inset-bottom))}.mapDialogActions{display:grid;grid-template-columns:1fr 1fr}.mapDialogActions button{min-height:42px;padding:9px 7px;font-size:11px}.mapCanvas{min-height:220px}.pointInputRow{gap:5px}.pointIconButton{width:42px;height:44px;flex-basis:42px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
-
+</head>
 <body>
   <div id="loginScreen" class="loginScreen">
     <div class="loginCard">
@@ -148,16 +152,27 @@ input,select,textarea{width:100%;min-width:0;color:var(--ink);background:rgba(25
         <section class="card formCard hidden" id="formCard">
           <div class="formHead">
             <div><h2 data-i18n="newTrip">Новая запись</h2><p class="sectionSub" data-i18n="formSub">Укажите дату и сумму расхода.</p></div>
-            <div class="formActions"><button class="btnGhost btnSmall" type="button" onclick="repeatLastTrip()" data-i18n="repeatLast">Повторить маршрут</button><button class="btnGhost btnSmall" type="button" onclick="toggleForm()" aria-label="Закрыть">✕</button></div>
+            <div class="formActions"><button class="btnGhost btnSmall" type="button" onclick="repeatLastTrip()" data-i18n="repeatLast">Повторить точки</button><button class="btnGhost btnSmall" type="button" onclick="toggleForm()" aria-label="Закрыть">✕</button></div>
           </div>
           <div class="formSection">
             <label class="fieldLabel" for="date" data-i18n="tripDate">Дата расхода</label>
             <input type="date" id="date">
             <label class="fieldLabel" for="amount" data-i18n="amount">Сумма расхода</label>
             <input type="number" id="amount" min="0.01" step="0.01" inputmode="decimal" data-placeholder-key="amountPlaceholder" placeholder="Например: 35">
-            <label class="fieldLabel" for="routeText" data-i18n="routeOptional">Маршрут или цель поездки (необязательно)</label>
-            <input list="pointsList" id="routeText" data-placeholder-key="routePlaceholder" placeholder="Например: офис → клиент" autocomplete="off">
+            <label class="fieldLabel" for="pointA" data-i18n="pointA">Точка А — откуда (необязательно)</label>
+            <div class="pointInputRow">
+              <input list="pointsList" id="pointA" data-placeholder-key="pointPlaceholder" placeholder="Название или координаты" autocomplete="off">
+              <button class="pointIconButton" type="button" onclick="captureCurrentLocation('pointA', this)" data-title-key="useCurrentLocation"><span aria-hidden="true">◎</span></button>
+              <button class="pointIconButton" type="button" onclick="openMapPicker('pointA')" data-title-key="chooseOnMap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg></button>
+            </div>
+            <label class="fieldLabel" for="pointB" data-i18n="pointB">Точка Б — куда (необязательно)</label>
+            <div class="pointInputRow">
+              <input list="pointsList" id="pointB" data-placeholder-key="pointPlaceholder" placeholder="Название или координаты" autocomplete="off">
+              <button class="pointIconButton" type="button" onclick="captureCurrentLocation('pointB', this)" data-title-key="useCurrentLocation"><span aria-hidden="true">◎</span></button>
+              <button class="pointIconButton" type="button" onclick="openMapPicker('pointB')" data-title-key="chooseOnMap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg></button>
+            </div>
             <datalist id="pointsList"></datalist>
+            <div class="hint" data-i18n="mapPointHint">Выберите точку по GPS или на карте. Координаты можно заменить названием места.</div>
             <label class="fieldLabel" for="comment" data-i18n="comment">Комментарий (необязательно)</label>
             <textarea id="comment" data-placeholder-key="commentPlaceholder" placeholder="Например: встреча с клиентом"></textarea>
           </div>
@@ -203,9 +218,27 @@ input,select,textarea{width:100%;min-width:0;color:var(--ink);background:rgba(25
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
+  <div id="mapModal" class="mapModal hidden" role="dialog" aria-modal="true" aria-labelledby="mapModalTitle" onclick="closeMapPicker(event)">
+    <section class="mapDialog" onclick="event.stopPropagation()">
+      <div class="mapDialogHead">
+        <div><h2 id="mapModalTitle" data-i18n="mapTitle">Выбор точки на карте</h2><p id="mapTargetLabel"></p></div>
+        <button class="btnGhost btnSmall" type="button" onclick="closeMapPicker()" data-title-key="close">✕</button>
+      </div>
+      <div id="routeMap" class="mapCanvas"></div>
+      <div id="mapFallback" class="mapFallback hidden" data-i18n="mapUnavailable">Карта не загрузилась. Можно определить GPS или ввести координаты вручную.</div>
+      <div class="mapDialogFooter">
+        <div id="mapSelectionText" class="mapSelectionText" data-i18n="mapTapHint">Нажмите на карту, чтобы отметить точку.</div>
+        <div class="mapDialogActions">
+          <button class="btnGhost btnSmall" type="button" onclick="locateOnMap(this)" data-i18n="mapUseCurrent">◎ Моё местоположение</button>
+          <button class="btn btnPrimary btnSmall" type="button" onclick="useSelectedMapPoint()" data-i18n="mapApply">Выбрать эту точку</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbynBw-dcbNbRwXqBrBhVvB1aU1_RERiP9d7wZrg3lFGhaOXN64t414-lPtz3PJT_rMM/exec';
-    const APP_VERSION = 'v. 3.0.0';
+    const APP_VERSION = 'v. 3.1.0';
 
     const I18N = {
       ru: {
@@ -303,7 +336,7 @@ minutesShort:'дақ'
         monthFilter:'Календарный месяц', currentPeriod:'Текущий период',
         currentPeriods:'Текущие периоды сотрудников', allHistory:'Вся история',
         formSub:'Укажите дату и сумму. Маршрут и комментарий можно добавить по желанию.',
-        repeatLast:'Повторить маршрут', manualAmountHint:'Сумма вводится вручную',
+        repeatLast:'Повторить точки', manualAmountHint:'Сумма вводится вручную',
         draftHint:'Черновик сохраняется автоматически на этом устройстве.',
         recentSub:'Записи выбранного периода.', activePeriod:'Период',
         reportOverview:'Детальная история расходов',
@@ -315,8 +348,18 @@ minutesShort:'дақ'
         draftRestored:'Черновик восстановлен', lastTripMissing:'Пока нет поездок для повтора',
         tripCountLabel:'поездок', exportPDF:'▤ Печать / PDF', exportExcel:'▦ Excel',
         close:'Закрыть', amount:'Сумма расхода', amountPlaceholder:'Например: 35',
-        routeOptional:'Маршрут или цель поездки (необязательно)',
-        routePlaceholder:'Например: офис → клиент', closePeriod:'Закрыть период',
+        pointA:'Точка А — откуда (необязательно)', pointB:'Точка Б — куда (необязательно)',
+        pointPlaceholder:'Название места или координаты', useCurrentLocation:'Указать текущее местоположение',
+        chooseOnMap:'Выбрать точку на карте', mapPointHint:'Выберите точку по GPS или на карте. Координаты можно заменить названием места.',
+        mapTitle:'Выбор точки на карте', mapTapHint:'Нажмите на карту, чтобы отметить точку.',
+        mapUseCurrent:'◎ Моё местоположение', mapApply:'Выбрать эту точку',
+        mapUnavailable:'Карта не загрузилась. Можно определить GPS или ввести координаты вручную.',
+        mapNoSelection:'Сначала отметьте точку на карте или определите местоположение.',
+        locationAdded:'Текущее местоположение добавлено', mapPointAdded:'Точка добавлена в маршрут',
+        geoUnavailable:'Этот браузер не поддерживает геолокацию.', geoHttps:'Для геолокации откройте приложение по защищённому HTTPS-адресу.',
+        geoPermissionDenied:'Разрешите доступ к местоположению в настройках браузера.',
+        geoTimeout:'Не удалось определить местоположение. Попробуйте ещё раз.', geoFailed:'Не удалось получить координаты. Проверьте настройки GPS.',
+        closePeriod:'Закрыть период',
         closePeriodConfirm:'Закрыть текущий период и начать новый? Текущие записи останутся в истории.',
         periodClosed:'Период закрыт. Начат новый период.',
         noCurrentTrips:'В текущем периоде пока нет расходов.',
@@ -337,7 +380,7 @@ minutesShort:'дақ'
         monthFilter:'Моҳи тақвимӣ', currentPeriod:'Давраи ҷорӣ',
         currentPeriods:'Давраҳои ҷории кормандон', allHistory:'Тамоми таърих',
         formSub:'Сана ва маблағро ворид кунед. Масир ва шарҳ ихтиёрӣ мебошанд.',
-        repeatLast:'Такрори масир', manualAmountHint:'Маблағ дастӣ ворид мешавад',
+        repeatLast:'Такрори нуқтаҳо', manualAmountHint:'Маблағ дастӣ ворид мешавад',
         draftHint:'Лоиҳа худкор дар ин дастгоҳ нигоҳ дошта мешавад.',
         recentSub:'Сабтҳои давраи интихобшуда.', activePeriod:'Давра',
         reportOverview:'Таърихи муфассали хароҷот',
@@ -349,8 +392,18 @@ minutesShort:'дақ'
         draftRestored:'Лоиҳа барқарор шуд', lastTripMissing:'Барои такрор ҳоло сафар нест',
         tripCountLabel:'сафар', exportPDF:'▤ Чоп / PDF', exportExcel:'▦ Excel',
         close:'Пӯшидан', amount:'Маблағи хароҷот', amountPlaceholder:'Масалан: 35',
-        routeOptional:'Масир ё мақсади сафар (ихтиёрӣ)',
-        routePlaceholder:'Масалан: офис → муштарӣ', closePeriod:'Пӯшидани давра',
+        pointA:'Нуқтаи А — аз куҷо (ихтиёрӣ)', pointB:'Нуқтаи Б — ба куҷо (ихтиёрӣ)',
+        pointPlaceholder:'Номи ҷой ё координатаҳо', useCurrentLocation:'Ҷойгиршавии ҳозираро нишон додан',
+        chooseOnMap:'Интихоби нуқта дар харита', mapPointHint:'Нуқтаро бо GPS ё дар харита интихоб кунед. Координатҳоро бо номи ҷой иваз кардан мумкин аст.',
+        mapTitle:'Интихоби нуқта дар харита', mapTapHint:'Барои нишон додани нуқта ба харита пахш кунед.',
+        mapUseCurrent:'◎ Ҷойгиршавии ман', mapApply:'Ин нуқтаро интихоб кардан',
+        mapUnavailable:'Харита бор нашуд. GPS-ро истифода баред ё координатҳоро дастӣ ворид кунед.',
+        mapNoSelection:'Аввал нуқтаро дар харита интихоб кунед ё ҷойгиршавиро муайян кунед.',
+        locationAdded:'Ҷойгиршавии ҳозира илова шуд', mapPointAdded:'Нуқта ба масир илова шуд',
+        geoUnavailable:'Ин браузер геолокатсияро дастгирӣ намекунад.', geoHttps:'Барои геолокатсия барномаро бо суроғаи HTTPS кушоед.',
+        geoPermissionDenied:'Дар танзимоти браузер иҷозати ҷойгиршавиро диҳед.',
+        geoTimeout:'Ҷойгиршавӣ муайян нашуд. Бори дигар кӯшиш кунед.', geoFailed:'Координатҳо гирифта нашуданд. Танзимоти GPS-ро санҷед.',
+        closePeriod:'Пӯшидани давра',
         closePeriodConfirm:'Давраи ҷориро пӯшида, давраи навро оғоз мекунед? Сабтҳои ҷорӣ дар таърих мемонанд.',
         periodClosed:'Давра пӯшида шуд. Давраи нав оғоз ёфт.',
         noCurrentTrips:'Дар давраи ҷорӣ ҳоло хароҷот нест.',
@@ -371,6 +424,11 @@ minutesShort:'дақ'
     let employeesCache = [];
     let editingTripId = null;
     let restoringDraft = false;
+    let routeMap = null;
+    let routeMapMarker = null;
+    let routeMapTarget = '';
+    let selectedMapPoint = null;
+    let bodyOverflowBeforeMap = '';
 
     let currentUser = localStorage.getItem('smartpay_user') || '';
     let currentRole = localStorage.getItem('smartpay_role') || '';
@@ -381,7 +439,7 @@ minutesShort:'дақ'
       const savedLogin = localStorage.getItem('smartpay_last_login') || '';
       document.getElementById('loginEmployee').value = savedLogin;
 
-      ['date','amount','routeText','comment'].forEach(id => {
+      ['date','amount','pointA','pointB','comment'].forEach(id => {
         const field = document.getElementById(id);
         field.addEventListener('input', () => { updatePreview(); saveDraft(); });
         field.addEventListener('change', () => { updatePreview(); saveDraft(); });
@@ -390,6 +448,9 @@ minutesShort:'дақ'
         if (event.key === 'Enter') login();
       });
       document.getElementById('tripSearch').addEventListener('keydown', event => { if (event.key === 'Enter') applyMonthFilter(); });
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && !document.getElementById('mapModal').classList.contains('hidden')) closeMapPicker();
+      });
 
       applyLanguage();
       registerPWA();
@@ -420,6 +481,11 @@ minutesShort:'дақ'
 
       document.querySelectorAll('[data-placeholder-key]').forEach(el => {
         el.placeholder = t(el.getAttribute('data-placeholder-key'));
+      });
+      document.querySelectorAll('[data-title-key]').forEach(el => {
+        const label = t(el.getAttribute('data-title-key'));
+        el.title = label;
+        el.setAttribute('aria-label', label);
       });
 
       document.getElementById('loginEmployee').placeholder = lang === 'tj' ? 'Номи кормандро ворид кунед' : 'Введите имя сотрудника';
@@ -774,6 +840,148 @@ function fillMonths(months) {
       return String(trip.route || trip.from || [trip.from, trip.to].filter(Boolean).join(' → ') || '').trim();
     }
 
+    function splitRouteText(value) {
+      const parts = String(value || '').split(/\s*→\s*/).filter(Boolean);
+      if (parts.length < 2) return { from: parts[0] || '', to: '' };
+      return { from: parts.shift(), to: parts.join(' → ') };
+    }
+
+    function formatCoordinates(lat, lng) {
+      return Number(lat).toFixed(6) + ', ' + Number(lng).toFixed(6);
+    }
+
+    function parseCoordinates(value) {
+      const match = String(value || '').match(/(-?\d{1,2}(?:\.\d+)?)\s*[,;]\s*(-?\d{1,3}(?:\.\d+)?)/);
+      if (!match) return null;
+      const lat = Number(match[1]);
+      const lng = Number(match[2]);
+      if (!Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180) return null;
+      return { lat: lat, lng: lng };
+    }
+
+    function getBrowserLocation() {
+      return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) return reject(new Error(t('geoUnavailable')));
+        if (!window.isSecureContext) return reject(new Error(t('geoHttps')));
+        navigator.geolocation.getCurrentPosition(position => {
+          resolve({ lat: position.coords.latitude, lng: position.coords.longitude });
+        }, error => {
+          if (error && error.code === 1) return reject(new Error(t('geoPermissionDenied')));
+          if (error && error.code === 3) return reject(new Error(t('geoTimeout')));
+          reject(new Error(t('geoFailed')));
+        }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
+      });
+    }
+
+    async function captureCurrentLocation(fieldId, button) {
+      const field = document.getElementById(fieldId);
+      if (!field) return;
+      if (button) button.disabled = true;
+      try {
+        const point = await getBrowserLocation();
+        field.value = formatCoordinates(point.lat, point.lng);
+        field.dispatchEvent(new Event('input', { bubbles: true }));
+        showToast(t('locationAdded'));
+      } catch (error) {
+        alert(error.message || t('geoFailed'));
+      } finally {
+        if (button) button.disabled = false;
+      }
+    }
+
+    function openMapPicker(fieldId) {
+      if (fieldId !== 'pointA' && fieldId !== 'pointB') return;
+      routeMapTarget = fieldId;
+      selectedMapPoint = parseCoordinates(document.getElementById(fieldId).value);
+      document.getElementById('mapTargetLabel').textContent = t(fieldId === 'pointA' ? 'pointA' : 'pointB');
+      bodyOverflowBeforeMap = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      document.getElementById('mapModal').classList.remove('hidden');
+
+      const mapElement = document.getElementById('routeMap');
+      const fallback = document.getElementById('mapFallback');
+      if (!window.L) {
+        mapElement.classList.add('hidden');
+        fallback.classList.remove('hidden');
+        document.getElementById('mapSelectionText').textContent = selectedMapPoint
+          ? formatCoordinates(selectedMapPoint.lat, selectedMapPoint.lng)
+          : t('mapNoSelection');
+        return;
+      }
+
+      mapElement.classList.remove('hidden');
+      fallback.classList.add('hidden');
+      if (!routeMap) {
+        routeMap = L.map('routeMap', { zoomControl: true }).setView([38.5598, 68.7870], 12);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>'
+        }).addTo(routeMap);
+        routeMap.on('click', event => setMapPickerPoint(event.latlng.lat, event.latlng.lng, false));
+      }
+
+      setTimeout(() => {
+        if (!routeMap) return;
+        routeMap.invalidateSize();
+        if (selectedMapPoint) {
+          setMapPickerPoint(selectedMapPoint.lat, selectedMapPoint.lng, true);
+        } else {
+          if (routeMapMarker) routeMap.removeLayer(routeMapMarker);
+          routeMapMarker = null;
+          document.getElementById('mapSelectionText').textContent = t('mapTapHint');
+          routeMap.setView([38.5598, 68.7870], 12);
+        }
+      }, 120);
+    }
+
+    function setMapPickerPoint(lat, lng, pan) {
+      selectedMapPoint = { lat: Number(lat), lng: Number(lng) };
+      const label = formatCoordinates(selectedMapPoint.lat, selectedMapPoint.lng);
+      document.getElementById('mapSelectionText').textContent = label;
+      if (!routeMap) return;
+      const latLng = [selectedMapPoint.lat, selectedMapPoint.lng];
+      if (!routeMapMarker) {
+        routeMapMarker = L.marker(latLng, { draggable: true }).addTo(routeMap);
+        routeMapMarker.on('dragend', event => {
+          const moved = event.target.getLatLng();
+          setMapPickerPoint(moved.lat, moved.lng, false);
+        });
+      } else {
+        routeMapMarker.setLatLng(latLng);
+      }
+      if (pan) routeMap.setView(latLng, Math.max(routeMap.getZoom(), 16));
+    }
+
+    async function locateOnMap(button) {
+      if (button) button.disabled = true;
+      try {
+        const point = await getBrowserLocation();
+        setMapPickerPoint(point.lat, point.lng, true);
+      } catch (error) {
+        alert(error.message || t('geoFailed'));
+      } finally {
+        if (button) button.disabled = false;
+      }
+    }
+
+    function useSelectedMapPoint() {
+      if (!selectedMapPoint || !routeMapTarget) return alert(t('mapNoSelection'));
+      const field = document.getElementById(routeMapTarget);
+      field.value = formatCoordinates(selectedMapPoint.lat, selectedMapPoint.lng);
+      field.dispatchEvent(new Event('input', { bubbles: true }));
+      closeMapPicker();
+      showToast(t('mapPointAdded'));
+    }
+
+    function closeMapPicker(event) {
+      if (event && event.target !== event.currentTarget) return;
+      const modal = document.getElementById('mapModal');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      document.body.style.overflow = bodyOverflowBeforeMap;
+      routeMapTarget = '';
+    }
+
     function updatePeriodControls() {
       const button = document.getElementById('closePeriodBtn');
       if (!button) return;
@@ -809,11 +1017,15 @@ function fillMonths(months) {
     function toggleReport() { setView('reports'); }
 
     function getPayload() {
+      const from = document.getElementById('pointA').value.trim();
+      const to = document.getElementById('pointB').value.trim();
       return {
         date: document.getElementById('date').value,
         employee: currentUser,
         amount: Number(document.getElementById('amount').value || 0),
-        routeText: document.getElementById('routeText').value.trim(),
+        from: from,
+        to: to,
+        routeText: [from, to].filter(Boolean).join(' → '),
         comment: document.getElementById('comment').value.trim()
       };
     }
@@ -877,7 +1089,8 @@ function fillMonths(months) {
     function clearForm() {
       document.getElementById('date').valueAsDate = new Date();
       document.getElementById('amount').value = '';
-      document.getElementById('routeText').value = '';
+      document.getElementById('pointA').value = '';
+      document.getElementById('pointB').value = '';
       document.getElementById('comment').value = '';
       editingTripId = null;
       localStorage.removeItem(draftKey());
@@ -984,7 +1197,9 @@ function fillMonths(months) {
       editingTripId = id;
       document.getElementById('date').value = trip.date || '';
       document.getElementById('amount').value = Number(trip.total || 0);
-      document.getElementById('routeText').value = getTripRoute(trip);
+      const routePoints = splitRouteText(getTripRoute(trip));
+      document.getElementById('pointA').value = routePoints.from;
+      document.getElementById('pointB').value = routePoints.to;
       document.getElementById('comment').value = trip.comment || '';
       document.getElementById('saveBtn').textContent = t('editMode');
       setView('trips');
@@ -1031,7 +1246,9 @@ function fillMonths(months) {
       if (!trip) return showToast(t('lastTripMissing'));
       document.getElementById('date').valueAsDate = new Date();
       document.getElementById('amount').value = '';
-      document.getElementById('routeText').value = getTripRoute(trip);
+      const routePoints = splitRouteText(getTripRoute(trip));
+      document.getElementById('pointA').value = routePoints.from;
+      document.getElementById('pointB').value = routePoints.to;
       document.getElementById('comment').value = '';
       editingTripId = null;
       updatePreview();
@@ -1041,13 +1258,13 @@ function fillMonths(months) {
     function saveDraft() {
       if (!currentUser || restoringDraft || editingTripId) return;
       const payload = getPayload();
-      if (!payload.amount && !payload.routeText && !payload.comment) {
+      if (!payload.amount && !payload.from && !payload.to && !payload.comment) {
         localStorage.removeItem(draftKey());
         return;
       }
       localStorage.setItem(draftKey(), JSON.stringify({
         date: payload.date, amount: document.getElementById('amount').value,
-        routeText: payload.routeText, comment: payload.comment
+        from: payload.from, to: payload.to, comment: payload.comment
       }));
     }
 
@@ -1065,7 +1282,12 @@ function fillMonths(months) {
       restoringDraft = true;
       document.getElementById('date').value = draft.date || document.getElementById('date').value;
       document.getElementById('amount').value = draft.amount || draft.taxiAmount || '';
-      document.getElementById('routeText').value = draft.routeText || [draft.from, ...(draft.extraPoints || []), draft.to].filter(Boolean).join(' → ');
+      const legacyRoute = draft.routeText || [draft.from, ...(draft.extraPoints || []), draft.to].filter(Boolean).join(' → ');
+      const savedPoints = Object.prototype.hasOwnProperty.call(draft, 'from') || Object.prototype.hasOwnProperty.call(draft, 'to')
+        ? { from: String(draft.from || ''), to: String(draft.to || '') }
+        : splitRouteText(legacyRoute);
+      document.getElementById('pointA').value = savedPoints.from;
+      document.getElementById('pointB').value = savedPoints.to;
       document.getElementById('comment').value = draft.comment || '';
       if (!document.getElementById('amount').value && draft.transportType === 'car') {
         const km = Number(draft.km || 0);
