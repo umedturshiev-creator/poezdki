@@ -108,6 +108,7 @@ input[type=checkbox]{width:19px;height:19px;margin:0;padding:0;background:transp
 .loginScreen{background:#f2f4f7}.loginCard{background:#fff}.loginCard .langSwitch button.active{background:#edf2f6;color:#102a43}
 .mapDialog{background:#fff}.mapDialogHead,.mapDialogFooter{border-color:#e5e9ef}.mapDialogFooter{border-top:1px solid #e5e9ef}.mapModal{backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
 .toast{background:#102a43;border-radius:10px;box-shadow:0 8px 24px rgba(16,42,67,.22)}
+.pointFieldWrap{position:relative;flex:1;min-width:0}.pointFieldWrap input{width:100%;margin:0;padding-right:46px}.pointSuggestionToggle{position:absolute;right:4px;top:4px;width:34px;height:34px;display:grid;place-items:center;padding:0;border:0;border-radius:8px;background:transparent;color:#53677b}.pointSuggestionToggle:hover,.pointSuggestionToggle[aria-expanded="true"]{background:#edf2f6;color:#102a43}.pointSuggestionToggle svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .16s ease}.pointSuggestionToggle[aria-expanded="true"] svg{transform:rotate(180deg)}.pointSuggestions{position:absolute;z-index:100;top:calc(100% + 4px);left:0;right:0;max-height:230px;overflow:auto;padding:4px;border:1px solid #d7dfe8;border-radius:11px;background:#fff;box-shadow:0 10px 26px rgba(16,42,67,.14)}.pointSuggestionOption{display:block;width:100%;min-height:38px;padding:9px 11px;border:0;border-radius:7px;background:transparent;color:#253c54;text-align:left;font-size:13px;line-height:1.35;overflow-wrap:anywhere}.pointSuggestionOption:hover,.pointSuggestionOption:focus-visible{background:#edf2f6;outline:none}.pointSuggestionEmpty{padding:10px 11px;color:#68798b;font-size:12px;line-height:1.45}.loadMoreButton{margin-top:12px}.formToggleIcon{font-size:19px;font-weight:600;line-height:1;min-width:16px;text-align:center}
 @media(max-width:760px){.app{padding:12px 12px calc(28px + env(safe-area-inset-bottom))}.hero{padding:18px;border-radius:15px}.heroActions{width:100%;min-width:0}.heroStats{grid-template-columns:1.25fr .7fr 1.1fr;gap:8px}.heroStat{padding-left:8px}.heroStat span{font-size:10px}.heroStat strong{font-size:13px}.heroStat:last-child strong{font-size:16px}.heroButtons{gap:7px}.heroButtons .btn{padding:10px 12px;font-size:12px}.card{padding:16px}.reportHero{border-radius:15px}.filterPanel{padding:13px}.mapDialog{border-radius:15px}.mapDialogActions{display:flex;justify-content:flex-end;width:100%}}
 @media(max-width:420px){.heroStats{grid-template-columns:1fr 1fr}.heroStat:first-child{grid-column:1/-1;border:0;padding:0 0 9px;border-bottom:1px solid rgba(255,255,255,.2)}.heroStat:nth-child(2){padding-left:0;border-left:0}.heroStat:last-child strong{font-size:15px}.heroButtons .btn{flex:1;min-width:0}}
 </style>
@@ -173,7 +174,7 @@ input[type=checkbox]{width:19px;height:19px;margin:0;padding:0;background:transp
           <div class="heroStat"><span data-i18n="tripsCount">Поездок</span><strong id="homeCount">0</strong></div>
           <div class="heroStat"><span data-i18n="sum">Сумма</span><strong id="homeTotal">0</strong></div>
         </div>
-        <div class="heroButtons"><button id="formToggleBtn" class="btn btnPrimary" type="button" onclick="toggleForm()"><span>＋</span><span data-i18n="addTripBtn">Добавить расход</span></button><button id="closePeriodBtn" class="btn btnGhost periodCloseButton hidden" type="button" onclick="closeCurrentPeriod()" data-i18n="closePeriod">Закрыть период</button></div>
+        <div class="heroButtons"><button id="formToggleBtn" class="btn btnPrimary" type="button" onclick="toggleForm()" aria-expanded="true"><span class="formToggleIcon" aria-hidden="true">＋</span><span data-i18n="addTripBtn">Добавить расход</span></button><button id="closePeriodBtn" class="btn btnGhost periodCloseButton hidden" type="button" onclick="closeCurrentPeriod()" data-i18n="closePeriod">Закрыть период</button></div>
       </div>
     </section>
 
@@ -204,18 +205,17 @@ input[type=checkbox]{width:19px;height:19px;margin:0;padding:0;background:transp
             <input type="number" id="amount" min="0.01" step="0.01" inputmode="decimal" data-placeholder-key="amountPlaceholder" placeholder="Например: 35">
             <label class="fieldLabel" for="pointA" data-i18n="pointA">Точка А — откуда *</label>
             <div class="pointInputRow">
-              <input list="pointsList" id="pointA" data-placeholder-key="pointPlaceholder" placeholder="Название или адрес" autocomplete="off">
+              <div class="pointFieldWrap"><input id="pointA" data-placeholder-key="pointPlaceholder" placeholder="Название или адрес" autocomplete="off" aria-autocomplete="list" aria-expanded="false" aria-controls="pointSuggestions_pointA"><button class="pointSuggestionToggle" type="button" onclick="togglePointSuggestions('pointA')" data-title-key="placeSuggestions" aria-label="Открыть список мест" aria-expanded="false" aria-controls="pointSuggestions_pointA"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button><div class="pointSuggestions hidden" id="pointSuggestions_pointA" role="listbox"></div></div>
               <button class="pointIconButton" type="button" onclick="openMapPicker('pointA')" data-title-key="chooseOnMap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg></button>
             </div>
             <div id="extraPoints"></div>
             <button class="btnGhost btnSmall addPointButton" type="button" onclick="addIntermediatePoint()" data-i18n="addPoint">＋ Добавить промежуточную точку</button>
             <label class="fieldLabel" for="pointB" data-i18n="pointB">Точка Б — куда *</label>
             <div class="pointInputRow">
-              <input list="pointsList" id="pointB" data-placeholder-key="pointPlaceholder" placeholder="Название или адрес" autocomplete="off">
+              <div class="pointFieldWrap"><input id="pointB" data-placeholder-key="pointPlaceholder" placeholder="Название или адрес" autocomplete="off" aria-autocomplete="list" aria-expanded="false" aria-controls="pointSuggestions_pointB"><button class="pointSuggestionToggle" type="button" onclick="togglePointSuggestions('pointB')" data-title-key="placeSuggestions" aria-label="Открыть список мест" aria-expanded="false" aria-controls="pointSuggestions_pointB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button><div class="pointSuggestions hidden" id="pointSuggestions_pointB" role="listbox"></div></div>
               <button class="pointIconButton" type="button" onclick="openMapPicker('pointB')" data-title-key="chooseOnMap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg></button>
             </div>
             <label class="roundTripLabel"><input type="checkbox" id="roundTrip"><span data-i18n="roundTrip">Туда и обратно</span></label>
-            <datalist id="pointsList"></datalist>
             <div class="hint routeRequiredHint" data-i18n="routeRequired">Укажите точки А и Б. Добавленные промежуточные точки тоже нужно заполнить.</div>
             <label class="fieldLabel" for="comment" data-i18n="comment">Комментарий (необязательно)</label>
             <textarea id="comment" data-placeholder-key="commentPlaceholder" placeholder="Например: встреча с клиентом"></textarea>
@@ -228,6 +228,7 @@ input[type=checkbox]{width:19px;height:19px;margin:0;padding:0;background:transp
         <section class="card">
           <div class="tripPanelHead"><div><h2 data-i18n="tripList">Поездки</h2><p class="sectionSub" data-i18n="recentSub">Последние поездки и их расходы.</p></div><span class="countPill" id="tripCountPill">0</span></div>
           <div id="tripList" class="list"></div>
+          <button id="showMoreTripsBtn" class="btnGhost btnFull loadMoreButton hidden" type="button" onclick="showMoreTrips()" data-i18n="showMoreTrips">Показать ещё 5</button>
         </section>
       </div>
     </section>
@@ -277,22 +278,22 @@ input[type=checkbox]{width:19px;height:19px;margin:0;padding:0;background:transp
 
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbynBw-dcbNbRwXqBrBhVvB1aU1_RERiP9d7wZrg3lFGhaOXN64t414-lPtz3PJT_rMM/exec';
-    const APP_VERSION = 'v. 3.5.1';
-    const EXPECTED_API_VERSION = '3.5.1';
+    const APP_VERSION = 'v. 3.5.2';
+    const EXPECTED_API_VERSION = '3.5.2';
 
     const I18N = {
       ru: {
         loginTitle:'Вход в систему', loginSub:'Введите имя сотрудника и PIN-код', employee:'Сотрудник', pin:'PIN-код', loginBtn:'Войти',
         title:'SmartPay Trips', subtitle:'Smartpay — рабочие поездки и расходы', logout:'Выйти', changePin:'Сменить PIN',
         oldPin:'Старый PIN', newPin:'Новый PIN', repeatPin:'Повторите новый PIN', savePin:'Сохранить PIN', cancel:'Отмена',
-        loadingData:'Данные загружаются...', newTrip:'Новая поездка', hideForm:'✖️ Скрыть новую поездку', tripDate:'Дата поездки',
+        loadingData:'Данные загружаются...', newTrip:'Новая поездка', hideForm:'Скрыть расход', tripDate:'Дата поездки',
         pointA:'Точка А', pointB:'Точка Б', fromPlaceholder:'Откуда', toPlaceholder:'Куда',
         pointHint:'Можно выбрать точку из списка и дописать текст, например: “Банк Эсхата”.',
         addPoint:'+ Добавить промежуточную точку', transportType:'Тип транспорта', car:'🚗 Своя', taxi:'🚕 Такси',
         km:'Километраж', minutes:'Время поездки, минут', kmPlaceholder:'Например: 12', minutesPlaceholder:'Например: 21',
         taxiAmount:'Сумма такси', taxiPlaceholder:'Например: 35', roundTrip:'Туда и обратно', comment:'Комментарий',
         commentPlaceholder:'Например: встреча с клиентом', total:'Итоговая сумма', saveTrip:'✅ Сохранить поездку',
-        addTripBtn:'➕ Добавить новую поездку', openReport:'📊 Открыть отчет за месяц', closeReport:'📊 Скрыть отчет за месяц',
+        addTripBtn:'Добавить расход', openReport:'📊 Открыть отчет за месяц', closeReport:'📊 Скрыть отчет за месяц',
         monthlyReport:'Отчет за месяц', allMonths:'Все месяцы', show:'Показать', tripsCount:'Поездок', sum:'Сумма',
         month:'Месяц', exportReport:'📤 Экспорт отчета', hideExport:'📤 Скрыть экспорт', tripList:'Список поездок',
         noTrips:'Пока нет поездок', loginLoading:'Входим...', dataLoaded:'Данные обновлены', loading:'Загрузка данных...',
@@ -325,14 +326,14 @@ minutesShort:'мин',
         loginTitle:'Воридшавӣ ба система', loginSub:'Номи корманд ва PIN-рамзро ворид кунед', employee:'Корманд', pin:'PIN-рамз', loginBtn:'Ворид шудан',
         title:'SmartPay Trips', subtitle:'Smartpay — сафарҳои корӣ ва хароҷот', logout:'Баромадан', changePin:'Иваз кардани PIN',
         oldPin:'PIN-и кӯҳна', newPin:'PIN-и нав', repeatPin:'PIN-и навро такрор кунед', savePin:'Сабт кардани PIN', cancel:'Бекор кардан',
-        loadingData:'Маълумот бор шуда истодааст...', newTrip:'Сафари нав', hideForm:'✖️ Пинҳон кардани сафари нав', tripDate:'Санаи сафар',
+        loadingData:'Маълумот бор шуда истодааст...', newTrip:'Сафари нав', hideForm:'Пинҳон кардани хароҷот', tripDate:'Санаи сафар',
         pointA:'Нуқтаи А', pointB:'Нуқтаи Б', fromPlaceholder:'Аз куҷо', toPlaceholder:'Ба куҷо',
         pointHint:'Метавонед нуқтаро аз рӯйхат интихоб карда, матни иловагӣ нависед, масалан: “Банк Эсхата”.',
         addPoint:'+ Иловаи нуқтаи мобайнӣ', transportType:'Навъи нақлиёт', car:'🚗 Мошини худӣ', taxi:'🚕 Таксӣ',
         km:'Километр', minutes:'Вақти сафар, дақиқа', kmPlaceholder:'Масалан: 12', minutesPlaceholder:'Масалан: 21',
         taxiAmount:'Маблағи таксӣ', taxiPlaceholder:'Масалан: 35', roundTrip:'Рафту баргашт', comment:'Шарҳ',
         commentPlaceholder:'Масалан: вохӯрӣ бо мизоҷ', total:'Маблағи умумӣ', saveTrip:'✅ Сабт кардани сафар',
-        addTripBtn:'➕ Иловаи сафари нав', openReport:'📊 Кушодани ҳисоботи моҳона', closeReport:'📊 Пинҳон кардани ҳисобот',
+        addTripBtn:'Иловаи хароҷот', openReport:'📊 Кушодани ҳисоботи моҳона', closeReport:'📊 Пинҳон кардани ҳисобот',
         monthlyReport:'Ҳисоботи моҳона', allMonths:'Ҳамаи моҳҳо', show:'Нишон додан', tripsCount:'Сафарҳо', sum:'Маблағ',
         month:'Моҳ', exportReport:'📤 Содироти ҳисобот', hideExport:'📤 Пинҳон кардани содирот', tripList:'Рӯйхати сафарҳо',
         noTrips:'Ҳоло сафар нест', loginLoading:'Ворид шуда истодааст...', dataLoaded:'Маълумот нав шуд', loading:'Боркунии маълумот...',
@@ -378,7 +379,7 @@ minutesShort:'дақ'
         formSub:'Укажите дату, сумму и маршрут поездки.',
         repeatLast:'Повторить точки', manualAmountHint:'Введите сумму за одну сторону — при обратной поездке она удвоится.',
         draftHint:'Черновик сохраняется автоматически на этом устройстве.',
-        recentSub:'Записи выбранного периода.', activePeriod:'Период',
+        recentSub:'Последние записи выбранного периода.', activePeriod:'Период',
         reportOverview:'Детальная история расходов',
         reportSub:'Откройте детали, распечатайте или выгрузите их, когда понадобится.',
         employeeBreakdown:'По сотрудникам', reportTrips:'Детализация расходов',
@@ -401,7 +402,9 @@ minutesShort:'дақ'
         addPoint:'＋ Добавить промежуточную точку', intermediatePoint:'Промежуточная точка', removePoint:'Удалить точку',
         movePointUp:'Переместить точку выше', movePointDown:'Переместить точку ниже',
         roundTrip:'Туда и обратно', routeRequired:'Укажите точки А и Б. Добавленные промежуточные точки тоже нужно заполнить.',
-        pointPlaceholder:'Название или адрес места',
+        pointPlaceholder:'Название или адрес места', placeSuggestions:'Показать список мест',
+        noPlaceSuggestions:'Сохранённых мест пока нет — можно ввести адрес вручную.',
+        showMoreTrips:'Показать ещё {count}',
         chooseOnMap:'Выбрать точку на карте', mapPointHint:'Адреса берутся из OpenStreetMap. После выбора координаты передаются для определения адреса; название можно ввести вручную.',
         mapAttribution:'© OpenStreetMap contributors',
         mapTitle:'Выбор точки на карте', mapTapHint:'Нажмите на карту, чтобы отметить точку.',
@@ -416,7 +419,7 @@ minutesShort:'дақ'
         noCurrentTrips:'В текущем периоде пока нет расходов.',
         periodStarted:'Начало периода', today:'по сегодня',
         newTrip:'Новая запись', tripDate:'Дата расхода', noTrips:'Нет расходов в выбранном периоде', saving:'Сохраняем расход...', saved:'Расход сохранён', updated:'Запись обновлена', deleted:'Расход удалён', confirmDelete:'Удалить запись?',
-        addTripBtn:'➕ Добавить расход', hideForm:'✖️ Скрыть форму',
+        addTripBtn:'Добавить расход', hideForm:'Скрыть расход',
         total:'Сумма записи', saveTrip:'✅ Сохранить расход',
         sum:'Общая сумма', tripsCount:'Записей', reportOverview:'Детальная история расходов'
       },
@@ -433,7 +436,7 @@ minutesShort:'дақ'
         formSub:'Сана, маблағ ва масири сафарро ворид кунед.',
         repeatLast:'Такрори нуқтаҳо', manualAmountHint:'Маблағи як самтро ворид кунед — ҳангоми бозгашт он ду баробар мешавад.',
         draftHint:'Лоиҳа худкор дар ин дастгоҳ нигоҳ дошта мешавад.',
-        recentSub:'Сабтҳои давраи интихобшуда.', activePeriod:'Давра',
+        recentSub:'Сабтҳои охирини давраи интихобшуда.', activePeriod:'Давра',
         reportOverview:'Таърихи муфассали хароҷот',
         reportSub:'Ҳангоми зарурат тафсилотро кушоед, чоп ё содир кунед.',
         employeeBreakdown:'Аз рӯйи кормандон', reportTrips:'Тафсилоти хароҷот',
@@ -456,7 +459,9 @@ minutesShort:'дақ'
         addPoint:'＋ Иловаи нуқтаи мобайнӣ', intermediatePoint:'Нуқтаи мобайнӣ', removePoint:'Нест кардани нуқта',
         movePointUp:'Нуқтаро боло бурдан', movePointDown:'Нуқтаро поён бурдан',
         roundTrip:'Рафту баргашт', routeRequired:'Нуқтаҳои А ва Б-ро ворид кунед. Нуқтаҳои мобайнии иловашударо низ пур кунед.',
-        pointPlaceholder:'Номи ҷой ё суроға',
+        pointPlaceholder:'Номи ҷой ё суроға', placeSuggestions:'Кушодани рӯйхати ҷойҳо',
+        noPlaceSuggestions:'Ҷойҳои сабтшуда ҳоло нестанд — суроғаи навро дастӣ ворид кунед.',
+        showMoreTrips:'Боз {count}-то нишон додан',
         chooseOnMap:'Интихоби нуқта дар харита', mapPointHint:'Суроғаҳо аз OpenStreetMap гирифта мешаванд. Пас аз интихоб координатаҳо барои муайян кардани суроға фиристода мешаванд; номро дастӣ ворид кардан мумкин аст.',
         mapAttribution:'© OpenStreetMap contributors',
         mapTitle:'Интихоби нуқта дар харита', mapTapHint:'Барои нишон додани нуқта ба харита пахш кунед.',
@@ -471,7 +476,7 @@ minutesShort:'дақ'
         noCurrentTrips:'Дар давраи ҷорӣ ҳоло хароҷот нест.',
         periodStarted:'Оғози давра', today:'то имрӯз',
         newTrip:'Сабти нав', tripDate:'Санаи хароҷот', noTrips:'Дар давраи интихобшуда хароҷот нест', saving:'Хароҷот сабт мешавад...', saved:'Хароҷот сабт шуд', updated:'Сабт нав карда шуд', deleted:'Хароҷот нест карда шуд', confirmDelete:'Сабтро нест мекунед?',
-        addTripBtn:'➕ Иловаи хароҷот', hideForm:'✖️ Пинҳон кардани шакл',
+        addTripBtn:'Иловаи хароҷот', hideForm:'Пинҳон кардани хароҷот',
         total:'Маблағи сабт', saveTrip:'✅ Сабти хароҷот',
         sum:'Маблағи умумӣ', tripsCount:'Сабтҳо'
       }
@@ -496,12 +501,13 @@ minutesShort:'дақ'
     let bodyOverflowBeforeMap = '';
     let extraPointSequence = 0;
     let leafletLoadPromise = null;
+    let tripListVisibleCount = 2;
 
     let currentUser = localStorage.getItem('smartpay_user') || '';
     let currentRole = localStorage.getItem('smartpay_role') || '';
 
     document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('date').valueAsDate = new Date();
+      setTripDateToToday();
 
       const savedLogin = localStorage.getItem('smartpay_last_login') || '';
       document.getElementById('loginEmployee').value = savedLogin;
@@ -511,15 +517,24 @@ minutesShort:'дақ'
         field.addEventListener('input', () => { updatePreview(); saveDraft(); });
         field.addEventListener('change', () => { updatePreview(); saveDraft(); });
       });
+      ['pointA','pointB'].forEach(id => {
+        const field = document.getElementById(id);
+        field.addEventListener('input', () => renderPointSuggestions(field, false));
+      });
       document.getElementById('loginPin').addEventListener('keydown', event => {
         if (event.key === 'Enter') login();
       });
       document.getElementById('tripSearch').addEventListener('keydown', event => { if (event.key === 'Enter') applyMonthFilter(); });
       document.addEventListener('keydown', event => {
         if (event.key === 'Escape' && !document.getElementById('mapModal').classList.contains('hidden')) closeMapPicker();
+        if (event.key === 'Escape') closePointSuggestions();
+      });
+      document.addEventListener('pointerdown', event => {
+        if (!event.target.closest('.pointFieldWrap')) closePointSuggestions();
       });
 
       applyLanguage();
+      updateFormToggleButton(document.getElementById('formCard').classList.contains('hidden'));
       registerPWA();
 
       if (currentUser) {
@@ -532,10 +547,26 @@ minutesShort:'дақ'
       return (EXTRA_I18N[lang] && EXTRA_I18N[lang][key]) || (I18N[lang] && I18N[lang][key]) || I18N.ru[key] || key;
     }
 
+    function localTodayDate() {
+      const today = new Date();
+      return [today.getFullYear(), String(today.getMonth() + 1).padStart(2, '0'), String(today.getDate()).padStart(2, '0')].join('-');
+    }
+
+    function draftDateValue(draft, today) {
+      const currentDay = today || localTodayDate();
+      return draft && draft.savedOn === currentDay && draft.date ? draft.date : currentDay;
+    }
+
+    function setTripDateToToday() {
+      const field = document.getElementById('date');
+      if (field) field.value = localTodayDate();
+    }
+
     function setLanguage(value) {
       lang = value;
       localStorage.setItem('smartpay_lang', lang);
       applyLanguage();
+      renderTrips(getFilteredTrips(), 'tripList');
     }
 
     function applyLanguage() {
@@ -727,7 +758,7 @@ minutesShort:'дақ'
         pointsCache = data.points || [];
         employeesCache = data.employees || [];
 
-        fillPointsDatalist();
+        closePointSuggestions();
         fillEmployeeFilter();
         fillMonths(data.months || []);
         fillPeriodFilter();
@@ -779,13 +810,84 @@ minutesShort:'дақ'
       select.value = selected;
     }
 
-    function fillPointsDatalist() {
-      const list = document.getElementById('pointsList');
-      list.innerHTML = '';
-      pointsCache.forEach(point => {
-        const option = document.createElement('option');
-        option.value = point;
-        list.appendChild(option);
+    function pointSuggestionValues(query) {
+      const normalizedQuery = String(query || '').trim().toLocaleLowerCase();
+      const recentRoutePoints = allTrips.flatMap(trip =>
+        getTripOutboundRoute(trip).split(/\s*→\s*/).map(point => point.trim()).filter(Boolean)
+      );
+      const seen = new Set();
+      return [...recentRoutePoints, ...pointsCache].filter(point => {
+        const value = String(point || '').trim();
+        const key = value.toLocaleLowerCase();
+        if (!value || seen.has(key) || (normalizedQuery && !key.includes(normalizedQuery))) return false;
+        seen.add(key);
+        return true;
+      }).slice(0, 40);
+    }
+
+    function renderPointSuggestions(fieldOrId, showAll) {
+      const field = typeof fieldOrId === 'string' ? document.getElementById(fieldOrId) : fieldOrId;
+      const wrap = field && field.closest('.pointFieldWrap');
+      if (!wrap) return;
+      const panel = wrap.querySelector('.pointSuggestions');
+      const toggle = wrap.querySelector('.pointSuggestionToggle');
+      if (!panel) return;
+
+      const query = showAll ? '' : field.value;
+      const values = pointSuggestionValues(query);
+      panel.replaceChildren();
+      if (!values.length) {
+        const empty = document.createElement('div');
+        empty.className = 'pointSuggestionEmpty';
+        empty.textContent = t('noPlaceSuggestions');
+        panel.appendChild(empty);
+      } else {
+        values.forEach(value => {
+          const option = document.createElement('button');
+          option.type = 'button';
+          option.className = 'pointSuggestionOption';
+          option.setAttribute('role', 'option');
+          option.textContent = value;
+          option.addEventListener('pointerdown', event => event.preventDefault());
+          option.addEventListener('click', () => selectPointSuggestion(field.id, value));
+          panel.appendChild(option);
+        });
+      }
+      panel.classList.remove('hidden');
+      panel.setAttribute('aria-label', t('placeSuggestions'));
+      field.setAttribute('aria-expanded', 'true');
+      if (toggle) toggle.setAttribute('aria-expanded', 'true');
+    }
+
+    function togglePointSuggestions(fieldId) {
+      const field = document.getElementById(fieldId);
+      const panel = field && field.closest('.pointFieldWrap')?.querySelector('.pointSuggestions');
+      if (!panel) return;
+      if (panel.classList.contains('hidden')) renderPointSuggestions(field, true);
+      else closePointSuggestions(fieldId);
+    }
+
+    function selectPointSuggestion(fieldId, value) {
+      const field = document.getElementById(fieldId);
+      if (!field) return;
+      field.value = value;
+      field.dispatchEvent(new Event('input', { bubbles: true }));
+      field.dispatchEvent(new Event('change', { bubbles: true }));
+      closePointSuggestions(fieldId);
+      updatePreview();
+      saveDraft();
+    }
+
+    function closePointSuggestions(fieldId) {
+      const fields = fieldId ? [document.getElementById(fieldId)].filter(Boolean) :
+        [...document.querySelectorAll('.pointFieldWrap input')];
+      fields.forEach(field => {
+        const wrap = field.closest('.pointFieldWrap');
+        const panel = wrap && wrap.querySelector('.pointSuggestions');
+        const toggle = wrap && wrap.querySelector('.pointSuggestionToggle');
+        if (panel) panel.classList.add('hidden');
+        field.setAttribute('aria-expanded', 'false');
+        if (toggle) toggle.setAttribute('aria-expanded', 'false');
       });
     }
 
@@ -978,16 +1080,38 @@ function fillMonths(months) {
 
       const row = document.createElement('div');
       row.className = 'pointInputRow';
+      const inputWrap = document.createElement('div');
+      inputWrap.className = 'pointFieldWrap';
       const input = document.createElement('input');
       input.id = id;
       input.type = 'text';
-      input.setAttribute('list', 'pointsList');
       input.autocomplete = 'off';
+      input.setAttribute('aria-autocomplete', 'list');
+      input.setAttribute('aria-expanded', 'false');
       input.placeholder = t('pointPlaceholder');
       input.value = value || '';
-      input.addEventListener('input', () => { updatePreview(); saveDraft(); });
+      input.addEventListener('input', () => { updatePreview(); saveDraft(); renderPointSuggestions(input, false); });
       input.addEventListener('change', () => { updatePreview(); saveDraft(); });
-      row.appendChild(input);
+      inputWrap.appendChild(input);
+
+      const suggestionsToggle = document.createElement('button');
+      suggestionsToggle.type = 'button';
+      suggestionsToggle.className = 'pointSuggestionToggle';
+      suggestionsToggle.title = t('placeSuggestions');
+      suggestionsToggle.setAttribute('aria-label', t('placeSuggestions'));
+      suggestionsToggle.setAttribute('aria-expanded', 'false');
+      suggestionsToggle.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>';
+      suggestionsToggle.onclick = () => togglePointSuggestions(id);
+      inputWrap.appendChild(suggestionsToggle);
+
+      const suggestions = document.createElement('div');
+      suggestions.className = 'pointSuggestions hidden';
+      suggestions.id = 'pointSuggestions_' + id;
+      suggestions.setAttribute('role', 'listbox');
+      input.setAttribute('aria-controls', suggestions.id);
+      suggestionsToggle.setAttribute('aria-controls', suggestions.id);
+      inputWrap.appendChild(suggestions);
+      row.appendChild(inputWrap);
 
       const map = document.createElement('button');
       map.type = 'button';
@@ -1045,10 +1169,15 @@ function fillMonths(months) {
           button.setAttribute('aria-label', button.title);
           button.disabled = up ? index === 0 : index === items.length - 1;
         });
-        const mapButton = item.querySelector('.pointInputRow button');
+        const mapButton = item.querySelector('.pointInputRow .pointIconButton');
         if (mapButton) {
           mapButton.title = t('chooseOnMap');
           mapButton.setAttribute('aria-label', t('chooseOnMap'));
+        }
+        const suggestionsButton = item.querySelector('.pointSuggestionToggle');
+        if (suggestionsButton) {
+          suggestionsButton.title = t('placeSuggestions');
+          suggestionsButton.setAttribute('aria-label', t('placeSuggestions'));
         }
       });
     }
@@ -1236,6 +1365,7 @@ function fillMonths(months) {
         const address = await resolveAddress(point, 'map');
         field.value = address;
         field.dispatchEvent(new Event('input', { bubbles: true }));
+        closePointSuggestions(field.id);
         closeMapPicker();
         showToast(t('mapPointAdded'));
       } catch (error) {
@@ -1267,15 +1397,25 @@ function fillMonths(months) {
 
     function toggleForm() {
       const form = document.getElementById('formCard');
-      const btn = document.getElementById('formToggleBtn');
       form.classList.toggle('hidden');
       const isHidden = form.classList.contains('hidden');
       document.getElementById('workspaceGrid').classList.toggle('form-collapsed', isHidden);
-      btn.innerHTML = isHidden ? '<span>＋</span><span data-i18n="addTripBtn">' + t('addTripBtn') + '</span>' : '<span>−</span><span data-i18n="hideForm">' + t('hideForm') + '</span>';
-      if (!isHidden) {
+      updateFormToggleButton(isHidden);
+      if (isHidden) {
+        closePointSuggestions();
+      } else {
         restoreDraft();
         setTimeout(() => form.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
       }
+    }
+
+    function updateFormToggleButton(isHidden) {
+      const button = document.getElementById('formToggleBtn');
+      if (!button) return;
+      const icon = isHidden ? '＋' : '−';
+      const labelKey = isHidden ? 'addTripBtn' : 'hideForm';
+      button.innerHTML = '<span class="formToggleIcon" aria-hidden="true">' + icon + '</span><span data-i18n="' + labelKey + '">' + escapeHtml(t(labelKey)) + '</span>';
+      button.setAttribute('aria-expanded', String(!isHidden));
     }
 
     function setView(view) {
@@ -1354,7 +1494,7 @@ function fillMonths(months) {
         showToast(t(wasEditing ? 'updated' : 'saved'));
         document.getElementById('formCard').classList.add('hidden');
         document.getElementById('workspaceGrid').classList.add('form-collapsed');
-        document.getElementById('formToggleBtn').innerHTML = '<span>＋</span><span data-i18n="addTripBtn">' + t('addTripBtn') + '</span>';
+        updateFormToggleButton(true);
       } catch (err) {
         alert('Ошибка сохранения: ' + err.message);
       } finally {
@@ -1391,7 +1531,8 @@ function fillMonths(months) {
     }
 
     function clearForm() {
-      document.getElementById('date').valueAsDate = new Date();
+      closePointSuggestions();
+      setTripDateToToday();
       document.getElementById('amount').value = '';
       document.getElementById('pointA').value = '';
       document.getElementById('pointB').value = '';
@@ -1405,6 +1546,7 @@ function fillMonths(months) {
     }
 
     function applyMonthFilter() {
+      tripListVisibleCount = 2;
       currentMonth = document.getElementById('monthFilter').value;
       const filtered = getFilteredTrips();
       renderTrips(filtered, 'tripList');
@@ -1445,15 +1587,20 @@ function fillMonths(months) {
     }
 
     function renderTrips(trips, targetId) {
-      const list = document.getElementById(targetId || 'tripList');
+      const listId = targetId || 'tripList';
+      const list = document.getElementById(listId);
       if (!list) return;
+      const isMainList = listId === 'tripList';
+      const moreButton = isMainList ? document.getElementById('showMoreTripsBtn') : null;
+      if (moreButton) moreButton.classList.add('hidden');
       if (!trips.length) {
         const hasData = getPeriodScopedTrips().length > 0;
         list.innerHTML = '<div class="emptyState">' + (hasData ? t('noMatches') : t('noTrips')) + '</div>';
         return;
       }
 
-      list.innerHTML = trips.map(trip => {
+      const visibleTrips = getVisibleTrips(trips, listId);
+      list.innerHTML = visibleTrips.map(trip => {
         const route = getTripRoute(trip);
         const details = trip.comment ? '<div class="tripMeta">💬 ' + escapeHtml(trip.comment) + '</div>' : '';
         const routeLine = route ? '<div class="tripRoute"><span class="routePin">⌖</span><span>' + escapeHtml(route) + '</span></div>' : '';
@@ -1461,6 +1608,20 @@ function fillMonths(months) {
         const actions = trip.editable ? '<div class="tripActions"><button class="btnGhost btnSmall" type="button" onclick="editTrip(&quot;' + safeId + '&quot;)">' + t('edit') + '</button><button class="btnDanger btnSmall" type="button" onclick="deleteTripConfirm(&quot;' + safeId + '&quot;)">' + t('delete') + '</button></div>' : '';
         return '<article class="trip"><div class="tripTop"><div><div class="tripTitle">' + escapeHtml(trip.date) + (currentRole === 'admin' ? ' · ' + escapeHtml(trip.employee) : '') + '</div></div><div class="tripTotal">' + formatMoney(trip.total) + '</div></div>' + routeLine + details + actions + '</article>';
       }).join('');
+      if (moreButton && trips.length > visibleTrips.length) {
+        const remaining = Math.min(5, trips.length - visibleTrips.length);
+        moreButton.textContent = t('showMoreTrips').replace('{count}', remaining);
+        moreButton.classList.remove('hidden');
+      }
+    }
+
+    function showMoreTrips() {
+      tripListVisibleCount += 5;
+      renderTrips(getFilteredTrips(), 'tripList');
+    }
+
+    function getVisibleTrips(trips, listId) {
+      return listId === 'tripList' ? trips.slice(0, tripListVisibleCount) : trips;
     }
 
     function renderReport(trips) {
@@ -1552,7 +1713,7 @@ function fillMonths(months) {
     function repeatLastTrip() {
       const trip = allTrips.find(item => currentPeriod && String(item.periodId) === String(currentPeriod.id)) || allTrips[0];
       if (!trip) return showToast(t('lastTripMissing'));
-      document.getElementById('date').valueAsDate = new Date();
+      setTripDateToToday();
       document.getElementById('amount').value = '';
       const routePoints = splitRouteText(getTripOutboundRoute(trip));
       document.getElementById('pointA').value = routePoints.from;
@@ -1574,7 +1735,7 @@ function fillMonths(months) {
         return;
       }
       localStorage.setItem(draftKey(), JSON.stringify({
-        date: payload.date, amount: document.getElementById('amount').value,
+        date: payload.date, savedOn: localTodayDate(), amount: document.getElementById('amount').value,
         from: payload.from, to: payload.to, extraPoints: payload.extraPoints,
         roundTrip: payload.roundTrip, comment: payload.comment
       }));
@@ -1592,7 +1753,7 @@ function fillMonths(months) {
       try { draft = JSON.parse(raw); } catch (_) { localStorage.removeItem(draftKey()); return; }
 
       restoringDraft = true;
-      document.getElementById('date').value = draft.date || document.getElementById('date').value;
+      document.getElementById('date').value = draftDateValue(draft);
       document.getElementById('amount').value = draft.amount || draft.taxiAmount || '';
       const legacyRoute = draft.routeText || [draft.from, ...(draft.extraPoints || []), draft.to].filter(Boolean).join(' → ');
       const savedPoints = Object.prototype.hasOwnProperty.call(draft, 'from') || Object.prototype.hasOwnProperty.call(draft, 'to')
